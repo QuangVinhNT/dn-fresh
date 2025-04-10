@@ -1,0 +1,130 @@
+@use '@/styles' as *;
+.client-header-component {
+  background-color: $primary-color; 
+  position: relative;
+  width: 100%;
+
+  .client-header-content {
+    max-width: 1280px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+
+    .client-header-menus {
+      display: flex;
+      gap: 20px;
+      a {
+        color: #fff;
+        text-decoration: none;
+        transition: all .3s;
+
+        &:hover {
+          color: $secondary-color !important;
+        }
+      }
+    }
+
+    .client-header-logo {
+      display: flex;
+      gap: 4px;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: pointer;
+      img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+      }
+
+      span {
+        text-transform: uppercase;
+        color: #fff;
+        font-weight: 300;
+        font-size: 12px;
+        letter-spacing: 1px;
+      }
+    }
+
+    .client-header-tools {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+
+      .tool {
+        position: relative;
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all .3s;
+        border: 1px solid #fff;
+
+        .icon {
+          color: $primary-color;
+          transition: all .3s;
+        }
+
+        &:hover {
+          background-color: $primary-color;
+
+          .icon {
+            color: #fff;
+          }
+        }
+
+        .quantity {
+          position: absolute;
+          right: -8px;
+          top: -8px;
+          font-size: 10px;
+          background-color: $secondary-color;
+          line-height: 16px;
+          text-align: center;
+          width: 16px;   
+          border-radius: 50%;    
+          color: #fff;
+        }
+      }
+
+      .user {
+        color: #fff;
+
+        a.username {
+          color: #fff;
+          font-weight: 700;
+          transition: all .3s;
+          
+          &:hover {
+            color: $secondary-color;
+          }
+        }
+
+        a.sign-in-btn, a.sign-up-btn {
+          font-weight: 400;
+          text-decoration: none;
+          color: #fff;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
+  .deco-header {
+    position: absolute;
+    width: 1280px;
+    left: 50%;
+    transform: translate(-50%, -2px);
+    z-index: 1;
+  }
+}

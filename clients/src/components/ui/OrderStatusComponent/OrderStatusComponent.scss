@@ -1,0 +1,66 @@
+@use '@/styles' as *;
+.order-status-component {
+  display: flex;
+  font-size: 14px;
+  gap: 40px;
+
+  .status-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+
+    &:last-child {
+      .status-number {
+        &::after {
+          display: none;
+        }
+      }
+    }
+
+    .status-number {
+      border: 1px solid rgba(0,0,0,0.2);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(0,0,0,0.2);
+      position: relative;
+
+      &::after {
+        content: '';
+        width: 100px;
+        height: 3px;
+        background-color: rgba(0,0,0,0.2);
+        position: absolute;
+        left: calc(100% + 10px);
+      }
+
+      &.done::after {
+        background-color: $admin-primary-color;
+      }
+
+      &.border-done {
+        border-color: $admin-primary-color;
+      }
+
+      .icn-check {
+        color: $admin-primary-color;
+      }
+    }
+
+    .status-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 12px;
+      margin-top: 4px;
+
+      .status-time {
+        color: rgba(0,0,0,0.4);
+      }
+    }
+  }
+}

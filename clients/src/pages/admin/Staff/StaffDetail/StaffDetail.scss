@@ -1,0 +1,35 @@
+.staff-detail-component {
+  .staff-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .delete-edit {
+      display: flex;
+
+      .btn-delete {
+        background-color: transparent;
+        border: 2px solid red;
+        color: red;
+        font-size: 14px;
+        padding: 8px 12px;
+        font-weight: 500;
+        margin-right: 8px;
+        transition: all .3s;
+        cursor: pointer;
+
+        &:hover {
+          background-color: red;
+          color: #fff;
+        }
+      }
+    }
+  }
+  .staff-detail-body {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+}

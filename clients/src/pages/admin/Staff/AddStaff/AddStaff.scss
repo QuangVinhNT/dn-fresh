@@ -1,0 +1,27 @@
+@use '@/styles' as *;
+.add-staff-component {
+  .add-staff-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .cancel-save {
+      display: flex;
+      gap: 8px;
+
+      .btn-cancel {
+        color: $admin-primary-color;
+        border: 1px solid $admin-primary-color;
+
+
+        &:hover {
+          color: red !important;
+          border-color: red !important;
+        }
+      }
+    }
+  }
+  .add-staff-body {
+    margin-top: 20px;
+  }
+}

@@ -1,0 +1,57 @@
+@use '@/styles' as *;
+
+.edit-food-component {
+
+  .edit-food-body {
+    display: flex;
+    gap: 20px;
+
+    .food-image {
+      width: 30%;
+      height: fit-content;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 4px;
+    }
+
+    .food-info-container {
+      flex: 1;
+
+      .food-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+
+        .food-desc {
+          grid-column: span 2;
+        }
+
+        .food-info-footer {
+          display: flex;
+          justify-content: flex-end;
+          gap: 8px;
+          grid-column: span 2;
+
+          .btn-cancel {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: transparent;
+            border: 1px solid $admin-primary-color;
+            color: $admin-primary-color;
+            cursor: pointer;
+            transition: all .3s;
+
+            &:hover {
+              color: red;
+              border-color: red;
+            }
+          }
+        }
+      }
+    }
+  }
+}

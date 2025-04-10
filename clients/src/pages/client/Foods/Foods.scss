@@ -1,0 +1,82 @@
+@use '@/styles' as *;
+
+.foods-component {
+  .foods-content {
+    max-width: 1280px;
+    margin: 64px auto;
+    display: flex;
+    justify-content: space-between;
+
+    .aside-components {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sort-foods {
+      flex: 1;
+      margin-left: 24px;
+
+      .sort {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px;
+        border-bottom: 1px solid $border-color;
+        font-weight: 500;
+
+        .sort-item {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          input {
+            width: 15px;
+            height: 15px;
+          }
+
+          label {
+            cursor: pointer;
+          }
+        }
+      }
+
+      .foods {
+        .foods-item {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+          margin-top: 12px;
+        }
+
+        .pagination {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          margin-top: 24px;
+
+          span {
+            display: block;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-weight: 700;
+            transition: all .3s;
+            cursor: pointer;
+
+            &:hover,
+            &.active {
+              background-color: $secondary-color;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+}

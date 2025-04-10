@@ -1,0 +1,53 @@
+@use '@/styles' as *;
+
+.food-list-component {
+
+  .food-list-tool {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .export-file {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      transition: all .3s;
+      cursor: pointer;
+      padding: 8px 16px;
+      font-weight: 500;
+
+      &:hover {
+        border-color: rgba(0,0,0,0.3);
+      }
+
+      .icn-download {
+        font-size: 20px;
+      }
+
+      
+    }
+
+    .add-food {
+      background-color: $admin-primary-color;
+      border: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #fff;
+      padding: 8px 12px;
+      transition: all .3s;
+      cursor: pointer;
+
+      &:hover {
+        filter: brightness(125%);
+      }
+    }
+
+    .table-component {
+      margin-top: 20px;
+    }
+  }
+}

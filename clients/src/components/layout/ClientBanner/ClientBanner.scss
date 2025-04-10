@@ -1,0 +1,14 @@
+.client-banner-component {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    font-size: 32px;
+    font-weight: 700;
+  }
+}

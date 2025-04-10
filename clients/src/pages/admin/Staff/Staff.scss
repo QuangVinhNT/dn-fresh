@@ -1,0 +1,55 @@
+.staff-component {
+  .staff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .staff-header-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .export-file {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        transition: all .3s;
+        cursor: pointer;
+        padding: 8px 16px;
+        font-weight: 500;
+  
+        &:hover {
+          border-color: rgba(0, 0, 0, 0.3);
+        }
+  
+        .icn-download {
+          font-size: 20px;
+        }
+      }
+
+      .scheduling {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        transition: all .3s;
+        cursor: pointer;
+        padding: 8px 16px;
+        font-weight: 500;
+
+        &:hover {
+          border-color: rgba(0, 0, 0, 0.3);
+        }
+  
+        .icn-scheduling {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+
+  .staff-body {
+    margin-top: 20px;
+  }
+}

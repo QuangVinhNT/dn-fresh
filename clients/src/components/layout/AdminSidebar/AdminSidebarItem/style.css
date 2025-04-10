@@ -1,0 +1,35 @@
+.sidebar-item-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 10px;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.sidebar-item-container:hover {
+  background-color: #ffffff0d;
+}
+
+.sidebar-item-content {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-item-child-container {
+  display: flex;
+  padding: 8px 0;
+}
+
+.sidebar-item-child-content {
+  font-size: 13px;
+  font-weight: 300;
+  color: #fff;  
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .3s;
+}
+
+.sidebar-item-child-content:hover {
+  color: #0088ff;
+}

@@ -1,0 +1,70 @@
+@use "@/styles" as *;
+.aside-box-component {
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  overflow: hidden;
+  .title {
+    background-color: $primary-color;
+    display: block;
+    padding: 12px 20px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .category-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+
+    a {
+      color: #000;
+      text-decoration: none;
+      transition: all .3s;
+      
+      &:hover {
+        color: $secondary-color;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .filter-content {
+    padding: 20px;
+
+    .filter-item {
+      span {
+        margin-bottom: 12px;
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .filter-item-contents {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        .filter-item-content {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          input {
+            width: 15px;
+            height: 15px;
+          }
+
+          label {
+            cursor: pointer;     
+            transition: all .3s;
+
+            &:hover {
+              color: $secondary-color;
+            }       
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,101 @@
+@use '@/styles' as *;
+.discount-card-component {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    .prd-img {
+      img {
+        transform: scale(1.1);
+      }
+
+      .tools {
+        transform: translateY(calc(-100% - 10px));
+      }
+    }
+  }
+
+  .discount-tag {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: $red-orange-color;
+    padding: 4px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    border-top-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+
+  .prd-img {
+    position: relative;
+    overflow: hidden;
+    img {
+      transition: all .3s;
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .tools {
+      position: absolute;
+      transition: all .3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      gap: 8px;
+
+      .icon {
+        border-radius: 50%;
+        padding: 6px;
+        cursor: pointer;
+        transition: all .3s;
+        
+        &:hover {
+          background-color: $secondary-color;
+        }
+      }
+
+      .fav-icon {
+        background-color: $red-color;
+      }
+
+      .info-icon {
+        background-color: $primary-color;
+      }
+    }
+  }
+
+  .prd-info {
+    .prd-name {
+      display: block;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .prd-discount {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      .prd-discount-price {
+        color: $red-color;
+        font-weight: 700;
+      }
+
+      .prd-std-price {
+        color: $text-color;
+        text-decoration: line-through;
+        font-size: 14px;
+      }
+    }
+  }
+}

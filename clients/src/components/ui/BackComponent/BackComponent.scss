@@ -1,0 +1,20 @@
+@use '@/styles' as *;
+.back-component {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 4px;
+  color: $text-color;
+  cursor: pointer;
+  transition: all .3s;
+
+  &:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .back-content {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}

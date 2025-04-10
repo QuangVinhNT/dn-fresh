@@ -1,0 +1,30 @@
+@use '@/styles' as *;
+.edit-food-category-component {
+
+  .edit-food-category-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .cancel-save {
+      display: flex;
+      gap: 8px;
+
+      .btn-cancel {
+        color: $admin-primary-color;
+        border: 1px solid $admin-primary-color;
+
+        &:hover {
+          color: red;
+          border-color: red;
+        }
+      }
+    }
+
+    .detail-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+}

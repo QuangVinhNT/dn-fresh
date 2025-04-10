@@ -1,0 +1,96 @@
+@use '@/styles' as *;
+.home-component {
+  .home-content {
+    max-width: 1280px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+
+    .banner {
+      height: 540px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      p {
+        text-align: center;
+        color: $primary-color;
+        font-weight: 700;
+        font-size: 64px;
+        span {
+          color: $text-color;
+          font-size: 32px;
+        }
+      }
+    }
+
+    .base-category {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .discount {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      border: 3px solid $red-color;
+      border-radius: 16px;
+      padding: 48px 16px 16px;
+
+      .title {
+        background-color: #fff;
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0px 0px 12px 3px rgba(0,0,0,0.1);
+        font-size: 32px;
+        font-weight: 700;
+        padding: 12px 32px;
+        border-radius: 36px;
+        transition: all .3s;
+        cursor: pointer;
+
+        &:hover {
+          color: $secondary-color;
+        }
+      }
+
+      .category-item {
+        border-right: 1px solid rgba(0,0,0,0.2);
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+
+    .prd-ads {
+      display: flex;
+      gap: 20px;
+      height: 280px;
+    }
+
+    .base-product {
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+    }
+
+    .delivery-banner {
+      height: 200px;
+      border-radius: 16px;
+      p {
+        line-height: 200px;
+        text-align: center;
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+      }
+    }
+  }
+}

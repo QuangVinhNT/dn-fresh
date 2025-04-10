@@ -1,0 +1,90 @@
+@use '@/styles' as *;
+
+.order-detail-component {
+  .order-detail-header {
+    display: flex;
+    justify-content: space-between;
+
+    .order-code-print {
+      display: flex;
+      flex-direction: column;
+
+      .btn-print {
+        background-color: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+
+        .icn-print {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .order-detail-body {
+    .customer-order {
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+
+      .customer-info-container {
+        flex: 1;
+
+        .customer-info {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          font-size: 14px;
+
+          div {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+
+            .title {
+              color: $text-color;
+            }
+          }
+        }
+      }
+
+      .order-info-container {
+        width: 30%;
+
+        .order-info {
+          font-size: 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+
+          div {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+
+            .title {
+              color: $text-color;
+            }
+          }
+        }
+      }
+    }
+
+    .food-note {
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+      .food-info-container {
+        flex: 1;
+      }
+
+      .note-info-container {
+        width: 30%;
+        ol {
+          margin: 0 20px;
+
+          li {
+            line-height: 1.3;
+          }
+        }
+      }
+    }
+  }
+}

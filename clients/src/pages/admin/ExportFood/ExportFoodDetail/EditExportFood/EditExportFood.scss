@@ -1,0 +1,29 @@
+@use '@/styles' as *;
+
+.edit-export-food-component {
+  .edit-export-food-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .cancel-save {
+      display: flex;
+      gap: 8px;
+
+      .btn-cancel {
+        color: $admin-primary-color;
+        border: 1px solid $admin-primary-color;
+
+
+        &:hover {
+          color: red !important;
+          border-color: red !important;
+        }
+      }
+    }
+  }
+
+  .edit-export-food-body {
+    margin-top: 20px;
+  }
+}

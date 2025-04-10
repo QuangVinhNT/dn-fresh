@@ -1,0 +1,34 @@
+.input-component {
+  .input-title {
+    font-size: 14px;
+    font-weight: 500;
+
+    .input-required {
+      color: red;
+    }
+  }
+
+  .input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 4px;
+
+    input {
+      outline: none;
+      border: none;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    textarea {
+      outline: none;
+      border: none;
+      font-size: 14px;
+      width: 100%;
+      min-height: 80px;
+    }
+  }
+}

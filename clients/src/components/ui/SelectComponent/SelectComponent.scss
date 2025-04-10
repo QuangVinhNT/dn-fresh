@@ -1,0 +1,19 @@
+.select-component {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  select {
+    height: fit-content;
+    padding: 8px 12px;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,21 @@
+.product-ads-component {
+  border-radius: 16px;
+  overflow: hidden;
+
+
+  a {
+    cursor: pointer;
+    display: block;
+
+    &:hover {
+      img {
+        transform: scale(1.1);
+      }
+    }
+
+    img {
+      transition: all .3s;
+      object-fit: cover;
+    }
+  }
+}

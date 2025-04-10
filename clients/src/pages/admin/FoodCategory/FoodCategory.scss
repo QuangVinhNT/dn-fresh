@@ -1,0 +1,16 @@
+.food-category-component {
+  .food-category-header {
+    display: flex;
+    justify-content: flex-end;
+
+    .btn-add {
+      .icn-add {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .food-category-body {
+    margin-top: 20px;
+  }
+}

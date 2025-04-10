@@ -1,0 +1,19 @@
+.admin-container-component {
+  background-color: #fff;
+  border-radius: 4px;
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 20px;
+
+    .title {
+      font-weight: 600;
+    }
+  }
+  .body-container {
+    padding: 20px;
+  }
+}
