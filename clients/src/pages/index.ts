@@ -10,6 +10,7 @@ import Staff from "./admin/Staff/Staff";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import Client from "./client/Client";
+import ClientFoodDetail from "./client/ClientFoodDetail/ClientFoodDetail";
 import ClientOrders from "./client/ClientOrders/ClientOrders";
 import Contact from "./client/Contact/Contact";
 import Foods from "./client/Foods/Foods";
@@ -21,7 +22,7 @@ export {
   Admin, Overview, Order, FoodList, FoodCategory, ImportFood, ExportFood, Customer, Staff,
   
   // Client
-  Client, Home, Introduce, Foods, Contact, ClientOrders,
+  Client, Home, Introduce, Foods, Contact, ClientOrders, ClientFoodDetail,
 
   // Auth
   Login, Register,

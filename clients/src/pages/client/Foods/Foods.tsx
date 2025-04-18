@@ -2,6 +2,7 @@ import { AsideBox, ClientBanner, ProductCard } from "@/components";
 import './Foods.scss';
 import FoodImg from '@/assets/images/sp1.png';
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
+import { useState } from "react";
 
 const cateData = [
   { label: 'Thực phẩm tươi sống', value: 'fresh-food' },
@@ -19,12 +20,12 @@ const filterDatas = [
   {
     labelType: 'Giá sản phẩm',
     filterData: [
-      { label: 'Giá dưới 100.000đ', value: 'under-100k' },
-      { label: 'Giá từ 100.000đ - 200.000đ', value: '100k-200k' },
-      { label: 'Giá từ 200.000đ - 500.000đ', value: '200k-500k' },
-      { label: 'Giá từ 500.000đ - 1.000.000đ', value: '500k-1m' },
-      { label: 'Giá từ 1.000.000đ - 2.000.000đ', value: '1m-2m' },
-      { label: 'Giá trên 2.000.000đ', value: 'over-2m' },
+      { label: 'Dưới 100.000đ', value: 'under-100k' },
+      { label: 'Từ 100.000đ - 200.000đ', value: '100k-200k' },
+      { label: 'Từ 200.000đ - 500.000đ', value: '200k-500k' },
+      { label: 'Từ 500.000đ - 1.000.000đ', value: '500k-1m' },
+      { label: 'Từ 1.000.000đ - 2.000.000đ', value: '1m-2m' },
+      { label: 'Trên 2.000.000đ', value: 'over-2m' },
     ]
   }
 ];
@@ -105,6 +106,7 @@ const foodData = [
 ];
 
 const Foods = () => {
+  const [isShowDetail, setIsShowDetail] = useState(false);
   return (
     <div className="foods-component">
       <ClientBanner label="Thực phẩm" />

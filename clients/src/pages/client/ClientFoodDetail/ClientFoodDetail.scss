@@ -1,0 +1,177 @@
+@use '@/styles' as *;
+
+.client-food-detail-component {
+  .client-food-detail-content {
+    max-width: 1280px;
+    margin: 32px auto;
+
+    .main-food-detail {
+      display: flex;
+      gap: 16px;
+
+      .food-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+
+        .food-name {
+          font-weight: 600;
+          font-size: 18px;
+        }
+
+        .food-price {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+
+          .discount-price {
+            color: $red-color;
+            font-weight: 700;
+            font-size: 20px;
+          }
+
+          .standard-price {
+            color: $text-color;
+            text-decoration: line-through;
+            font-size: 14px;
+          }
+        }
+
+        .money-save {
+          font-size: 14px;
+        }
+
+        .food-description {
+          font-size: 14px;
+        }
+
+        .food-quantity-container {
+          .title {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 8px;
+          }
+
+          .quantity-buy {
+            display: flex;
+            align-items: center;
+            border: 1px solid $border-color;
+            width: fit-content;
+            border-radius: 100px;
+            overflow: hidden;
+            margin-top: 4px;
+
+            .btn-minus {
+              background-color: #fff;
+              border: none;
+              font-size: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              padding: 10px;
+              transition: all .3s;
+
+              &:hover {
+                color: $primary-color;
+              }
+            }
+
+            .food-quantity {
+              border: none;
+              outline: none;
+              width: 50px;
+              font-size: 20px;
+              text-align: center;
+            }
+
+            .no-spinner::-webkit-outer-spin-button,
+            .no-spinner::-webkit-inner-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+            }
+
+            .no-spinner {
+              appearance: textfield;
+              -moz-appearance: textfield;
+            }
+
+            .btn-plus {
+              background-color: #fff;
+              border: none;
+              font-size: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              padding: 10px;
+              transition: all .3s;
+
+              &:hover {
+                color: $primary-color;
+              }
+            }
+          }
+        }
+
+        .btn-add-to-cart {
+          width: fit-content;
+          background-color: $primary-color;
+          border: none;
+          color: #fff;
+          padding: 8px 16px;
+          border-radius: 100px;
+          font-size: 16px;
+          text-transform: uppercase;
+          font-weight: 700;
+          transition: all .3s;
+          cursor: pointer;
+
+          &:hover {
+            filter: brightness(125%);
+          }
+        }
+      }
+
+      .food-commit {
+        width: 20%;
+        border: 1px solid $primary-color;
+        border-radius: 8px;
+        padding: 10px;
+
+        .food-commit-item {
+          display: flex;
+          flex-direction: column;
+          margin: 20px 0;
+          gap: 8px;
+
+          img {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+          }
+
+          span {
+            font-size: 15px;
+            display: block;
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    .food-view-history {
+      h1 {
+        text-align: center;
+        margin-bottom: 16px;
+        margin-top: 64px;
+      }
+
+      .food-view-history-items {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './App.css';
-import { Admin, Client, ClientOrders, Contact, Customer, ExportFood, FoodCategory, FoodList, Foods, Home, ImportFood, Introduce, Login, Order, Overview, Register, Staff } from "./pages";
+import { Admin, Client, ClientFoodDetail, ClientOrders, Contact, Customer, ExportFood, FoodCategory, FoodList, Foods, Home, ImportFood, Introduce, Login, Order, Overview, Register, Staff } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: '/foods',
         element: <Foods />
+      },
+      {
+        path: '/foods/:slug',
+        element: <ClientFoodDetail />
       },
       {
         path: '/orders',

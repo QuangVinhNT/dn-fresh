@@ -1,5 +1,5 @@
 import { IoDocumentTextOutline, IoHomeOutline, IoPeopleOutline, IoPersonOutline, IoRestaurantOutline } from "react-icons/io5";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { AdminHeader, AdminSidebar, Overlay } from "../../components";
 import { User } from "../../types";
 import { overlayStore } from "../../store";
@@ -87,6 +87,7 @@ const Admin = () => {
           <Outlet />
         </div>
       </div>
+      <ScrollRestoration />
     </div>
   );
 };

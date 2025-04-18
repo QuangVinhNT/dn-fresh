@@ -1,5 +1,5 @@
 import { ClientFooter, ClientHeader } from "@/components";
-import { Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 
 const Client = () => {
   return (
@@ -9,6 +9,7 @@ const Client = () => {
         <Outlet />
       </div>
       <ClientFooter />
+      <ScrollRestoration />
     </div>
   );
 };

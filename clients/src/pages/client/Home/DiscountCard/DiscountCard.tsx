@@ -1,6 +1,7 @@
 import { IoHeartOutline, IoInformationCircleOutline } from "react-icons/io5";
 import './DiscountCard.scss';
 import SeparateNumber from "@/utils/separateNumber";
+import { Link } from "react-router-dom";
 
 interface IProps {
   imgSrc: string;
@@ -13,7 +14,7 @@ interface IProps {
 const DiscountCard = (props: IProps) => {
   const { imgSrc, discount, label, standardPrice, className } = props;
   return (
-    <div className={`discount-card-component ${className}`}>
+    <Link to={'/foods/dao-do-my'} className={`discount-card-component ${className}`}>
       {discount && <span className="discount-tag">- {discount * 100}%</span>}
       <div className="prd-img">
         <img src={imgSrc} alt="" />
@@ -29,7 +30,7 @@ const DiscountCard = (props: IProps) => {
           <span className="prd-std-price">{SeparateNumber(standardPrice)} ₫</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

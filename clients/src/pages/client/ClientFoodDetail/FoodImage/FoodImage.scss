@@ -1,0 +1,65 @@
+@use '@/styles' as *;
+
+.food-image-component {
+  display: flex;
+
+  .thumbnails {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    .icon-up, .icon-down {
+      cursor: pointer;
+      transition: all .3s;
+      
+      &:hover {
+        color: $primary-color !important;
+      }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      img {
+        width: 75px;
+        height: 75px;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        object-fit: cover;
+        opacity: 50%;
+        transition: all .3s;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 100%;
+          border-color: $primary-color;
+        }
+
+        &.active {
+          opacity: 100%;
+          border-color: $primary-color;
+        }
+      }
+    }
+  }
+
+  .food-image-container {
+    width: 400px;
+    overflow: hidden;
+    margin-left: 16px;
+
+    .food-images {
+      display: flex;
+      transition: all .3s;
+
+      img {
+        width: 400px;
+        height: 400px;
+        object-fit: cover;
+      }
+    }
+  }
+}

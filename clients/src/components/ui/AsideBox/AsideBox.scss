@@ -3,6 +3,7 @@
   border: 1px solid $border-color;
   border-radius: 16px;
   overflow: hidden;
+  min-width: 300px;
   .title {
     background-color: $primary-color;
     display: block;
@@ -22,6 +23,7 @@
       color: #000;
       text-decoration: none;
       transition: all .3s;
+      font-size: 14px;
       
       &:hover {
         color: $secondary-color;
@@ -56,7 +58,8 @@
           }
 
           label {
-            cursor: pointer;     
+            cursor: pointer;    
+            font-size: 14px; 
             transition: all .3s;
 
             &:hover {
