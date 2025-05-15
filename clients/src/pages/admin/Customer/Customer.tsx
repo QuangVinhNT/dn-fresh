@@ -13,53 +13,6 @@ import { getCustomers } from "@/api/userApi";
 import { CustomerList, Gender, UserStatus } from "@/types/User";
 
 const headers = ['Mã người dùng', 'Họ tên', 'Ngày sinh', 'Giới tính', 'Email', 'Trạng thái', 'Ngày tạo'];
-const data = [
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  }
-];
 
 const filtersData: FilterType[] = [
   {

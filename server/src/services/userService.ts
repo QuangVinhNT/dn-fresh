@@ -23,6 +23,29 @@ const getAllCustomer = async (page: number, limit: number) => {
   }
 }
 
+const getAllStaff = async (page: number, limit: number) => {
+  try {
+    const rows = await UserModel.getAllStaff(page, limit);
+    const data = (rows.data as RowDataPacket[]).map((row): UserModel.StaffDTO => ({
+      id: row.maNguoiDung,
+      fullname: row.hoTen,
+      dob: row.ngaySinh,
+      gender: row.gioiTinh,
+      status: row.trangThai,
+      roleId: row.maVaiTro,
+      createdAt: row.ngayTao
+    }));
+    const total = rows.total as RowDataPacket[];
+    return {
+      data,
+      total: total[0].total
+    };
+  } catch (error) {
+    console.error(`Service error: ${error}`);
+    throw error;
+  }
+}
+
 export {
-  getAllCustomer
+  getAllCustomer, getAllStaff
 }

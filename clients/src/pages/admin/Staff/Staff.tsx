@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './Staff.scss';
 import { TfiExport } from "react-icons/tfi";
-import { ButtonComponent, FilterDrawerComponent, TableComponent } from "@/components";
+import { ButtonComponent, FilterDrawerComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
 import { IoAdd, IoCalendarOutline } from "react-icons/io5";
 import { FilterType } from "@/types";
 import AddStaff from "./AddStaff/AddStaff";
 import StaffDetail from "./StaffDetail/StaffDetail";
 import EditStaff from "./StaffDetail/EditStaff/EditStaff";
 import SchedulingStaff from "./SchedulingStaff/SchedulingStaff";
+import { getStaffs } from "@/api/userApi";
+import { loadingStore } from "@/store";
+import { Gender, Role, StaffList, UserStatus } from "@/types/User";
+import { dateFormatter, datetimeFormatter } from "@/utils/datetimeFormatter";
 
-const headers = ['Sản phẩm', 'Ảnh', 'Loại', 'Nhãn hiệu', 'Có thể bán', 'Tồn kho', 'Ngày khởi tạo'];
+const headers = ['Mã người dùng', 'Họ tên', 'Ngày sinh', 'Giới tính', 'Trạng thái', 'Vai trò', 'Ngày tạo'];
 const data = [
   {
     name: 'Nước mắm Nam Ngư mới',
@@ -103,6 +107,29 @@ const Staff = () => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
   const [isShowScheduling, setIsShowScheduling] = useState(false);
+  const [staffs, setStaffs] = useState<StaffList[]>([])
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(5);
+  const [total, setTotal] = useState<number>(0);
+
+  const { showLoading, hideLoading } = loadingStore();
+
+  useEffect(() => {
+    fetchStaffs();
+  }, [limit, page]);
+
+  const fetchStaffs = async () => {
+    showLoading();
+    try {
+      const response = await getStaffs(page, limit);
+      setStaffs(response.data);
+      setTotal(response.total);
+    } catch (error) {
+      console.error('Error when load product:', error);
+    } finally {
+      hideLoading();
+    }
+  };
   return (
     <>
       {(!isShowAdd && !isShowEdit && !isShowDetail && !isShowScheduling) && (
@@ -127,15 +154,50 @@ const Staff = () => {
               onClick={() => { setIsShowAdd(true); }}
             />
           </div>
-          <div className="staff-body">
-            <TableComponent
-              headers={headers}
-              data={data}
-              searchPlaceholder="Tìm mã phiếu nhập, tên nhà cung cấp,..."
-              setIsShowFilter={setIsShowFilter}
-              setIsShowDetail={setIsShowDetail}
-            />
-            <FilterDrawerComponent filters={filtersData} setIsShowFilter={setIsShowFilter} isShowFilter={isShowFilter} />
+          <div className="table-component">
+            <TableSearchFilter searchPlaceholder="Tìm theo tên sản phẩm" setIsShowFilter={setIsShowFilter} />
+            <table className="table">
+              <thead>
+                <tr className="tb-header-row">
+                  {headers.map((value, index) => (
+                    <th key={index} className="table-data">
+                      {value}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {staffs?.map((staff, idx) => (
+                  <tr key={idx} className="tb-body-row" onClick={() => { 
+                    // handleClickRow(product.id); 
+                    }}>
+                    <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
+                      <span>{staff.id}</span>
+                    </td>                    
+                    <td>
+                      <span>{staff.fullname}</span>
+                    </td>
+                    <td>
+                      <span>{dateFormatter.format(new Date(staff.dob))}</span>
+                    </td>
+                    <td>
+                      <span>{Gender[staff.gender]}</span>
+                    </td>
+                    <td>
+                      <span>{UserStatus[staff.status]}</span>
+                    </td>
+                    <td>
+                      <span>{Role[staff.roleId as keyof typeof Role]}</span>
+                    </td>
+                    <td>
+                      <span>{datetimeFormatter(staff.createdAt)}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
+            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
           </div>
         </div>
       )}
