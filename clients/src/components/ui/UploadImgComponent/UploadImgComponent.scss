@@ -15,10 +15,49 @@
     font-weight: 500;
   }
 
-  img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
+  .img-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+
+    .img-item {
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        img {
+          filter: blur(3px) grayscale(80%);
+        }
+
+        .close-icon {
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border: 1px solid $border-color;
+        transition: all .3s;
+      }
+
+      .close-icon {
+        position: absolute;
+        z-index: 1;
+        color: red;
+        top: 110%;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: all .3s;        
+        cursor: pointer;
+
+        &:hover {          
+          filter: drop-shadow(0 0 10px);
+        }
+      }
+    }
   }
 
   label {

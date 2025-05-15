@@ -2,8 +2,8 @@ import { ReactNode } from "react";
 import './InputComponent.scss';
 import { UseFormRegister } from "react-hook-form";
 
-type QueryData = {
-  [key: string]: string;
+type FormValues = {
+  [key: string]: string | string[] | File[] | FileList;
 };
 
 interface IProps {
@@ -15,13 +15,14 @@ interface IProps {
   type?: 'text' | 'email' | 'password';
   className?: string;
   isReadOnly?: boolean;
-  register?: UseFormRegister<QueryData>;
+  register?: UseFormRegister<FormValues>;
   name: string;
   isTextarea?: boolean;
+  defaultValue?: boolean;
 }
 
 const InputComponent = (props: IProps) => {
-  const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea } = props;
+  const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea, defaultValue } = props;
   return (
     <div className={`input-component ${className}`}>
       {title && (
@@ -35,6 +36,7 @@ const InputComponent = (props: IProps) => {
             placeholder={placeholder}
             required={isRequired}
             readOnly={isReadOnly}
+            defaultValue={defaultValue ? placeholder : ''}
             {...(register && register(name))}
           >
           </textarea>
@@ -44,6 +46,7 @@ const InputComponent = (props: IProps) => {
             placeholder={placeholder ?? ''}
             required={isRequired}
             readOnly={isReadOnly}
+            defaultValue={defaultValue ? placeholder : ''}
             {...(register && register(name))}
           />
         )}

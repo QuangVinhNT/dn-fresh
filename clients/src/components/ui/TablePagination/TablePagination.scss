@@ -1,0 +1,49 @@
+.table-pagination-component {
+  background-color: #fff;
+  padding: 24px;
+  display: flex;
+  gap: 64px;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+
+  .data-number-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    select {
+      padding: 4px;
+      outline: none;
+      cursor: pointer;
+      min-width: 57px;
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.5);
+
+    * {
+      cursor: pointer;
+      transition: all .3s;
+      display: block;
+      width: 30px;
+      line-height: 30px;
+      border-radius: 50%;
+      text-align: center;
+
+      &:hover {
+        color: black;
+      }
+    }
+
+    .active {
+      background-color: #0088ff;
+      color: #fff;
+    }
+  }
+}

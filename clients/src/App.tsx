@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './App.css';
-import { Admin, Client, ClientFoodDetail, ClientOrders, Contact, Customer, ExportFood, FoodCategory, FoodList, Foods, Home, ImportFood, Introduce, Login, Order, Overview, Register, Staff } from "./pages";
+import { Admin, Client, ClientFoodDetail, ClientOrders, ConfirmCode, Contact, Customer, ExportFood, Favourites, FoodCategory, FoodList, Foods, ForgotPassword, Home, ImportFood, Introduce, Login, Order, Overview, Payment, Register, Staff, UserRole } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: '/contact',
         element: <Contact />
+      },
+      {
+        path: '/favourites',
+        element: <Favourites />
       }
     ]
   },
@@ -78,16 +82,32 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <Register />
+  },
+  {
+    path: '/confirm-code',
+    element: <ConfirmCode />
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />
+  },
+  {
+    path: '/user-roles',
+    element: <UserRole />
+  },
+  {
+    path: '/payment',
+    element: <Payment />
   }
-])
+]);
 
 function App() {
 
   return (
     <>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

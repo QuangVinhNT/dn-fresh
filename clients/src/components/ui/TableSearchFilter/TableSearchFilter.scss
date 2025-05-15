@@ -1,0 +1,38 @@
+.table-search-filter-component {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 18px 12px;
+
+  .input-container {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 8px 12px;
+    gap: 12px;
+    margin-right: 12px;
+
+    input {
+      outline: none;
+      border: none;
+      width: 100%;
+    }
+  }
+
+  .btn-filter {
+    background-color: #0088ff;
+    color: #fff;
+    border: 1px solid #0088ff;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all .3s;
+
+    &:hover {
+      filter: brightness(125%);
+    }
+  }
+}

@@ -1,9 +1,9 @@
-import { IoCloudUploadOutline } from "react-icons/io5";
-import './UploadImgComponent.scss';
 import { UseFormRegister, UseFormWatch } from "react-hook-form";
+import { IoCloseCircle, IoCloudUploadOutline } from "react-icons/io5";
+import './UploadImgComponent.scss';
 
 type QueryData = {
-  [key: string]: string;
+  [key: string]: string | string[] | File[] | FileList;
 };
 
 interface IProps {
@@ -12,23 +12,43 @@ interface IProps {
   register: UseFormRegister<QueryData>;
   watch: UseFormWatch<QueryData>;
   title?: string;
+  defaultImages?: string;
 }
 const UploadImgComponent = (props: IProps) => {
   const { id, register, name, watch, title } = props;
-
+  const watched = watch(name);
   return (
     <div className="upload-component">
-      {title && <p className="upload-title">{title} {(<span style={{color: 'red'}}>*</span>)}</p>}
-      {watch(name)?.length > 0 && (
-        <img src={URL.createObjectURL(new Blob([watch(name)?.[0]]))} />
-      )}
+      {title && <p className="upload-title">{title} {(<span style={{ color: 'red' }}>*</span>)}</p>}
+      <div className="img-list">
+        {watched instanceof FileList && watched?.length > 0 && Array.from(watched).map((img, idx) => (
+          <div className="img-item" key={idx}>
+            <img
+              src={URL.createObjectURL(new Blob([img]))}
+            />
+            <IoCloseCircle 
+              className="close-icon" size={32} 
+              onClick={() => {
+
+            }}
+            />
+          </div>
+        ))}
+      </div>
       <label htmlFor={id}>
         <IoCloudUploadOutline className="upload-icon" />
         <span className="upload-content">
-          {watch(name)?.length > 0 ? 'Thay đổi ảnh' : 'Tải ảnh lên từ thiết bị'}
+          {watch(name)?.length > 0 ? 'Thay đổi ảnh' : 'Tải ảnh mới từ thiết bị'}
         </span>
       </label>
-      <input type="file" id={id} accept="image/png, image/jpeg, image/jpg" {...(register && register(name))} />
+      <input 
+        type="file" 
+        id={id} 
+        accept="image/png, image/jpeg, image/jpg" 
+        {...(register && register(name))} 
+        multiple 
+        // onChange={() => {setValue(name, imageFiles)}}
+        />
     </div>
   );
 };

@@ -1,61 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './ExportFood.scss';
 import { FilterType } from "@/types";
 import { TfiExport } from "react-icons/tfi";
-import { ButtonComponent, FilterDrawerComponent, TableComponent } from "@/components";
+import { ButtonComponent, FilterDrawerComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
 import { IoAdd } from "react-icons/io5";
 import ExportFoodDetail from "./ExportFoodDetail/ExportFoodDetail";
 import EditExportFood from "./ExportFoodDetail/EditExportFood/EditExportFood";
 import AddExportFood from "./AddExportFood/AddExportFood";
+import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import { ExportReceiptList, ExportReceiptStatus } from "@/types/ExportReceipt";
+import { loadingStore } from "@/store";
+import { getExportReceipts } from "@/api/exportReceiptApi";
 
-const headers = ['Sản phẩm', 'Ảnh', 'Loại', 'Nhãn hiệu', 'Có thể bán', 'Tồn kho', 'Ngày khởi tạo'];
-const data = [
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  }
-];
+const headers = ['Mã phiếu xuất', 'Ngày xuất hàng', 'Mã nhân viên', 'Mã quản trị viên', 'Trạng thái', 'Ngày tạo', 'Ngày cập nhật'];
 
 const filtersData: FilterType[] = [
   {
@@ -101,6 +58,29 @@ const ExportFood = () => {
   const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
+  const [exportReceipts, setExportReceipts] = useState<ExportReceiptList[]>([])
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(5);
+  const [total, setTotal] = useState<number>(0);
+
+  const { showLoading, hideLoading } = loadingStore();
+
+  useEffect(() => {
+    fetchExportReceipts();
+  }, [limit, page]);
+
+  const fetchExportReceipts = async () => {
+    showLoading();
+    try {
+      const response = await getExportReceipts(page, limit);
+      setExportReceipts(response.data);
+      setTotal(response.total);
+    } catch (error) {
+      console.error('Error when load product:', error);
+    } finally {
+      hideLoading();
+    }
+  };
   return (
     <>
       {(!isShowAdd && !isShowDetail && !isShowEdit) && (
@@ -119,15 +99,50 @@ const ExportFood = () => {
               onClick={() => { setIsShowAdd(true); }}
             />
           </div>
-          <div className="export-food-body">
-            <TableComponent
-              headers={headers}
-              data={data}
-              searchPlaceholder="Tìm mã phiếu nhập, tên nhà cung cấp,..."
-              setIsShowFilter={setIsShowFilter}
-              setIsShowDetail={setIsShowDetail}
-            />
-            <FilterDrawerComponent filters={filtersData} setIsShowFilter={setIsShowFilter} isShowFilter={isShowFilter} />
+          <div className="table-component">
+            <TableSearchFilter searchPlaceholder="Tìm theo tên sản phẩm" setIsShowFilter={setIsShowFilter} />
+            <table className="table">
+              <thead>
+                <tr className="tb-header-row">
+                  {headers.map((value, index) => (
+                    <th key={index} className="table-data">
+                      {value}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {exportReceipts?.map((exportReceipt, idx) => (
+                  <tr key={idx} className="tb-body-row" onClick={() => { 
+                    // handleClickRow(product.id); 
+                    }}>
+                    <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
+                      <span>{exportReceipt.id}</span>
+                    </td>
+                    <td>
+                      <span>{datetimeFormatter(exportReceipt.exportDate)}</span>
+                    </td>
+                    <td>
+                      <span>{exportReceipt.staffId}</span>
+                    </td>
+                    <td>
+                      <span>{exportReceipt.adminId}</span>
+                    </td>
+                    <td>
+                      <span>{ExportReceiptStatus[exportReceipt.status]}</span>
+                    </td>
+                    <td>
+                      <span>{datetimeFormatter(exportReceipt.createdAt)}</span>
+                    </td>
+                    <td>
+                      <span>{datetimeFormatter(exportReceipt.updatedAt)}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
+            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
           </div>
         </div>
       )}

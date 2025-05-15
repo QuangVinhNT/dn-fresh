@@ -1,5 +1,7 @@
-const Overlay = () => {
+import { overlayStore } from "@/store";
 
+const Overlay = () => {
+  const {isShowOverlay} = overlayStore();
   return (
     <div
       style={{
@@ -10,6 +12,8 @@ const Overlay = () => {
         top: 0,
         left: 0,
         zIndex: 50,
+        opacity: isShowOverlay ? 1 : 0,
+        transition: 'all .3s'
       }}
     ></div>
   );

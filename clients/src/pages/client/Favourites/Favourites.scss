@@ -1,0 +1,17 @@
+.favourites-component {
+  .favourites-content {
+    max-width: 1280px;
+    margin: 64px auto;
+
+    h3 {
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 20px;      
+    }
+
+    .favourite-list {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+}

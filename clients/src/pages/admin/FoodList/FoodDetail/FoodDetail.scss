@@ -16,10 +16,23 @@
       .status {
         font-size: 12px;
         margin-left: 12px;
-        background-color: #e7a22a2a;
-        color: #e7a22a;
         padding: 4px 8px;
         border-radius: 16px;
+
+        &.trading {
+          background-color: #0088ff44;
+          color: $admin-primary-color;
+        }
+
+        &.no-trading {
+          background-color: $border-color;
+          color: #000;
+        }
+
+        &.out-of-stock {
+          background-color: #e7a22a2a;
+          color: #e7a22a;
+        }
       }
     }
 
@@ -48,11 +61,13 @@
       display: flex;
       padding: 12px;
       font-size: 14px;
+      justify-content: space-between;
 
       .content {
         flex: 1;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
 
         div {
           display: grid;
@@ -66,18 +81,7 @@
         }
       }
 
-      .image {
-        width: 30%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
 
-        img {
-          width: 150px;
-          height: 150px;
-          object-fit: cover;
-        }
-      }
     }
   }
 

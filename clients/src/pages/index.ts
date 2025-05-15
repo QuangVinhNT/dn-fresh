@@ -7,23 +7,32 @@ import ImportFood from "./admin/ImportFood/ImportFood";
 import Order from "./admin/Order/Order";
 import Overview from "./admin/Overview/Overview";
 import Staff from "./admin/Staff/Staff";
-import Login from "./auth/Login";
-import Register from "./auth/Register";
+import ConfirmCode from "./auth/ConfirmCode/ConfirmCode";
+import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
+import Login from "./auth/Login/Login";
+import Register from "./auth/Register/Register";
+import UserRole from "./auth/UserRole/UserRole";
+import CartDrawer from "./client/CartDrawer/CartDrawer";
 import Client from "./client/Client";
 import ClientFoodDetail from "./client/ClientFoodDetail/ClientFoodDetail";
 import ClientOrders from "./client/ClientOrders/ClientOrders";
 import Contact from "./client/Contact/Contact";
+import Favourites from "./client/Favourites/Favourites";
 import Foods from "./client/Foods/Foods";
 import Home from "./client/Home/Home";
 import Introduce from "./client/Introduce/Introduce";
+import Payment from "./client/Payment/Payment";
 
 export {
   // Admin
   Admin, Overview, Order, FoodList, FoodCategory, ImportFood, ExportFood, Customer, Staff,
   
   // Client
-  Client, Home, Introduce, Foods, Contact, ClientOrders, ClientFoodDetail,
+  Client, Home, Introduce, Foods, Contact, ClientOrders, ClientFoodDetail, Favourites, Payment,
 
   // Auth
-  Login, Register,
+  Login, Register, ConfirmCode, ForgotPassword, UserRole,
+
+  // Other
+  CartDrawer
 };

@@ -1,9 +1,11 @@
+import DecoHeader from '@/assets/images/deco-header.png';
 import Logo from '@/assets/svgs/dnfresh-logo-white.svg';
-import DecoHeader from '@/assets/images/deco-header.png'
 import { useState } from "react";
 import { IoCartOutline, IoHeartOutline } from "react-icons/io5";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import './ClientHeader.scss';
+import { cartStore } from "@/store/cartStore";
+import { overlayStore } from "@/store";
 
 const menuItems = [
   {
@@ -31,6 +33,10 @@ const menuItems = [
 const ClientHeader = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const {showCart} = cartStore();
+  const {showOverlay} = overlayStore();
 
   return (
     <div className="client-header-component">
@@ -45,11 +51,14 @@ const ClientHeader = () => {
           <span>Fresh - Fast - Reliable</span>
         </div>
         <div className="client-header-tools">
-          <div className="favourite tool">
+          <div className="favourite tool" onClick={() => navigate('/favourites')}>
             <span className="quantity">0</span>
             <IoHeartOutline size={24} className="icon"/>
           </div>
-          <div className="cart tool">
+          <div className="cart tool" onClick={() => {
+            showCart();
+            showOverlay();
+          }}>
             <span className="quantity">0</span>
             <IoCartOutline size={24} className="icon"/>
           </div>
@@ -60,9 +69,9 @@ const ClientHeader = () => {
               </div>
             ): (
               <div>
-                <Link to={'/'} className="sign-in-btn">Đăng nhập</Link>
+                <Link to={'/login'} className="sign-in-btn">Đăng nhập</Link>
                 <span> | </span>
-                <Link to={'/'} className="sign-up-btn">Đăng ký</Link>
+                <Link to={'/register'} className="sign-up-btn">Đăng ký</Link>
               </div>
               )}
           </div>

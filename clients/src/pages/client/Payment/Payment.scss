@@ -1,0 +1,190 @@
+@use '@/styles' as *;
+
+.payment-component {
+  .payment-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    height: 100vh;
+
+    .receiving-info-payment {
+      display: grid;
+      margin: 64px 0;
+      padding: 32px;
+      gap: 32px;
+      grid-template-columns: repeat(2, 1fr);
+      flex: 1;
+
+      .receiving-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .payment {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        div {
+          position: relative;
+          display: flex;
+          align-items: center;
+          height: 56px;
+
+          input {
+            margin-left: 16px;
+          }
+
+          label {
+            border: 1px solid $border-color;
+            padding: 16px 40px;
+            border-radius: 4px;
+            position: absolute;
+            width: 100%;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .order-info {
+      width: 400px;
+      background-color: #fafafa;
+      border-left: 1px solid $border-color;
+
+      h3 {
+        padding: 16px;
+        border-bottom: 1px solid $border-color;
+      }
+
+      .product-list {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .product-item {
+          display: flex;
+          border-bottom: 1px solid $border-color;
+          padding: 12px 0;
+
+          .product-img {
+            position: relative;
+            margin-right: 16px;
+
+            img {
+              width: 45px;
+              height: 45px;
+              object-fit: cover;
+              border-radius: 8px;
+              border: 1px solid $border-color;
+            }
+
+            span {
+              position: absolute;
+              top: 0;
+              left: 45px;
+              transform: translate(-50%, -50%);
+              font-size: 12px;
+              color: #fff;
+              background-color: #000;
+              display: inline-block;
+              width: 16px;
+              line-height: 16px;
+              text-align: center;
+              border-radius: 50%;
+            }
+          }
+
+          .product-name {
+            display: flex;
+            flex-direction: column;
+
+            .name {
+              font-size: 14px;
+            }
+
+            .weight {
+              font-size: 12px;
+              color: $text-color;
+            }
+          }
+
+          .product-price {
+            margin-left: auto;
+            align-self: center;
+
+            span {
+              font-size: 14px;
+              color: $text-color;
+            }
+          }
+        }
+      }
+
+      .fee-temp-delivery {
+        padding: 16px;
+        font-size: 14px;
+        color: $text-color;
+        .fee-temp {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+
+        .fee-delivery {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-bottom: 16px;
+          border-bottom: 1px solid $border-color;
+        }
+      }
+
+      .total-fee {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+
+        span {
+          &:first-child {
+            color: $text-color;
+          }
+
+          &:last-child {
+            font-size: 18px;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .back-pay {
+        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .back {
+          color: #000;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        .pay {
+          background-color: #000;
+          color: #fff;
+          border: none;
+          padding: 12px 20px;
+        }
+      }
+    }
+  }
+}

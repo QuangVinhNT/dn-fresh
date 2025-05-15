@@ -1,0 +1,83 @@
+@use '@/styles' as *;
+.register-component {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h1 {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  form {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;    
+
+    .btn-register {
+      display: flex;
+      justify-content: center;
+      border-radius: 999px !important;
+      padding: 12px 0;
+    }
+
+    p {
+      text-align: center;
+      font-size: 14px;
+
+      a {
+        color: $primary-color;
+        font-weight: 500;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .other-login-text {
+      font-size: 14px;
+      display: block;
+      text-align: center;
+      position: relative;
+
+      &::before {
+        content: '';
+        width: 42%;
+        height: 1px;
+        background-color: $border-color;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      &::after {
+        content: '';
+        width: 42%;
+        height: 1px;
+        background-color: $border-color;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    .btn-login-with-google {
+      border: 1px solid $text-color;
+      border-radius: 999px !important;
+      display: flex;
+      justify-content: center;
+      transition: all .3s;
+
+      &:hover {
+        background-color: $text-color;
+        color: #fff;
+      }
+    }
+  }
+}

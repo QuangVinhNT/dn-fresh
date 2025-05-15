@@ -1,8 +1,8 @@
 import { IoDocumentTextOutline, IoHomeOutline, IoPeopleOutline, IoPersonOutline, IoRestaurantOutline } from "react-icons/io5";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
-import { AdminHeader, AdminSidebar, Overlay } from "../../components";
+import { AdminHeader, AdminSidebar, LoadingComponent, Overlay } from "../../components";
 import { User } from "../../types";
-import { overlayStore } from "../../store";
+import { loadingStore, overlayStore } from "../../store";
 
 const user: User = {
   fullname: 'Admin',
@@ -61,6 +61,7 @@ const menuItems = [
 
 const Admin = () => {
   const { isShowOverlay } = overlayStore();
+  const { isShowLoading } = loadingStore();
   const location = useLocation();
   const getCategory = () => {
     let result = '';
@@ -80,6 +81,7 @@ const Admin = () => {
   return (
     <div style={{ display: 'flex', width: '100%', height: '100vh' }} id="admin-root">
       {isShowOverlay && <Overlay />}
+      {isShowLoading && <LoadingComponent />}
       <AdminSidebar menuItems={menuItems} />
       <div style={{ backgroundColor: '#f0f1f1', flex: 1, overflowX: 'hidden' }}>
         <AdminHeader category={getCategory()} user={user} />

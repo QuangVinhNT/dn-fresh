@@ -1,0 +1,36 @@
+@use '@/styles' as *;
+.image-slider-component {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  .prev-icon, .next-icon {
+    cursor: pointer;
+    color: $text-color;
+    transition: all .3s;
+
+    &:hover {
+      color: #000;
+    }
+  }
+
+  .prev-icon {
+    &:hover {
+      transform: translateX(-4px);
+    }
+  }
+
+  .next-icon {
+    &:hover {
+      transform: translateX(4px);
+    }
+  }
+
+  .image-frame {
+    overflow: hidden;
+    .image-list {
+      display: flex;
+      transition: all .3s;
+    }
+  }
+}

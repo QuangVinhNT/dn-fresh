@@ -1,0 +1,36 @@
+@use '@/styles' as *;
+.confirm-code-component {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h1 {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 32px;
+    span {
+      color: $primary-color;
+      font-weight: 500;
+    }
+  }
+
+  form {
+    width: 400px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .confirm-code-input {
+      flex: 1;
+    }
+
+    .btn-confirm {
+      height: fit-content;
+      margin-top: 4px;
+    }
+  }
+}

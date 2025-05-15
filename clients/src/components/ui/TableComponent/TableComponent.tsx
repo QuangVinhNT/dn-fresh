@@ -5,7 +5,7 @@ import './TableComponent.scss';
 import { overlayStore } from "../../../store";
 
 interface DataType {
-  [key: string]: string | number | ReactNode;
+  [key: string]: string | number | ReactNode | string[];
 }
 
 interface Props {
@@ -77,8 +77,8 @@ const TableComponent = (props: Props) => {
             <tr key={index} className="tb-body-row" onClick={() => setIsShowDetail && setIsShowDetail(true)}>
               {Object.keys(value).map((item, index) => (
                 <td key={index} className="table-data">
-                  {(typeof value[item] === 'string' && isImage(value[item])) ? (
-                    <img src={value[item]} className="image-data" />
+                  {(typeof value[item] === 'string' && isImage(value[item][0])) ? (
+                    <img src={value[item][0]} className="image-data" />
                   ) : (
                     <span>{value[item]}</span>
                   )}

@@ -1,7 +1,7 @@
-import { IoHeartOutline, IoInformationCircleOutline } from "react-icons/io5";
-import './ProductCard.scss';
 import SeparateNumber from "@/utils/separateNumber";
+import { IoCartOutline, IoHeartOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import './ProductCard.scss';
 
 interface IProps {
   imgSrc: string;
@@ -18,10 +18,12 @@ const ProductCard = (props: IProps) => {
       <div className="prd-img">
         <img src={imgSrc} alt="" />
         <div className="tools">
-          <IoHeartOutline className="fav-icon icon" size={36} color="#fff" />
-          <Link to={'/foods/dao-do-my'}>
-            <IoInformationCircleOutline className="info-icon icon" size={36} color="#fff" />
-          </Link>
+          <div>
+            <IoHeartOutline className="fav-icon icon" size={36} color="#fff" />
+          </div>
+          <div>
+            <IoCartOutline className="info-icon icon" size={36} color="#fff" />
+          </div>
         </div>
       </div>
       <div className="prd-info">

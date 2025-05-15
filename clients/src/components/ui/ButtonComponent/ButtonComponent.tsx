@@ -3,7 +3,7 @@ import './ButtonComponent.scss';
 import { ReactNode } from "react";
 
 interface IProps {
-  label: string;
+  label: string | ReactNode;
   type: 'submit' | 'no-submit';
   variant?: 'primary' | 'danger' | 'secondary';
   styles?: React.CSSProperties;
@@ -27,7 +27,8 @@ const ButtonComponent = (props: IProps) => {
       variant === 'secondary' ? webColors.primary : undefined
       )
     )}`,
-    color: variant ? '#fff' : undefined
+    color: variant ? '#fff' : undefined,
+    borderRadius: '4px'
   }
   return (
     <>
