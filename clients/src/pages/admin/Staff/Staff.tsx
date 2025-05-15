@@ -155,7 +155,7 @@ const Staff = () => {
             />
           </div>
           <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo tên sản phẩm" setIsShowFilter={setIsShowFilter} />
+            <TableSearchFilter searchPlaceholder="Tìm theo tên nhân viên, mã nhân viên" setIsShowFilter={setIsShowFilter} />
             <table className="table">
               <thead>
                 <tr className="tb-header-row">

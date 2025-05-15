@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getCategoriesForSelectBox } from "../controllers/categoryController.js";
+import { getAllCategory, getCategoriesForSelectBox } from "../controllers/categoryController.js";
 
 const categoryRoutes = Router();
 
-categoryRoutes.get('/select-box', getCategoriesForSelectBox)
+categoryRoutes.get('/', getAllCategory);
+categoryRoutes.get('/select-box', getCategoriesForSelectBox);
 
 export default categoryRoutes;

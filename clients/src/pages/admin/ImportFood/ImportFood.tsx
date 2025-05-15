@@ -101,7 +101,7 @@ const ImportFood = () => {
             />
           </div>
           <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo tên sản phẩm" setIsShowFilter={setIsShowFilter} />
+            <TableSearchFilter searchPlaceholder="Tìm theo mã phiếu nhập, mã người dùng" setIsShowFilter={setIsShowFilter} />
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
