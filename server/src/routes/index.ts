@@ -5,14 +5,16 @@ import uploadRoutes from "./uploadRoutes.js";
 import categoryRoutes from "./categoryRoutes.js";
 import importReceiptRoutes from "./importReceiptRoutes.js";
 import exportReceiptRoutes from "./exportReceiptRoutes.js";
+import userRoutes from "./userRoutes.js";
 
 const router = Router();
 
-router.use('/v1/admin-products', productRoutes)
-router.use('/v1/admin-providers', providerRoutes)
-router.use('/v1/categories', categoryRoutes)
-router.use('/v1/import-receipts', importReceiptRoutes)
-router.use('/v1/export-receipts', exportReceiptRoutes)
-router.use('/upload', uploadRoutes)
+router.use('/v1/admin-products', productRoutes);
+router.use('/v1/admin-providers', providerRoutes);
+router.use('/v1/categories', categoryRoutes);
+router.use('/v1/import-receipts', importReceiptRoutes);
+router.use('/v1/export-receipts', exportReceiptRoutes);
+router.use('/v1/users', userRoutes);
+router.use('/upload', uploadRoutes);
 
 export default router;

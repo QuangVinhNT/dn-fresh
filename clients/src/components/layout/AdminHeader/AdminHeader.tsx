@@ -1,10 +1,10 @@
+import { AccountUser } from "@/types/User";
 import { IoNotifications } from "react-icons/io5";
-import { User } from "../../../types";
 import './AdminHeader.scss';
 
 interface Props {
   category: string;
-  user: User;
+  user: AccountUser;
 }
 const AdminHeader = (props: Props) => {
   const { category, user } = props;
