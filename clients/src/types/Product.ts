@@ -27,12 +27,16 @@ export enum ProductStatus {
 
 type AdminProductList = Pick<Product, 'id' | 'name' | 'imageUrls' | 'category' | 'quantity' | 'unit' | 'createdAt' | 'status'>
 
+type ProductList = Pick<Product, 'id' | 'name' | 'imageUrls' | 'price' | 'discountRate'>
+
 type AdminProductDetail = Pick<Product, 'id' | 'name' | 'imageUrls' | 'price' | 'quantity' | 'unit' | 'category' | 'createdAt' | 'updatedAt' | 'description' | 'categoryId' | 'status' | 'discountRate'>
+
+type ProductDetail = Pick<Product, 'id' | 'name' | 'price' | 'quantity' | 'unit' | 'description' | 'imageUrls' | 'status' | 'discountRate'>
 
 type InsertProductPayload = Pick<Product, 'name' | 'price' | 'unit' | 'description' | 'categoryId' | 'imageUrls'>
 
 type UpdateProductPayload = Pick<Product, 'name' | 'price' | 'unit' | 'categoryId' | 'status' | 'discountRate' | 'description' | 'imageUrls'>
 
 export type {
-  AdminProductList, AdminProductDetail, InsertProductPayload, UpdateProductPayload
+  AdminProductList, AdminProductDetail, InsertProductPayload, UpdateProductPayload, ProductList, ProductDetail
 }

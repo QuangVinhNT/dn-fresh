@@ -1,9 +1,15 @@
-import { FilterDrawerComponent, TableComponent } from "@/components";
+import { FilterDrawerComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
 import { FilterType } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TfiExport } from "react-icons/tfi";
 import './Order.scss';
 import OrderDetail from "./OrderDetail/OrderDetail";
+import { OrderList, OrderStatus } from "@/types/Order";
+import { loadingStore } from "@/store";
+import { getAdminOrders } from "@/api/orderApi";
+import { datetimeFormatter } from "@/utils/datetimeFormatter";
+
+const headers = ['Mã đơn hàng', 'Ngày tạo đơn', 'Khách hàng', 'Trạng thái', 'Mã phiếu xuất', 'Nhân viên giao hàng']
 
 const filtersData: FilterType[] = [
   {
@@ -47,6 +53,30 @@ const filtersData: FilterType[] = [
 const Order = () => {
   const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
+  const [orders, setOrders] = useState<OrderList[]>([])
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(5);
+  const [total, setTotal] = useState<number>(0);
+
+  const { showLoading, hideLoading } = loadingStore();
+
+  useEffect(() => {
+    fetchOrders();
+  }, [limit, page]);
+
+  const fetchOrders = async () => {
+    showLoading();
+    try {
+      const response = await getAdminOrders(page, limit);
+      setOrders(response.data);
+      setTotal(response.total);
+    } catch (error) {
+      console.error('Error when load product:', error);
+    } finally {
+      hideLoading();
+    }
+  };
+
   return (
     <>
       {!isShowDetail && (
@@ -58,58 +88,48 @@ const Order = () => {
                 <span>Xuất file</span>
               </div>
             </div>
-            <TableComponent
-              headers={['Mã đơn hàng', 'Ngày tạo đơn', 'Tên khách hàng', 'Trạng thái', 'Mã phiếu xuất', 'Nhân viên giao hàng']}
-              data={[
-                {
-                  orderCode: 'DH001',
-                  orderCreateDate: '03/04/2025',
-                  customerName: 'Nguyễn Văn A',
-                  status: 'Đang giao dịch',
-                  exportCode: 'PX001',
-                  deliverCode: 'DLV001'
-                },
-                {
-                  orderCode: 'DH001',
-                  orderCreateDate: '03/04/2025',
-                  customerName: 'Nguyễn Văn A',
-                  status: 'Đang giao dịch',
-                  exportCode: 'PX001',
-                  deliverCode: 'DLV001'
-                },
-                {
-                  orderCode: 'DH001',
-                  orderCreateDate: '03/04/2025',
-                  customerName: 'Nguyễn Văn A',
-                  status: 'Đang giao dịch',
-                  exportCode: 'PX001',
-                  deliverCode: 'DLV001'
-                },
-                {
-                  orderCode: 'DH001',
-                  orderCreateDate: '03/04/2025',
-                  customerName: 'Nguyễn Văn A',
-                  status: 'Đang giao dịch',
-                  exportCode: 'PX001',
-                  deliverCode: 'DLV001'
-                },
-                {
-                  orderCode: 'DH001',
-                  orderCreateDate: '03/04/2025',
-                  customerName: 'Nguyễn Văn A',
-                  status: 'Đang giao dịch',
-                  exportCode: 'PX001',
-                  deliverCode: 'DLV001'
-                }
-              ]}
-              setIsShowFilter={setIsShowFilter}
-              searchPlaceholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, nhân viên giao hàng"
-              setIsShowDetail={setIsShowDetail}
-            />
-            <FilterDrawerComponent
-              filters={filtersData}
-              isShowFilter={isShowFilter}
-              setIsShowFilter={setIsShowFilter} />
+            <div className="table-component">
+            <TableSearchFilter searchPlaceholder="Tìm theo mã phiếu nhập, mã người dùng" setIsShowFilter={setIsShowFilter} />
+            <table className="table">
+              <thead>
+                <tr className="tb-header-row">
+                  {headers.map((value, index) => (
+                    <th key={index} className="table-data">
+                      {value}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {orders?.map((order, idx) => (
+                  <tr key={idx} className="tb-body-row" onClick={() => { 
+                    // handleClickRow(product.id); 
+                    }}>
+                    <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
+                      <span>{order.id}</span>
+                    </td>
+                    <td>
+                      <span>{datetimeFormatter(order.createdAt)}</span>
+                    </td>
+                    <td>
+                      <span>{order.customerName}</span>
+                    </td>
+                    <td>
+                      <span>{OrderStatus[order.status]}</span>
+                    </td>
+                    <td>
+                      <span>{order.exportReceiptId}</span>
+                    </td>
+                    <td>
+                      <span>{order.staffName}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
+            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
+          </div>
           </div>
         </>
       )}

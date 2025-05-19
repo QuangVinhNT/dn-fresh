@@ -1,4 +1,4 @@
-
+import './DSOrder.scss'
 const DSOrder = () => {
   return (
     <div>DSOrder</div>

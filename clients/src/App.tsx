@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './App.css';
-import { Admin, Client, ClientFoodDetail, ClientOrders, ConfirmCode, Contact, Customer, ExportFood, Favourites, FoodCategory, FoodList, Foods, ForgotPassword, Home, ImportFood, Introduce, Login, Order, Overview, Payment, Register, Staff, UserRole } from "./pages";
+import { Admin, Client, ClientFoodDetail, ClientOrders, ConfirmCode, Contact, Customer, DeliveryStaff, DSOrder, DSOverview, ExportFood, Favourites, FoodCategory, FoodList, Foods, ForgotPassword, Home, ImportFood, Introduce, InventoryStaff, ISExport, ISImport, Login, Order, Overview, Payment, Register, Staff, UserRole } from "./pages";
+import ISOverview from "./pages/inventory-staff/ISOverview/ISOverview";
 
 const router = createBrowserRouter([
   {
@@ -8,7 +9,7 @@ const router = createBrowserRouter([
     element: <Client />,
     children: [
       {
-        path: '/',
+        index: true,
         element: <Home />
       },
       {
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
         element: <Foods />
       },
       {
-        path: '/foods/:slug',
+        path: '/foods/:id',
         element: <ClientFoodDetail />
       },
       {
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
     element: <Admin />,
     children: [
       {
-        path: '/admin',
+        index: true,
         element: <Overview />
       },
       {
@@ -73,6 +74,38 @@ const router = createBrowserRouter([
         path: '/admin/staff',
         element: <Staff />
       },
+    ]
+  },
+  {
+    path: '/inventory-staff',
+    element: <InventoryStaff />,
+    children: [
+      {
+        index: true,
+        element: <ISOverview />
+      },
+      {
+        path: '/inventory-staff/import-receipts',
+        element: <ISImport />
+      },
+      {
+        path: '/inventory-staff/export-receipts',
+        element: <ISExport />
+      }
+    ]
+  },
+  {
+    path: '/delivery-staff',
+    element: <DeliveryStaff />,
+    children: [
+      {
+        index: true,
+        element: <DSOverview />
+      },
+      {
+        path: '/delivery-staff/orders',
+        element: <DSOrder />
+      }
     ]
   },
   {

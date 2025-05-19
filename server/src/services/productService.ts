@@ -17,11 +17,32 @@ const getAllAdminProduct = async (page: number, limit: number) => {
       imageUrls: row.hinhAnh,
       status: row.trangThai,
     }));
-    const total = rows.total as RowDataPacket[]
+    const total = rows.total as RowDataPacket[];
     return {
       data,
       total: total[0].total
-    }
+    };
+  } catch (error) {
+    console.error('Error service:', error);
+    throw error;
+  }
+};
+
+const getAllProduct = async (page: number, limit: number, categoryId: string, orderBy: { name: string, value: string; }) => {
+  try {
+    const rows = await ProductModel.getAllProduct(page, limit, categoryId, orderBy);
+    const data = (rows.data as RowDataPacket[]).map((row): ProductModel.ProductsDTO => ({
+      id: row.maThucPham,
+      name: row.tenThucPham,
+      imageUrls: row.hinhAnh,
+      price: row.donGia,
+      discountRate: row.tiLeKhuyenMai
+    }));
+    const total = rows.total as RowDataPacket[];
+    return {
+      data,
+      total: total[0].total
+    };
   } catch (error) {
     console.error('Error service:', error);
     throw error;
@@ -77,8 +98,27 @@ const insertProduct = async (name: string, price: number, unit: string, descript
   }
 };
 
-// const updateProduct = async ()
+const getProductById = async (id: string) => {
+  try {
+    const rows = (await ProductModel.getProductById(id) as RowDataPacket)[0];
+    const product: ProductModel.ProductDTO = {
+      id: rows.maThucPham,
+      name: rows.tenThucPham,
+      imageUrls: rows.hinhAnh,
+      price: rows.donGia,
+      quantity: rows.soLuongTonKho,
+      unit: rows.donViTinh,
+      description: rows.moTa,
+      status: rows.trangThai,
+      discountRate: rows.tiLeKhuyenMai
+    };
+    return product;
+  } catch (error) {
+    console.error('Error service:', error);
+    throw error;
+  }
+};
 
 export {
-  getAllAdminProduct, getAdminProductById, insertProduct
+  getAllAdminProduct, getAdminProductById, insertProduct, getAllProduct, getProductById
 };

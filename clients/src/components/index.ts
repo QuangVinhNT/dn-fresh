@@ -17,7 +17,9 @@ import LoadingComponent from "./ui/LoadingComponent";
 import OkCancelModal from "./ui/OkCancelModal/OkCancelModal";
 import OrderStatusComponent from "./ui/OrderStatusComponent/OrderStatusComponent";
 import Overlay from "./ui/Overlay";
+import Pagination from "./ui/Pagination/Pagination";
 import ProductCard from "./ui/ProductCard/ProductCard";
+import SearchComponent from "./ui/SearchComponent/SearchComponent";
 import SelectComponent from "./ui/SelectComponent/SelectComponent";
 import SpaceComponent from "./ui/SpaceComponent";
 import TableComponent from "./ui/TableComponent/TableComponent";
@@ -47,9 +49,11 @@ export {
   ProductCard,
   AsideBox,
   TablePagination,
+  Pagination,
   TableSearchFilter,
   ImageSlider,
   LoadingComponent,
+  SearchComponent,
 
   // Layout
   AdminHeader, AdminSidebar,

@@ -4,6 +4,11 @@ type SelectBox = {
   isSelected: boolean;
 }
 
+type OrderBy = {
+  name: string;
+  value: 'ASC' | 'DESC';
+}
+
 export type {
-  SelectBox
+  SelectBox, OrderBy
 }

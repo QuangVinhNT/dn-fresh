@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { getAdminProductById, getAllAdminProduct, insertProduct } from "../controllers/productController.js";
+import { getAllProduct, getProductById } from "../controllers/productController.js";
 
 const productRoutes = Router();
 
-productRoutes.get('/', getAllAdminProduct)
-productRoutes.post('/', insertProduct)
-productRoutes.get('/:id', getAdminProductById)
+productRoutes.get('/', getAllProduct);
+productRoutes.get('/:id', getProductById);
 
 export default productRoutes;

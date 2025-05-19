@@ -1,65 +1,49 @@
+import { AdminHeader, AdminSidebar, LoadingComponent, Overlay } from "@/components";
+import { loadingStore, overlayStore } from "@/store";
 import { AccountUser } from "@/types/User";
-import { IoDocumentTextOutline, IoHomeOutline, IoPeopleOutline, IoPersonOutline, IoRestaurantOutline } from "react-icons/io5";
+import { ReactNode } from "react";
+import { IoDocumentTextOutline, IoFileTrayFullOutline, IoHomeOutline } from "react-icons/io5";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
-import { AdminHeader, AdminSidebar, LoadingComponent, Overlay } from "../../components";
-import { loadingStore, overlayStore } from "../../store";
+
+interface ChildrenType {
+  name: string;
+  link: string;
+}
+
+interface MenuItem {
+  name: string;
+  link: string | undefined;
+  affix: ReactNode;
+  childrens: ChildrenType[];
+}
 
 const user: AccountUser = {
-  fullname: 'Admin',
+  fullname: 'Inventory Staff',
   avatar: 'https://i.pinimg.com/736x/5b/cf/1b/5bcf1b2636aae39616d08ee72d1b9569.jpg'
 };
 
-const menuItems = [
+const menuItems: MenuItem[] = [
   {
     name: 'Tổng quan',
-    link: '/admin',
+    link: '/inventory-staff',
     affix: <IoHomeOutline size={22} />,
     childrens: [],
   },
   {
-    name: 'Đơn hàng',
-    link: '/admin/order',
+    name: 'Phiếu nhập',
+    link: '/inventory-staff/import-receipts',
     affix: <IoDocumentTextOutline size={22} />,
     childrens: [],
-  },
+  },  
   {
-    name: 'Thực phẩm',
-    link: undefined,
-    affix: <IoRestaurantOutline size={22} />,
-    childrens: [
-      {
-        name: 'Danh sách thực phẩm',
-        link: '/admin/food-list'
-      },
-      {
-        name: 'Loại thực phẩm',
-        link: '/admin/food-category'
-      },
-      {
-        name: 'Nhập hàng',
-        link: '/admin/import-food'
-      },
-      {
-        name: 'Xuất hàng',
-        link: '/admin/export-food'
-      }
-    ],
-  },
-  {
-    name: 'Khách hàng',
-    link: '/admin/customer',
-    affix: <IoPeopleOutline size={22} />,
+    name: 'Phiếu xuất',
+    link: '/inventory-staff/export-receipts',
+    affix: <IoFileTrayFullOutline size={22} />,
     childrens: [],
-  },
-  {
-    name: 'Nhân sự',
-    link: '/admin/staff',
-    affix: <IoPersonOutline size={22} />,
-    childrens: [],
-  },
+  }
 ];
 
-const Admin = () => {
+const InventoryStaff = () => {
   const { isShowOverlay } = overlayStore();
   const { isShowLoading } = loadingStore();
   const location = useLocation();
@@ -69,7 +53,7 @@ const Admin = () => {
       if (item.link && item.link === location.pathname) {
         result = item.name;
       } else {
-        item.childrens.forEach((children) => {
+        item.childrens?.forEach((children) => {
           if (children.link === location.pathname) {
             result = children.name;
           }
@@ -79,7 +63,7 @@ const Admin = () => {
     return result;
   };
   return (
-    <div style={{ display: 'flex', width: '100%', height: '100vh' }} id="admin-root">
+    <div style={{ display: 'flex', width: '100%', height: '100vh' }} id="inventory-staff-root">
       {isShowOverlay && <Overlay />}
       {isShowLoading && <LoadingComponent />}
       <AdminSidebar menuItems={menuItems} />
@@ -94,4 +78,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default InventoryStaff;

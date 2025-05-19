@@ -1,25 +1,27 @@
-import { IObject } from "@/types";
+import { Filter } from "@/types";
 import './AsideBox.scss';
-import { Link } from "react-router-dom";
 
 interface IProps {
   title: string;
   type: 'category' | 'checkbox-filter';
-  cateData?: IObject[];
-  filterData?: { labelType: string, filterData: IObject[]; }[];
+  cateData?: {id: string, name: string}[];
+  filterData?: { labelType: string, filterData: Filter[]; }[];
+  setCategoryId?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AsideBox = (props: IProps) => {
-  const { title, type, cateData, filterData } = props;
+  const { title, type, cateData, filterData, setCategoryId } = props;
   return (
     <div className="aside-box-component">
       <span className="title">{title}</span>
       {(type === 'category' && cateData) && (
         <div className="category-content">
           {cateData.map((item, index) => (
-            <Link to={'/'} key={index}>
-              {item.label.toString()}
-            </Link>
+            <span key={index} onClick={() => {
+              setCategoryId && setCategoryId(item.id.toString())
+            }}>
+              {item.name.toString()}
+            </span>
           ))}
         </div>
       )}

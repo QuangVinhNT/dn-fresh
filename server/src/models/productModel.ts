@@ -12,6 +12,14 @@ interface AdminProductsDTO {
   status: number;
 }
 
+interface ProductsDTO {
+  id: string;
+  name: string;
+  imageUrls: string[];
+  price: number;
+  discountRate: number;
+}
+
 interface AdminProductDTO {
   id: string;
   name: string;
@@ -25,6 +33,18 @@ interface AdminProductDTO {
   updatedAt?: string;
   description: string;
   status: string;
+  discountRate: number;
+}
+
+interface ProductDTO {
+  id: string;
+  name: string;
+  price: string;
+  quantity: string;
+  unit: string;
+  description: string;
+  imageUrls: string[];
+  status: number;
   discountRate: number;
 }
 
@@ -79,7 +99,7 @@ const insertProduct = async (id: string, name: string, price: number, unit: stri
   try {
     const [result] = await connection.query(`
       INSERT INTO khothucpham (maThucPham, tenThucPham, donGia, moTa, trangThai, maDanhMuc, tiLeKhuyenMai, ngayTao, ngayCapNhat, soLuongTonKho, donViTinh)
-      VALUES (?, ?, ?, ?, 1, ?, 0, NOW(), NOW(), 0, ?)
+      VALUES (?, ?, ?, ?, 2, ?, 0, NOW(), NOW(), 0, ?)
       `, [id, name, price, description, categoryId, unit]);
     return result;
   } catch (error) {
@@ -112,5 +132,54 @@ const deleteProduct = async (id: string) => {
   }
 };
 
-export { AdminProductDTO, AdminProductsDTO, getAdminProductById, getAllAdminProduct, insertProduct, updateProduct, deleteProduct };
+const getAllProduct = async (page: number, limit: number, categoryId: string, orderBy: { name: string, value: string; }) => {
+  const offset = (page - 1) * limit;
+  try {
+    const [rows] = await pool.query(`
+      SELECT p.maThucPham, tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, donGia, tiLeKhuyenMai
+      FROM khothucpham as p
+      LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
+      ${categoryId.length > 0 ? `WHERE maDanhMuc = '${categoryId}'` : ''}
+      GROUP BY p.maThucPham
+      ${orderBy.name.length > 0 ? `ORDER BY ${orderBy.name} ${orderBy.value}` : ''}
+      LIMIT ? 
+      OFFSET ?
+    `, [limit, offset]);
+
+    const [total] = await pool.query(`
+      SELECT COUNT(maThucPham) as total
+      FROM khothucpham
+      ${categoryId.length > 0 ? `WHERE maDanhMuc = '${categoryId}'` : ''}
+      `);
+    return {
+      data: rows,
+      total,
+    };
+  } catch (error) {
+    console.error('Model error:', error);
+    throw error;
+  }
+};
+
+const getProductById = async (id: string) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT p.maThucPham, tenThucPham, donGia, soLuongTonKho, donViTinh, p.moTa, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, p.trangThai, p.tiLeKhuyenMai
+      FROM khothucpham as p
+      LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
+      WHERE p.maThucPham = ?
+      GROUP BY maThucPham
+      `, [id]);
+    return rows;
+  } catch (error) {
+    console.error('Model error:', error);
+    throw error;
+  }
+};
+
+const getProductByName = async (name: string) => {
+  
+}
+
+export { AdminProductDTO, AdminProductsDTO, ProductsDTO, ProductDTO, getAdminProductById, getAllAdminProduct, getAllProduct, insertProduct, updateProduct, deleteProduct, getProductById };
 

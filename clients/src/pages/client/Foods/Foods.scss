@@ -13,31 +13,41 @@
       gap: 16px;
     }
 
-    .sort-foods {
+    .sort-search-foods {
       flex: 1;
       margin-left: 24px;
 
-      .sort {
+      .sort-search {
         display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 12px;
-        border-bottom: 1px solid $border-color;
-        font-weight: 500;
-
-        .sort-item {
+        justify-content: space-between;
+        align-items: center; 
+        gap: 32px;
+        .sort {
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 16px;
+          padding: 12px;
+          border-bottom: 1px solid $border-color;
+          font-weight: 500;
 
-          input {
-            width: 15px;
-            height: 15px;
-          }
+          .sort-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
 
-          label {
-            cursor: pointer;
+            input {
+              width: 15px;
+              height: 15px;
+            }
+
+            label {
+              cursor: pointer;
+            }
           }
+        }
+
+        .search {
+          flex: 1;
         }
       }
 

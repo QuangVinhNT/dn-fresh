@@ -48,3 +48,27 @@ body {
     }
   }
 }
+
+button.disabled {
+  cursor: auto !important;
+}
+
+button.disabled-color {  
+  color: #676d79 !important;
+}
+
+button.disabled-bg-color {  
+  background-color: #aaaaaa !important;
+}
+
+button.disabled-color:hover {  
+  color: #676d79 !important;
+}
+
+button.disabled-bg-color:hover {  
+  background-color: #aaaaaa !important;
+}
+
+button.disabled:hover {
+  filter: none !important;
+}

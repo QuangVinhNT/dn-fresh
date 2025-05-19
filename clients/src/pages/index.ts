@@ -22,10 +22,22 @@ import Foods from "./client/Foods/Foods";
 import Home from "./client/Home/Home";
 import Introduce from "./client/Introduce/Introduce";
 import Payment from "./client/Payment/Payment";
+import DeliveryStaff from "./delivery-staff/DeliveryStaff";
+import DSOrder from "./delivery-staff/DSOrder/DSOrder";
+import DSOverview from "./delivery-staff/DSOverview/DSOverview";
+import InventoryStaff from "./inventory-staff/InventoryStaff";
+import ISExport from "./inventory-staff/ISExport/ISExport";
+import ISImport from "./inventory-staff/ISImport/ISImport";
 
 export {
   // Admin
   Admin, Overview, Order, FoodList, FoodCategory, ImportFood, ExportFood, Customer, Staff,
+
+  // Inventory Staff
+  InventoryStaff, ISImport, ISExport,
+  
+  // Delivery Staff
+  DeliveryStaff, DSOverview, DSOrder,
   
   // Client
   Client, Home, Introduce, Foods, Contact, ClientOrders, ClientFoodDetail, Favourites, Payment,
