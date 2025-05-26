@@ -4,7 +4,7 @@ import './AsideBox.scss';
 interface IProps {
   title: string;
   type: 'category' | 'checkbox-filter';
-  cateData?: {id: string, name: string}[];
+  cateData?: {maDanhMuc: string, tenDanhMuc: string}[];
   filterData?: { labelType: string, filterData: Filter[]; }[];
   setCategoryId?: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -18,9 +18,9 @@ const AsideBox = (props: IProps) => {
         <div className="category-content">
           {cateData.map((item, index) => (
             <span key={index} onClick={() => {
-              setCategoryId && setCategoryId(item.id.toString())
+              setCategoryId && setCategoryId(item.maDanhMuc.toString())
             }}>
-              {item.name.toString()}
+              {item.tenDanhMuc.toString()}
             </span>
           ))}
         </div>

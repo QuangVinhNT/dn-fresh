@@ -5,8 +5,8 @@ type SelectBox = {
 }
 
 type OrderBy = {
-  name: string;
-  value: 'ASC' | 'DESC';
+  columnName: string;
+  direction: 'ASC' | 'DESC';
 }
 
 export type {

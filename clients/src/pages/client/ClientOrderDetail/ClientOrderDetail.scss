@@ -1,0 +1,29 @@
+.client-order-detail-component {
+  .client-order-detail-content {
+    max-width: 1280px;
+    margin: 64px auto;
+
+    .order-status {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .order-info {
+      div {
+        display: flex;
+        flex-direction: column;
+        margin-top: 8px;
+        margin-left: 8px;
+        gap: 4px;
+        
+        span {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+  }
+}

@@ -21,8 +21,9 @@ const getAllProduct = async (req: Request, res: Response) => {
     const orderBy = {
       name: req.query.sortColumn as string || '',
       value: req.query.sortDirection as string || ''
-    }
-    const data = await ProductService.getAllProduct(page, limit, categoryId, orderBy);
+    };
+    const name = req.query.search as string || '';
+    const data = await ProductService.getAllProduct(page, limit, categoryId, orderBy, name);
     res.json(data);
   } catch (error) {
     console.error('Controller error:', error);
@@ -68,7 +69,7 @@ const getProductById = async (req: Request, res: Response) => {
     console.error('Controller error:', error);
     res.status(500).json({ message: 'Server error' });
   }
-}
+};
 
 const insertProduct = async (req: Request, res: Response) => {
   try {
@@ -85,6 +86,16 @@ const insertProduct = async (req: Request, res: Response) => {
   }
 };
 
+const getAllDiscountProduct = async (req: Request, res: Response) => {
+  try {
+    const data = await ProductService.getAllDiscountProduct();
+    res.json(data);
+  } catch (error) {
+    console.error('Controller error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 export {
-  getAllAdminProduct, getAdminProductById, insertProduct, getAllProduct, getProductById
+  getAllAdminProduct, getAdminProductById, insertProduct, getAllProduct, getProductById, getAllDiscountProduct
 };

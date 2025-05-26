@@ -15,6 +15,7 @@ import UserRole from "./auth/UserRole/UserRole";
 import CartDrawer from "./client/CartDrawer/CartDrawer";
 import Client from "./client/Client";
 import ClientFoodDetail from "./client/ClientFoodDetail/ClientFoodDetail";
+import ClientOrderDetail from "./client/ClientOrderDetail/ClientOrderDetail";
 import ClientOrders from "./client/ClientOrders/ClientOrders";
 import Contact from "./client/Contact/Contact";
 import Favourites from "./client/Favourites/Favourites";
@@ -40,7 +41,7 @@ export {
   DeliveryStaff, DSOverview, DSOrder,
   
   // Client
-  Client, Home, Introduce, Foods, Contact, ClientOrders, ClientFoodDetail, Favourites, Payment,
+  Client, Home, Introduce, Foods, Contact, ClientOrders, ClientFoodDetail, Favourites, Payment, ClientOrderDetail,
 
   // Auth
   Login, Register, ConfirmCode, ForgotPassword, UserRole,

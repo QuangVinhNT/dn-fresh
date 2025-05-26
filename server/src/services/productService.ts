@@ -1,6 +1,6 @@
 import { QueryResult, RowDataPacket } from "mysql2";
-import * as ProductModel from '../models/productModel.js';
-import * as ProductImageModel from '../models/productImageModel.js';
+import * as ProductModel from '../daos/productModel.js';
+import * as ProductImageModel from '../daos/productImageModel.js';
 import { pool } from "../configs/database.js";
 import generateUUID from "../utils/generateUUID.js";
 
@@ -28,15 +28,16 @@ const getAllAdminProduct = async (page: number, limit: number) => {
   }
 };
 
-const getAllProduct = async (page: number, limit: number, categoryId: string, orderBy: { name: string, value: string; }) => {
+const getAllProduct = async (page: number, limit: number, categoryId: string, orderBy: { name: string, value: string; }, name: string) => {
   try {
-    const rows = await ProductModel.getAllProduct(page, limit, categoryId, orderBy);
+    const rows = await ProductModel.getAllProduct(page, limit, categoryId, orderBy, name);
     const data = (rows.data as RowDataPacket[]).map((row): ProductModel.ProductsDTO => ({
       id: row.maThucPham,
       name: row.tenThucPham,
       imageUrls: row.hinhAnh,
       price: row.donGia,
-      discountRate: row.tiLeKhuyenMai
+      discountRate: row.tiLeKhuyenMai,
+      status: row.trangThai
     }));
     const total = rows.total as RowDataPacket[];
     return {
@@ -79,7 +80,7 @@ const insertProduct = async (name: string, price: number, unit: string, descript
   try {
     connection.beginTransaction();
     const productId = await generateUUID(10, connection, 'khothucpham', 'maThucPham', 'TP');
-    const productResult = await ProductModel.insertProduct(productId, name, price, unit, description, categoryId, connection);
+    const productResult = await ProductModel.insertProduct(productId, name, price, unit, description, categoryId, connection); // 
 
     const imageResult = await Promise.all(
       imageUrls.map(async (imageUrl) => {
@@ -119,6 +120,24 @@ const getProductById = async (id: string) => {
   }
 };
 
+const getAllDiscountProduct = async () => {
+  try {
+    const rows = await ProductModel.getAllDiscountProduct();
+    const data = (rows as RowDataPacket[]).map((row): ProductModel.ProductsDTO => ({
+      id: row.maThucPham,
+      name: row.tenThucPham,
+      imageUrls: row.hinhAnh,
+      price: row.donGia,
+      discountRate: row.tiLeKhuyenMai,
+      status: row.trangThai
+    }));
+    return data;
+  } catch (error) {
+    console.error('Error service:', error);
+    throw error;
+  }
+}
+
 export {
-  getAllAdminProduct, getAdminProductById, insertProduct, getAllProduct, getProductById
+  getAllAdminProduct, getAdminProductById, insertProduct, getAllProduct, getProductById, getAllDiscountProduct
 };

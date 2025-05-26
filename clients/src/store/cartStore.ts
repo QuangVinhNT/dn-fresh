@@ -1,44 +1,64 @@
+import { ProductList } from "@/types/Product";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-type Cart = {
-  foodId: string;
-  quantity: number;
+interface CartItem extends ProductList {
+  soLuong: number;
 }
 
 interface ICartState {
   isShowCart: boolean;
-  cartInfo: Cart[];
+  cart: CartItem[];
   showCart: () => void;
   hideCart: () => void;
-  addToCart: (cartItem: Cart) => void;
+  addToCart: (cartItem: CartItem) => void;
   removeFromCart: (foodId: string) => void;
+  clearCart: () => void;
   increaseQuantity: (foodId: string) => void;
   decreaseQuantity: (foodId: string) => void;
 }
 
-export const cartStore = create<ICartState>(set => ({
-  isShowCart: false,
-  cartInfo: [],
-  showCart: () => set({isShowCart: true}),
-  hideCart: () => set({isShowCart: false}),
-  addToCart: (cartItem: Cart) => set((state) => {
-    const existingItem = state.cartInfo.find(item => item.foodId === cartItem.foodId);
-    if (existingItem) {
-      return {
-        cartInfo: state.cartInfo.map(item => item.foodId === cartItem.foodId ? {...cartItem, quantity: cartItem.quantity + item.quantity} : item)
+export const cartStore = create<ICartState>()(
+  persist(
+    (set, get) => ({
+      isShowCart: false,
+      cart: [],
+      showCart: () => set({ isShowCart: true }),
+      hideCart: () => set({ isShowCart: false }),
+      addToCart: (cartItem: CartItem) => {
+        const existingItem = get().cart.find(item => item.maThucPham === cartItem.maThucPham);
+        if (existingItem) {
+          set({
+            cart: get().cart.map(item => item.maThucPham === cartItem.maThucPham ? { ...item, quantity: item.soLuong + 1 } : item)
+          });
+        } else {
+          set({
+            cart: [...get().cart, { ...cartItem }]
+          });
+        }
+      },
+      removeFromCart: (foodId: string) => {
+        set({
+          cart: get().cart.filter(item => item.maThucPham !== foodId)
+        });
+      },
+      clearCart: () => {
+        set({ cart: [] });
+      },
+      increaseQuantity: (foodId: string) => {
+        set({
+          cart: get().cart.map(item => item.maThucPham === foodId ? {...item, soLuong: item.soLuong + 1} : item)
+        })
+      },
+      decreaseQuantity: (foodId: string) => {
+        set({
+          cart: get().cart.map(item => item.maThucPham === foodId ? {...item, soLuong: item.soLuong - 1} : item)
+        })
       }
+    }),
+    {
+      name: 'cart-storage',
+      partialize: (state) => ({ cart: state.cart })
     }
-    return {
-      cartInfo: [...state.cartInfo, cartItem]
-    }
-  }),
-  removeFromCart: (foodId: string) => set((state) => ({
-    cartInfo: state.cartInfo.filter(item => item.foodId !== foodId)
-  })),
-  increaseQuantity: (foodId: string) => set((state) => ({
-    cartInfo: state.cartInfo.map(item => item.foodId === foodId ? {...item, quantity: item.quantity + 1} : item)
-  })),
-  decreaseQuantity: (foodId: string) => set((state) => ({
-    cartInfo: state.cartInfo.map(item => item.foodId === foodId ? {...item, quantity: item.quantity - 1} : item)
-  }))
-}))
+  )
+);

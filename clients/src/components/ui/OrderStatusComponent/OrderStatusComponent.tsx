@@ -21,7 +21,7 @@ const OrderStatusComponent = (props: IProps) => {
             ${(statusItems.indexOf(item) < statusItems.indexOf(status)) && 'done'} 
             ${(statusItems.indexOf(item) <= statusItems.indexOf(status)) && 'border-done'}`}>
                 {(statusItems.indexOf(item) <= statusItems.indexOf(status)) ? (
-                  <IoCheckmarkCircle className="icn-check" />) : (
+                  <IoCheckmarkCircle className="icn-check" size={20}/>) : (
                   <span>{index + 1}</span>
                 )}
               </div>

@@ -17,6 +17,19 @@ type Product = {
   inboundPrice: number;
   inboundQuantity: number;
   categoryId: string;
+
+  maThucPham: string;
+  tenThucPham: string;
+  donGia: number;
+  moTa: string;
+  trangThai: number;
+  maDanhMuc: string;
+  tiLeKhuyenMai: number;
+  ngayTao: Date;
+  ngayCapNhat: Date;
+  soLuongTonKho: number;
+  donViTinh: string;
+  hinhAnh: string[];
 }
 
 export enum ProductStatus {
@@ -27,11 +40,11 @@ export enum ProductStatus {
 
 type AdminProductList = Pick<Product, 'id' | 'name' | 'imageUrls' | 'category' | 'quantity' | 'unit' | 'createdAt' | 'status'>
 
-type ProductList = Pick<Product, 'id' | 'name' | 'imageUrls' | 'price' | 'discountRate'>
+type ProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'donGia' | 'tiLeKhuyenMai' | 'trangThai'>
 
 type AdminProductDetail = Pick<Product, 'id' | 'name' | 'imageUrls' | 'price' | 'quantity' | 'unit' | 'category' | 'createdAt' | 'updatedAt' | 'description' | 'categoryId' | 'status' | 'discountRate'>
 
-type ProductDetail = Pick<Product, 'id' | 'name' | 'price' | 'quantity' | 'unit' | 'description' | 'imageUrls' | 'status' | 'discountRate'>
+type ProductDetail = Pick<Product, 'maThucPham' | 'tenThucPham' | 'donGia' | 'soLuongTonKho' | 'donViTinh' | 'moTa' | 'hinhAnh' | 'trangThai' | 'tiLeKhuyenMai'>
 
 type InsertProductPayload = Pick<Product, 'name' | 'price' | 'unit' | 'description' | 'categoryId' | 'imageUrls'>
 

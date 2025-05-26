@@ -7,20 +7,12 @@ import SeparateNumber from "@/utils/separateNumber";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-const cartItem = {
-  id: 'abc',
-  img: 'http://localhost:5173/src/assets/images/sp1.png',
-  name: 'Đào đỏ Mỹ',
-  quantity: 100,
-  price: 40000
-};
-
 type FormValues = {
   [key: string]: string | string[] | File[] | FileList;
 };
 
 const CartDrawer = () => {
-  const { isShowCart, hideCart, cartInfo } = cartStore();
+  const { isShowCart, hideCart, cart, increaseQuantity, decreaseQuantity, removeFromCart } = cartStore();
   const { hideOverlay } = overlayStore();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -44,34 +36,42 @@ const CartDrawer = () => {
           }} />
         </div>
         <div className="cart-list" onSubmit={handleSubmit(onSubmit)}>
-          {Array.from({ length: 3 }).map((item, index) => (
-            <div key={index} className="cart-item">
-              <img src={cartItem.img} alt="" />
-              <div className="detail-info">
-                <b className="name">{cartItem.name}</b>
-                <div className="quantity">
-                  <span>Số lượng</span>
-                  <div>
-                    <IoRemoveOutline size={20} className="btn-minus" onClick={() => {
-                      cartItem.quantity--;
-                    }} />
-                    <input type="text" value={cartItem.quantity} />
-                    <IoAddOutline size={20} className="btn-plus" onClick={() => {
-                      cartItem.quantity++;
-                    }} />
+          {cart.map((item, index) => {
+            const price = item.tiLeKhuyenMai === 0 ? SeparateNumber(item.donGia) : SeparateNumber(item.donGia - Math.round((item.donGia * item.tiLeKhuyenMai) / 100) * 100)
+            return (
+              <div key={index} className="cart-item">
+                <img src={item.hinhAnh[0]} alt="" />
+                <div className="detail-info">
+                  <b className="name">{item.tenThucPham}</b>
+                  <div className="quantity">
+                    <span>Số lượng</span>
+                    <div>
+                      <IoRemoveOutline size={20} className="btn-minus" onClick={() => {
+                        decreaseQuantity(item.maThucPham);
+                      }} />
+                      <input type="text" value={item.soLuong} />
+                      <IoAddOutline size={20} className="btn-plus" onClick={() => {
+                        increaseQuantity(item.maThucPham);
+                      }} />
+                    </div>
                   </div>
                 </div>
+                <div className="price-remove">
+                  <span className="price">{`${price} ₫`}</span>
+                  <span className="remove" onClick={() => {
+                    removeFromCart(item.maThucPham);
+                  }}>Bỏ sản phẩm</span>
+                </div>
               </div>
-              <div className="price-remove">
-                <span className="price">{`${SeparateNumber(cartItem.price)} ₫`}</span>
-                <span className="remove">Bỏ sản phẩm</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="cart-footer">
           <div className="total-price">
-            <b>Tổng tiền: <span>{`${SeparateNumber(120000)} ₫`}</span></b>
+            <b>Tổng tiền: <span>{`${SeparateNumber(cart.reduce((prev, cur) => {
+              const price = cur.tiLeKhuyenMai === 0 ? cur.donGia : cur.donGia - Math.round((cur.donGia * cur.tiLeKhuyenMai) / 100) * 100
+              return prev + price * cur.soLuong
+            }, 0))} ₫`}</span></b>
           </div>
           <ButtonComponent label='Thanh toán' type="submit" variant="secondary" className="btn-pay" onClick={() =>
             navigate('/payment')} />

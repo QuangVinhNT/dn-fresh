@@ -1,7 +1,10 @@
 import SeparateNumber from "@/utils/separateNumber";
-import { IoCartOutline, IoHeartOutline } from "react-icons/io5";
+import { IoCartOutline, IoHeart, IoHeartOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import './ProductCard.scss';
+import { cartStore } from "@/store/cartStore";
+import { ProductStatus } from "@/types/Product";
+import { deleteFavouriteProduct, insertFavouriteProduct } from "@/api/favouriteProductApi";
 
 interface IProps {
   id: string;
@@ -9,10 +12,13 @@ interface IProps {
   discount: number;
   label: string;
   standardPrice: number;
+  status: number;
+  isFavourite?: boolean;
 }
 
 const ProductCard = (props: IProps) => {
-  const { imgSrc, discount, label, standardPrice, id } = props;
+  const { imgSrc, discount, label, standardPrice, id, status, isFavourite } = props;
+  const { addToCart } = cartStore();
   return (
     <Link to={`/foods/${id}`} className="product-card-component">
       {discount !== 0 && <span className="discount-tag">- {discount * 100}%</span>}
@@ -20,20 +26,60 @@ const ProductCard = (props: IProps) => {
         <img src={imgSrc} alt="" />
         <div className="tools">
           <div>
-            <IoHeartOutline className="fav-icon icon" size={36} color="#fff" />
+            {isFavourite ? (
+              <IoHeart
+                className="fav-icon icon"
+                size={36}
+                color="#fff"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const deleteResult = await deleteFavouriteProduct(id, 'ND003');
+                  console.log('Delete result:', deleteResult);
+                }}
+              />
+            ) : (
+              <IoHeartOutline
+                className="fav-icon icon"
+                size={36}
+                color="#fff"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const insertResult = await insertFavouriteProduct({ productId: id, userId: 'ND003' });
+                  console.log('Insert result:', insertResult);
+                }}
+              />
+            )}
           </div>
           <div>
-            <IoCartOutline className="info-icon icon" size={36} color="#fff" />
+            <IoCartOutline
+              className={`cart-icon icon ${status !== 1 && 'disabled'}`}
+              size={36}
+              color="#fff"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                status === 1 && addToCart({ maThucPham: id, tiLeKhuyenMai: discount, hinhAnh: [imgSrc], tenThucPham: label, donGia: standardPrice, trangThai: status, soLuong: 1 });
+              }} />
           </div>
         </div>
       </div>
       <div className="prd-info">
         <span className="prd-name">{label}</span>
         <div className="prd-discount">
-          <span className="prd-discount-price">
-            {discount !== 0 ? SeparateNumber(standardPrice - Math.round((standardPrice * discount) / 100) * 100) : SeparateNumber(standardPrice)} ₫
-          </span>
-          {discount !== 0 && <span className="prd-std-price">{SeparateNumber(standardPrice)} ₫</span>}
+          {status === 1 ? (
+            <>
+              <span className="prd-discount-price">
+                {discount !== 0 ? SeparateNumber(standardPrice - Math.round((standardPrice * discount) / 100) * 100) : SeparateNumber(standardPrice)} ₫
+              </span>
+              {discount !== 0 && <span className="prd-std-price">{SeparateNumber(standardPrice)} ₫</span>}
+            </>
+          ) : (
+            <span className="prd-status">
+              {ProductStatus[status]}
+            </span>
+          )}
         </div>
       </div>
     </Link>

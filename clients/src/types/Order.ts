@@ -5,6 +5,18 @@ type Order = {
   status: number;
   exportReceiptId: string;
   staffName: string;
+
+  maDonHang: string;
+  maKhachHang: string;
+  maDiaChi: string;
+  maNhanVien: string;
+  maPhieuXuat: string;
+  trangThai: number;
+  ngayTao: Date | null;
+  ngayCapNhat: Date | null;
+  ghiChu: string;
+  phuongThucThanhToan: number;
+  tongTien: number;
 }
 
 export enum OrderStatus {
@@ -15,7 +27,12 @@ export enum OrderStatus {
   'Xuất kho' = 4
 }
 
-type OrderList = Pick<Order, 'id' | 'createdAt' | 'customerName' | 'exportReceiptId' | 'staffName' | 'status'>
+export enum PaymentMethod {
+  'Trực tuyến' = 1,
+  'Trực tiếp (COD)' = 2
+}
+
+type OrderList = Pick<Order, 'maDonHang' | 'ngayTao' | 'trangThai' | 'phuongThucThanhToan' | 'tongTien'>
 
 export type {
   OrderList

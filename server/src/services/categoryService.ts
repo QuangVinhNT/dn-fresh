@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import * as CategoryModel from '../models/categoryModel.js'
+import * as CategoryModel from '../daos/categoryModel.js'
 
 const getAllCategory = async (page: number, limit: number) => {
   try {

@@ -18,6 +18,7 @@ interface ProductsDTO {
   imageUrls: string[];
   price: number;
   discountRate: number;
+  status: number;
 }
 
 interface AdminProductDTO {
@@ -132,14 +133,15 @@ const deleteProduct = async (id: string) => {
   }
 };
 
-const getAllProduct = async (page: number, limit: number, categoryId: string, orderBy: { name: string, value: string; }) => {
+const getAllProduct = async (page: number, limit: number, categoryId: string, orderBy: { name: string, value: string; }, name: string) => {
   const offset = (page - 1) * limit;
   try {
     const [rows] = await pool.query(`
-      SELECT p.maThucPham, tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, donGia, tiLeKhuyenMai
+      SELECT p.maThucPham, tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, donGia, tiLeKhuyenMai, p.trangThai
       FROM khothucpham as p
       LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
       ${categoryId.length > 0 ? `WHERE maDanhMuc = '${categoryId}'` : ''}
+      ${name.length > 0 ? `WHERE BINARY LOWER(tenThucPham) LIKE LOWER('%${name}%')` : ''}
       GROUP BY p.maThucPham
       ${orderBy.name.length > 0 ? `ORDER BY ${orderBy.name} ${orderBy.value}` : ''}
       LIMIT ? 
@@ -177,9 +179,23 @@ const getProductById = async (id: string) => {
   }
 };
 
-const getProductByName = async (name: string) => {
-  
+const getAllDiscountProduct = async () => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT p.maThucPham, tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, donGia, tiLeKhuyenMai, p.trangThai
+      FROM khothucpham as p
+      LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
+      WHERE tiLeKhuyenMai > 0
+      GROUP BY p.maThucPham
+      ORDER BY tiLeKhuyenMai DESC
+      LIMIT 5
+      `);
+    return rows;
+  } catch (error) {
+    console.error('Model error:', error);
+    throw error;
+  }
 }
 
-export { AdminProductDTO, AdminProductsDTO, ProductsDTO, ProductDTO, getAdminProductById, getAllAdminProduct, getAllProduct, insertProduct, updateProduct, deleteProduct, getProductById };
+export { AdminProductDTO, AdminProductsDTO, ProductsDTO, ProductDTO, getAdminProductById, getAllAdminProduct, getAllProduct, insertProduct, updateProduct, deleteProduct, getProductById, getAllDiscountProduct };
 

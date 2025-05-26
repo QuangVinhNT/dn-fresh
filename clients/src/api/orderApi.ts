@@ -5,6 +5,11 @@ const getAdminOrders = async (page: number, limit: number) => {
   return res.data;
 }
 
+const getOrders = async (page: number, limit: number, userId: string, orderId: string) => {
+  const res = await axiosInstance.get(`/v1/don-hang?page=${page}&limit=${limit}&userId=${userId}&search=${orderId}`)
+  return res.data;
+}
+
 export {
-  getAdminOrders
+  getAdminOrders, getOrders
 }

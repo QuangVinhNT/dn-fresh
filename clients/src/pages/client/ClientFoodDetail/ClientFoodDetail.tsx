@@ -3,10 +3,7 @@ import FoodService1 from '@/assets/images/service_1.png';
 import FoodService2 from '@/assets/images/service_2.png';
 import FoodService3 from '@/assets/images/service_3.png';
 import FoodService4 from '@/assets/images/service_4.png';
-import FoodImg2 from '@/assets/images/sp1-2.png';
-import FoodImg3 from '@/assets/images/sp1-3.png';
-import { default as FoodImg, default as FoodImg1 } from '@/assets/images/sp1.png';
-import { ClientBanner, ProductCard } from "@/components";
+import { ClientBanner } from "@/components";
 import { loadingStore } from "@/store";
 import { ProductDetail } from "@/types/Product";
 import SeparateNumber from "@/utils/separateNumber";
@@ -15,15 +12,7 @@ import { IoAddOutline, IoRemoveOutline } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import './ClientFoodDetail.scss';
 import FoodImage from "./FoodImage/FoodImage";
-
-const product = {
-  foodImg: [FoodImg1, FoodImg2, FoodImg3],
-  foodName: 'Đào đỏ Mỹ',
-  standardPrice: 68000,
-  discount: 0.41,
-  description: 'Đào (danh pháp khoa học: Prunus persica) là một loài cây được trồng để lấy quả hay hoa. Nó là một loài cây sớm rụng lá, thân gỗ nhỏ, có thể cao tới 5–10 m.',
-  unit: 'kg'
-};
+import { cartStore } from "@/store/cartStore";
 
 const foodCommits = [
   {
@@ -44,45 +33,13 @@ const foodCommits = [
   }
 ];
 
-const foodData = [
-  {
-    imgSrc: FoodImg,
-    discount: 0.41,
-    label: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-  },
-  {
-    imgSrc: FoodImg,
-    discount: 0.41,
-    label: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-  },
-  {
-    imgSrc: FoodImg,
-    discount: 0.41,
-    label: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-  },
-  {
-    imgSrc: FoodImg,
-    discount: 0.41,
-    label: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-  },
-  {
-    imgSrc: FoodImg,
-    discount: 0.41,
-    label: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-  },
-];
-
 const ClientFoodDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<ProductDetail>();
   const [foodQuantity, setFoodQuantity] = useState(1);
 
   const { showLoading, hideLoading } = loadingStore();
+  const { addToCart } = cartStore();
 
   useEffect(() => {
     fetchProducts();
@@ -109,42 +66,42 @@ const ClientFoodDetail = () => {
           <ClientBanner label="Chi tiết thực phẩm" />
           <div className="client-food-detail-content">
             <div className="main-food-detail">
-              <FoodImage images={product.imageUrls} />
+              <FoodImage images={product.hinhAnh} />
               <div className="food-info">
                 {/* Food name */}
-                <span className="food-name">{product.name}</span>
+                <span className="food-name">{product.tenThucPham}</span>
 
                 {/* Food price */}
                 <div className="food-price">
                   <span className="discount-price">
-                    {+product.discountRate !== 0 ?
-                      SeparateNumber(product.price - product.price * +product.discountRate) : SeparateNumber(product.price)
+                    {+product.tiLeKhuyenMai !== 0 ?
+                      SeparateNumber(product.donGia - product.donGia * +product.tiLeKhuyenMai) : SeparateNumber(product.donGia)
                     }₫
                   </span>
-                  {+product.discountRate !== 0 && (
+                  {+product.tiLeKhuyenMai !== 0 && (
                     <span className="standard-price">
-                      {SeparateNumber(product.price)}₫
+                      {SeparateNumber(product.donGia)}₫
                     </span>
                   )}
                 </div>
-                {+product.discountRate !== 0 && (
-                  <span className="money-save">Tiết kiệm: <b>{SeparateNumber(product.price - product.price * +product.discountRate)}₫</b> so với giá thị trường</span>
+                {+product.tiLeKhuyenMai !== 0 && (
+                  <span className="money-save">Tiết kiệm: <b>{SeparateNumber(product.donGia - product.donGia * +product.tiLeKhuyenMai)}₫</b> so với giá thị trường</span>
                 )}
 
                 {/* Food description */}
-                <p className="food-description">{product.description}</p>
+                <p className="food-description">{product.moTa}</p>
 
                 {/* Food quantity */}
                 <div className="food-quantity-container">
-                  <span className="title">Số lượng ({product.unit}):</span>
+                  <span className="title">Số lượng ({product.donViTinh}):</span>
                   <div className="quantity-buy">
-                    <button className={`btn-minus ${product.status !== 1 && 'disabled disabled-color'}`} disabled={product.status !== 1} onClick={() => {
+                    <button className={`btn-minus ${product.trangThai !== 1 && 'disabled disabled-color'}`} disabled={product.trangThai !== 1} onClick={() => {
                       foodQuantity > 1 && setFoodQuantity(foodQuantity - 1);
                     }}>
                       <IoRemoveOutline />
                     </button>
                     <input type="number" className="food-quantity no-spinner" value={foodQuantity} onChange={(e) => setFoodQuantity(+e.target.value)} />
-                    <button className={`btn-plus ${product.status !== 1 && 'disabled disabled-color'}`} disabled={product.status !== 1} onClick={() => {
+                    <button className={`btn-plus ${product.trangThai !== 1 && 'disabled disabled-color'}`} disabled={product.trangThai !== 1} onClick={() => {
                       foodQuantity < 999 && setFoodQuantity(foodQuantity + 1);
                     }}>
                       <IoAddOutline />
@@ -153,7 +110,13 @@ const ClientFoodDetail = () => {
                 </div>
 
                 {/* Add to cart */}
-                <button className={`btn-add-to-cart ${product.status !== 1 && 'disabled disabled-color disabled-bg-color'}`} disabled={product.status !== 1}>{product.status === 1 ? 'Thêm vào giỏ hàng' : 'Tạm hết hàng'}</button>
+                <button
+                  className={`btn-add-to-cart ${product.trangThai !== 1 && 'disabled disabled-color disabled-bg-color'}`}
+                  disabled={product.trangThai !== 1}
+                  onClick={() => {addToCart({...product, soLuong: foodQuantity})}}
+                >
+                  {product.trangThai === 1 ? 'Thêm vào giỏ hàng' : 'Tạm hết hàng'}
+                </button>
               </div>
               <div className="food-commit">
                 {foodCommits.map((item, idx) => (
@@ -169,9 +132,9 @@ const ClientFoodDetail = () => {
             <div className="food-view-history">
               <h1>Sản phẩm đã xem</h1>
               <div className="food-view-history-items">
-                {foodData.map((item, idx) => (
+                {/* {foodData.map((item, idx) => (
                   <ProductCard key={idx} imgSrc={item.imgSrc} label={item.label} standardPrice={item.standardPrice} discount={item.discount} id={''} />
-                ))}
+                ))} */}
               </div>
             </div>
           </div>

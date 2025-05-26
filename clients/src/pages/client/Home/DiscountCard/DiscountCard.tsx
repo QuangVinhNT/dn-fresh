@@ -4,6 +4,7 @@ import SeparateNumber from "@/utils/separateNumber";
 import { Link } from "react-router-dom";
 
 interface IProps {
+  id: string;
   imgSrc: string;
   discount?: number;
   label: string;
@@ -12,9 +13,9 @@ interface IProps {
 }
 
 const DiscountCard = (props: IProps) => {
-  const { imgSrc, discount, label, standardPrice, className } = props;
+  const { imgSrc, discount, label, standardPrice, className, id } = props;
   return (
-    <Link to={'/foods/dao-do-my'} className={`discount-card-component ${className}`}>
+    <Link to={`/foods/${id}`} className={`discount-card-component ${className}`}>
       {discount && <span className="discount-tag">- {discount * 100}%</span>}
       <div className="prd-img">
         <img src={imgSrc} alt="" />
@@ -26,7 +27,7 @@ const DiscountCard = (props: IProps) => {
       <div className="prd-info">
         <span className="prd-name">{label}</span>
         <div className="prd-discount">
-          {discount && <span className="prd-discount-price">{SeparateNumber(Math.round((standardPrice * discount) / 100) * 100)} ₫</span>}
+          {discount && <span className="prd-discount-price">{SeparateNumber(standardPrice - Math.round((standardPrice * discount) / 100) * 100)} ₫</span>}
           <span className="prd-std-price">{SeparateNumber(standardPrice)} ₫</span>
         </div>
       </div>

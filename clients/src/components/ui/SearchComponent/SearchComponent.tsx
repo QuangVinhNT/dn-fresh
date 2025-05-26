@@ -3,12 +3,13 @@ import './SearchComponent.scss';
 import { useRef, useState } from "react";
 
 interface IProps {
-  setKeyword: React.Dispatch<React.SetStateAction<string>>;
+  keywordRef: React.MutableRefObject<string>;
   placeholder?: string;
+  onSearch: () => void;
 }
 
 const SearchComponent = (props: IProps) => {
-  const { setKeyword, placeholder } = props;
+  const { placeholder, onSearch, keywordRef } = props;
 
   const [searchKey, setSearchKey] = useState('');
 
@@ -16,8 +17,9 @@ const SearchComponent = (props: IProps) => {
 
   const onEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      setKeyword(searchKey)
+      keywordRef.current = searchKey;
       searchRef.current?.blur();
+      onSearch();
     }
   };
 

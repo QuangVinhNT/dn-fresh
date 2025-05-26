@@ -17,14 +17,19 @@ const insertProduct = async (payload: InsertProductPayload) => {
   return res.data;
 }
 
-const getProducts = async (page: number, limit: number, categoryId: string, orderBy: OrderBy) => {
-  const res = await axiosInstance.get(`/v1/products?page=${page}&limit=${limit}&cateid=${categoryId}&sortColumn=${orderBy.name}&sortDirection=${orderBy.value}`)
+const getProducts = async (page: number, limit: number, maThucPham: string, orderBy: OrderBy, name: string) => {
+  const res = await axiosInstance.get(`/v1/kho-thuc-pham?page=${page}&limit=${limit}&categoryId=${maThucPham}&sortColumn=${orderBy.columnName}&sortDirection=${orderBy.direction}&search=${name}`)
   return res.data;
 }
 
 const getProductById = async (id: string): Promise<ProductDetail> => {
-  const res = await axiosInstance.get(`/v1/products/${id}`)
+  const res = await axiosInstance.get(`/v1/kho-thuc-pham/${id}`)
   return res.data;
 }
 
-export { getAdminProductById, getAdminProducts, insertProduct, getProducts, getProductById };
+const getDiscountProducts = async () => {
+  const res = await axiosInstance.get('/v1/kho-thuc-pham/giam-gia');
+  return res.data;
+}
+
+export { getAdminProductById, getAdminProducts, insertProduct, getProducts, getProductById, getDiscountProducts };

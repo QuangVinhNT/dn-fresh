@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import * as ExportReceiptModel from '../models/exportReceiptModel.js'
+import * as ExportReceiptModel from '../daos/exportReceiptModel.js'
 
 const getAllExportReceipt = async (page: number, limit: number) => {
   try {

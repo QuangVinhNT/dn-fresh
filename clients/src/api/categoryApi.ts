@@ -1,4 +1,4 @@
-import { CategorySelectBox } from "@/types/Category";
+import { CategoryFilter, CategorySelectBox } from "@/types/Category";
 import axiosInstance from "./axiosInstance";
 
 const getCategories = async (page: number, limit: number) => {
@@ -11,6 +11,11 @@ const getCategoriesForSelectBox = async (): Promise<CategorySelectBox[]> => {
   return res.data;
 };
 
+const getCategoriesForFilter = async (): Promise<CategoryFilter[]> => {
+  const res = await axiosInstance.get('/v1/danh-muc/filter');
+  return res.data;
+}
+
 export {
-  getCategoriesForSelectBox, getCategories
+  getCategoriesForSelectBox, getCategories, getCategoriesForFilter
 }

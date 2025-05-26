@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import * as ProviderModel from '../models/providerModel.js'
+import * as ProviderModel from '../daos/providerModel.js'
 
 const getAllProviderName = async () => {
   try {

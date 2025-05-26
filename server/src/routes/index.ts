@@ -8,6 +8,11 @@ import userRoutes from "./userRoutes.js";
 import orderRoutes from "./orderRoutes.js";
 import adminProductRoutes from "./adminProductRoutes.js";
 import productRoutes from "./productRoutes.js";
+import favouriteProductRoutes from "./favouriteProductRoutes.js";
+import khoThucPhamRouter from "./khoThucPhamRoutes.js";
+import danhMucRoutes from "./danhMucRoutes.js";
+import thucPhamYeuThichRoutes from "./thucPhamYeuThichRoutes.js";
+import donHangRoutes from "./donHangRoutes.js";
 
 const router = Router();
 
@@ -20,6 +25,12 @@ router.use('/v1/users', userRoutes);
 router.use('/v1/admin-orders', orderRoutes);
 
 router.use('/v1/products', productRoutes);
+router.use('/v1/favourites', favouriteProductRoutes);
+
+router.use('/v1/kho-thuc-pham', khoThucPhamRouter);
+router.use('/v1/danh-muc', danhMucRoutes);
+router.use('/v1/thuc-pham-yeu-thich', thucPhamYeuThichRoutes);
+router.use('/v1/don-hang', donHangRoutes);
 
 router.use('/upload', uploadRoutes);
 

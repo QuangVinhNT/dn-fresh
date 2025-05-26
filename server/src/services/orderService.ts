@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import * as OrderModel from '../models/orderModel.js'
+import * as OrderModel from '../daos/orderModel.js'
 const getAllAdminOrder = async (page: number, limit: number) => {
   try {
     const rows = await OrderModel.getAllAdminOrder(page, limit);

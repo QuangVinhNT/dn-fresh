@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import * as UserModel from '../models/userModel.js'
+import * as UserModel from '../daos/userModel.js'
 const getAllCustomer = async (page: number, limit: number) => {
   try {
     const rows = await UserModel.getAllCustomer(page, limit);
