@@ -1,53 +1,15 @@
-import { ClientBanner, FilterDrawerComponent, SearchComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
-import './ClientOrders.scss';
-import { useEffect, useRef, useState } from "react";
-import { FilterType } from "@/types";
-import { OrderList, OrderStatus, PaymentMethod } from "@/types/Order";
-import { loadingStore } from "@/store";
 import { getOrders } from "@/api/orderApi";
+import { ClientBanner, SearchComponent, TablePagination } from "@/components";
+import { loadingStore } from "@/store";
+import { OrderList, OrderStatus, PaymentMethod } from "@/types/Order";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './ClientOrders.scss';
 
-const filtersData: FilterType[] = [
-  {
-    query: 'status',
-    name: 'Trạng thái',
-    values: [
-      {
-        valueName: 'Đang vận chuyển',
-        value: 'trading'
-      },
-      {
-        valueName: 'Ngừng giao dịch',
-        value: 'notTrading'
-      }
-    ]
-  },
-  {
-    query: 'productType',
-    name: 'Phân loại',
-    values: [
-      {
-        valueName: 'Sản phẩm thường',
-        value: 'normal'
-      },
-      {
-        valueName: 'Serial',
-        value: 'serial'
-      },
-      {
-        valueName: 'Lô - Hạn sử dụng',
-        value: 'expireDate'
-      },
-      {
-        valueName: 'Combo',
-        value: 'combo'
-      }
-    ]
-  }
-];
 
-const headers = ['Mã đơn hàng', 'Ngày tạo', 'Trạng thái', 'Phương thức thanh toán', 'Tổng tiền']
+
+const headers = ['Mã đơn hàng', 'Ngày tạo', 'Trạng thái', 'Phương thức thanh toán', 'Tổng tiền'];
 
 const ClientOrders = () => {
   const [isShowFilter, setIsShowFilter] = useState(false);
@@ -80,8 +42,8 @@ const ClientOrders = () => {
   };
 
   const handleClickRow = (id: string) => {
-    navigate(`/orders/${id}`)
-  }
+    navigate(`/orders/${id}`);
+  };
 
   return (
     <div className="client-orders-component">
@@ -90,8 +52,8 @@ const ClientOrders = () => {
         <h3>Danh sách đơn hàng của tôi</h3>
         <div className="table-component">
           <div className="search">
-              <SearchComponent placeholder="Nhập mã đơn hàng..." onSearch={fetchProducts} keywordRef={keywordRef}/>
-            </div>
+            <SearchComponent placeholder="Nhập mã đơn hàng..." onSearch={fetchProducts} keywordRef={keywordRef} />
+          </div>
           <table className="table">
             <thead>
               <tr className="tb-header-row">
@@ -105,7 +67,7 @@ const ClientOrders = () => {
             <tbody>
               {orders?.map((order, idx) => (
                 <tr key={idx} className="tb-body-row" onClick={() => {
-                  handleClickRow(order.maDonHang); 
+                  handleClickRow(order.maDonHang);
                 }}>
                   <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
                     <span>{order.maDonHang}</span>
@@ -127,7 +89,6 @@ const ClientOrders = () => {
             </tbody>
           </table>
           <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
-          <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
         </div>
       </div>
     </div>

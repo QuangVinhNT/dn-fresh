@@ -30,4 +30,8 @@ export class DonHangDAO {
       throw error;
     }
   };
+
+  public getById = async (orderId: string) => {
+    
+  }
 }
