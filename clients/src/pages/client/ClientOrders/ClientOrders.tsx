@@ -12,8 +12,6 @@ import './ClientOrders.scss';
 const headers = ['Mã đơn hàng', 'Ngày tạo', 'Trạng thái', 'Phương thức thanh toán', 'Tổng tiền'];
 
 const ClientOrders = () => {
-  const [isShowFilter, setIsShowFilter] = useState(false);
-  const [isShowDetail, setIsShowDetail] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(12);
   const [total, setTotal] = useState<number>(0);

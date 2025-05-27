@@ -1,12 +1,6 @@
-interface ValueType {
-  valueName: string;
-  value: string;
-}
-
 interface FilterType {
-  query: string;
   name: string;
-  values: ValueType[];
+  value: string;
 }
 
 interface Filter {

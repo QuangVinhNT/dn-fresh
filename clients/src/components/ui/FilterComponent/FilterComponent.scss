@@ -1,0 +1,89 @@
+@use '@/styles' as *;
+
+.filter-component {
+  position: relative;
+
+  .type-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    border: 1px solid $border-color;
+    width: fit-content;
+    padding: 8px 12px;
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &.active {
+      border-color: $admin-primary-color;
+      color: $admin-primary-color;
+      background-color: rgba($admin-primary-color, 0.1);
+    }
+  }
+
+  .filter-container {
+    background-color: #fff;
+    width: max-content;
+    padding: 12px;
+    border-radius: 6px;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .filter-items {
+      display: flex;
+      gap: 8px;
+
+      .filter-item {
+        font-size: 14px;
+        border: 1px solid $border-color;
+        width: fit-content;
+        padding: 8px 12px;
+        background-color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &.active {
+          border-color: $admin-primary-color;
+          color: $admin-primary-color;
+          background-color: rgba($admin-primary-color, 0.1);
+        }
+      }
+    }
+
+    .close-apply {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+
+      .close {
+        color: $admin-primary-color;
+        font-weight: 500;
+        background-color: rgba($admin-primary-color, 0.1);
+        padding: 8px 12px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .apply {
+        color: #fff;
+        font-weight: 500;
+        background-color: $admin-primary-color;
+        padding: 8px 12px;
+        transition: all 0.3s;
+        cursor: pointer;
+        border-radius: 4px;
+
+        &:hover {
+          filter: brightness(125%);
+        }
+      }
+    }
+  }
+}

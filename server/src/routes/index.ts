@@ -13,6 +13,7 @@ import khoThucPhamRouter from "./khoThucPhamRoutes.js";
 import danhMucRoutes from "./danhMucRoutes.js";
 import thucPhamYeuThichRoutes from "./thucPhamYeuThichRoutes.js";
 import donHangRoutes from "./donHangRoutes.js";
+import khoThucPhamAdminRoutes from "./khoThucPhamAdminRoutes.js";
 
 const router = Router();
 
@@ -31,6 +32,8 @@ router.use('/v1/kho-thuc-pham', khoThucPhamRouter);
 router.use('/v1/danh-muc', danhMucRoutes);
 router.use('/v1/thuc-pham-yeu-thich', thucPhamYeuThichRoutes);
 router.use('/v1/don-hang', donHangRoutes);
+
+router.use('/v1/admin/kho-thuc-pham', khoThucPhamAdminRoutes);
 
 router.use('/upload', uploadRoutes);
 

@@ -41,4 +41,18 @@ export class KhoThucPhamService {
       throw error;
     }
   };
+
+  public getAllForAdmin = async (page: number, limit: number, productName: string, status: string, category: string) => {
+    try {
+      const rows = await this.khoThucPhamDAO.getAllForAdmin(page, limit, productName, status, category);
+      const total = rows.total as RowDataPacket[];
+      return {
+        data: rows.data,
+        total: total[0].total
+      };
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  }
 }

@@ -19,14 +19,12 @@
       font-weight: 500;
 
       &:hover {
-        border-color: rgba(0,0,0,0.3);
+        border-color: rgba(0, 0, 0, 0.3);
       }
 
       .icn-download {
         font-size: 20px;
       }
-
-      
     }
 
     .add-food {
@@ -44,10 +42,27 @@
       &:hover {
         filter: brightness(125%);
       }
-    }
-
-    .table-component {
-      margin-top: 20px;
-    }
+    }    
   }
+  .table-component {
+      margin-top: 20px;
+
+      .filter {
+        h3 {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+        }
+
+        .filter-list {
+          display: flex;
+          gap: 8px;
+        }
+      }
+
+      .search {
+        margin-top: 12px;
+      }
+    }
 }

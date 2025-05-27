@@ -1,57 +1,18 @@
 import { getAdminProductById, getAdminProducts } from "@/api/productApi";
-import { FilterDrawerComponent, TablePagination, TableSearchFilter } from "@/components";
+import { FilterComponent, FilterDrawerComponent, SearchComponent, TablePagination } from "@/components";
+import { loadingStore } from "@/store";
 import { FilterType } from "@/types";
 import { AdminProductDetail, AdminProductList, ProductStatus } from "@/types/Product";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
-import { useEffect, useState } from "react";
-import { IoAdd } from "react-icons/io5";
+import { useEffect, useRef, useState } from "react";
+import { IoAdd, IoFilter } from "react-icons/io5";
 import { TfiExport } from "react-icons/tfi";
 import AddFood from "./AddFood/AddFood";
 import EditFood from "./FoodDetail/EditFood/EditFood";
 import FoodDetail from "./FoodDetail/FoodDetail";
 import './FoodList.scss';
-import { loadingStore } from "@/store";
 
 const headers = ['Sản phẩm', 'Ảnh', 'Loại', 'Tồn kho', 'Đơn vị tính', 'Ngày khởi tạo', 'Trạng thái'];
-
-const filtersData: FilterType[] = [
-  {
-    query: 'status',
-    name: 'Trạng thái',
-    values: [
-      {
-        valueName: 'Đang giao dịch',
-        value: 'trading'
-      },
-      {
-        valueName: 'Ngừng giao dịch',
-        value: 'notTrading'
-      }
-    ]
-  },
-  {
-    query: 'productType',
-    name: 'Phân loại',
-    values: [
-      {
-        valueName: 'Sản phẩm thường',
-        value: 'normal'
-      },
-      {
-        valueName: 'Serial',
-        value: 'serial'
-      },
-      {
-        valueName: 'Lô - Hạn sử dụng',
-        value: 'expireDate'
-      },
-      {
-        valueName: 'Combo',
-        value: 'combo'
-      }
-    ]
-  }
-];
 
 
 
@@ -65,17 +26,22 @@ const FoodList = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
+  const [filters, setFilters] = useState<FilterType[]>([]);
+
+  const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
-    fetchProducts();
-  }, [limit, page]);
+    const statusFilter = filters.find(filter => filter.name === 'status')?.value;
+    const categoryFilter = filters.find(filter => filter.name === 'category')?.value;
+    fetchProducts(statusFilter, categoryFilter);
+  }, [limit, page, keywordRef.current, filters]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (status?: string, category?: string) => {
     showLoading();
     try {
-      const response = await getAdminProducts(page, limit);
+      const response = await getAdminProducts(page, limit, keywordRef.current, status, category);
       setProducts(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -113,7 +79,60 @@ const FoodList = () => {
             </button>
           </div>
           <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo tên sản phẩm" setIsShowFilter={setIsShowFilter} />
+            <div className="filter">
+              <h3><IoFilter /> Bộ lọc</h3>
+              <div className="filter-list">
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Ngưng giao dịch',
+                      value: 0,
+                    },
+                    {
+                      name: 'Đang giao dịch',
+                      value: 1,
+                    },
+                    {
+                      name: 'Tạm hết hàng',
+                      value: 2,
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Trạng thái',
+                    value: 'status'
+                  }}
+                  setFilters={setFilters}
+                />
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Rau củ',
+                      value: 'DM001',
+                    },
+                    {
+                      name: 'Thịt',
+                      value: 'DM002',
+                    },
+                    {
+                      name: 'Thủy - hải sản',
+                      value: 'DM003',
+                    },
+                    {
+                      name: 'Trái cây',
+                      value: 'DM004',
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Loại thực phẩm',
+                    value: 'category'
+                  }}
+                  setFilters={setFilters}
+                />
+              </div>
+            </div>
+            <div className="search">
+              <SearchComponent placeholder="Nhập tên thực phẩm..." onSearch={fetchProducts} keywordRef={keywordRef} />
+            </div>
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -126,34 +145,33 @@ const FoodList = () => {
               </thead>
               <tbody>
                 {products?.map((product, idx) => (
-                  <tr key={idx} className="tb-body-row" onClick={() => { handleClickRow(product.id); }}>
+                  <tr key={idx} className="tb-body-row" onClick={() => { handleClickRow(product.maThucPham); }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{product.name}</span>
+                      <span>{product.tenThucPham}</span>
                     </td>
                     <td>
-                      <img src={product.imageUrls[0]} alt="" />
+                      <img src={product.hinhAnh[0]} alt="" />
                     </td>
                     <td>
-                      <span>{product.category}</span>
+                      <span>{product.tenDanhMuc}</span>
                     </td>
                     <td>
-                      <span>{product.quantity}</span>
+                      <span>{product.soLuongTonKho}</span>
                     </td>
                     <td>
-                      <span>{product.unit}</span>
+                      <span>{product.donViTinh}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(product.createdAt)}</span>
+                      <span>{datetimeFormatter(product.ngayTao + '')}</span>
                     </td>
                     <td>
-                      <span>{ProductStatus[product.status]}</span>
+                      <span>{ProductStatus[product.trangThai]}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
-            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
           </div>
         </div>
       )}
@@ -163,7 +181,7 @@ const FoodList = () => {
 
 
       {/* Edit food component */}
-      {isShowEditFood && <EditFood setIsShowDetail={setIsShowDetail} setIsShowEditFood={setIsShowEditFood} data={product} onEdited={fetchProducts}/>}
+      {isShowEditFood && <EditFood setIsShowDetail={setIsShowDetail} setIsShowEditFood={setIsShowEditFood} data={product} onEdited={fetchProducts} />}
 
       {/* Add food component */}
       {isShowAddFood && <AddFood setIsShowAddFood={setIsShowAddFood} onAdded={fetchProducts} />}

@@ -8,6 +8,7 @@ import AsideBox from "./ui/AsideBox/AsideBox";
 import BackComponent from "./ui/BackComponent/BackComponent";
 import ButtonComponent from "./ui/ButtonComponent/ButtonComponent";
 import CheckboxComponent from "./ui/CheckboxComponent/CheckboxComponent";
+import FilterComponent from "./ui/FilterComponent/FilterComponent";
 import FilterDrawerComponent from "./ui/FilterDrawerComponent/FilterDrawerComponent";
 import FlexContainer from "./ui/FlexContainer";
 import ImageSlider from "./ui/ImageSlider/ImageSlider";
@@ -54,6 +55,7 @@ export {
   ImageSlider,
   LoadingComponent,
   SearchComponent,
+  FilterComponent,
 
   // Layout
   AdminHeader, AdminSidebar,

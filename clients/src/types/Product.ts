@@ -24,6 +24,7 @@ type Product = {
   moTa: string;
   trangThai: number;
   maDanhMuc: string;
+  tenDanhMuc: string;
   tiLeKhuyenMai: number;
   ngayTao: Date;
   ngayCapNhat: Date;
@@ -38,7 +39,7 @@ export enum ProductStatus {
   'Tạm hết hàng' = 2
 }
 
-type AdminProductList = Pick<Product, 'id' | 'name' | 'imageUrls' | 'category' | 'quantity' | 'unit' | 'createdAt' | 'status'>
+type AdminProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'category' | 'tenDanhMuc' | 'donViTinh' | 'ngayTao' | 'trangThai' | 'soLuongTonKho'>
 
 type ProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'donGia' | 'tiLeKhuyenMai' | 'trangThai'>
 

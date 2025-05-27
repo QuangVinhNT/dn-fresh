@@ -16,6 +16,7 @@ body {
   border-top-right-radius: 8px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
   border-collapse: collapse;
+  margin-top: 12px;
 
   .tb-header-row {
     background-color: #f4f6f8;
