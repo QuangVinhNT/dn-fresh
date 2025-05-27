@@ -14,10 +14,11 @@ interface IProps {
   standardPrice: number;
   status: number;
   isFavourite?: boolean;
+  onUpdateFavourite?: () => void;
 }
 
 const ProductCard = (props: IProps) => {
-  const { imgSrc, discount, label, standardPrice, id, status, isFavourite } = props;
+  const { imgSrc, discount, label, standardPrice, id, status, isFavourite, onUpdateFavourite } = props;
   const { addToCart } = cartStore();
   return (
     <Link to={`/foods/${id}`} className="product-card-component">
@@ -35,7 +36,7 @@ const ProductCard = (props: IProps) => {
                   e.preventDefault();
                   e.stopPropagation();
                   const deleteResult = await deleteFavouriteProduct(id, 'ND003');
-                  console.log('Delete result:', deleteResult);
+                  onUpdateFavourite && onUpdateFavourite();
                 }}
               />
             ) : (
@@ -47,7 +48,7 @@ const ProductCard = (props: IProps) => {
                   e.preventDefault();
                   e.stopPropagation();
                   const insertResult = await insertFavouriteProduct({ productId: id, userId: 'ND003' });
-                  console.log('Insert result:', insertResult);
+                  onUpdateFavourite && onUpdateFavourite();
                 }}
               />
             )}

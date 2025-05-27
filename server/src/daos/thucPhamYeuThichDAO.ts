@@ -29,7 +29,7 @@ export class ThucPhamYeuThichDAO {
         total,
       };
     } catch (error) {
-      console.error('Model error:', error);
+      console.error('DAO error:', error);
       throw error;
     }
   };
@@ -42,7 +42,7 @@ export class ThucPhamYeuThichDAO {
       `, [thucPhamYeuThich.getMaNguoiDung(), thucPhamYeuThich.getMaThucPham()]);
       return result;
     } catch (error) {
-      console.error('Model error:', error);
+      console.error('DAO error:', error);
       throw error;
     }
   };
@@ -56,7 +56,7 @@ export class ThucPhamYeuThichDAO {
       // console.log(`DELETE FROM thucphamyeuthich WHERE (maNguoiDung = '${userId}') AND (maThucPham = '${productId}')`);
       return result;
     } catch (error) {
-      console.error('Model error:', error);
+      console.error('DAO error:', error);
       throw error;
     }
   };

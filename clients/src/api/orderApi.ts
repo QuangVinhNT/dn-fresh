@@ -10,6 +10,11 @@ const getOrders = async (page: number, limit: number, userId: string, orderId: s
   return res.data;
 }
 
+const getOrderById = async (orderId: string) => {
+  const res = await axiosInstance.get(`/v1/don-hang/${orderId}`)
+  return res.data;
+}
+
 export {
-  getAdminOrders, getOrders
+  getAdminOrders, getOrders, getOrderById
 }

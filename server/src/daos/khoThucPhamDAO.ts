@@ -34,7 +34,7 @@ export class KhoThucPhamDAO {
         total,
       };
     } catch (error) {
-      console.error('Model error:', error);
+      console.error('DAO error:', error);
       throw error;
     }
   };
@@ -50,7 +50,7 @@ export class KhoThucPhamDAO {
       `, [productId]);
       return rows;
     } catch (error) {
-      console.error('Model error:', error);
+      console.error('DAO error:', error);
       throw error;
     }
   };
@@ -68,7 +68,7 @@ export class KhoThucPhamDAO {
       `);
       return rows;
     } catch (error) {
-      console.error('Model error:', error);
+      console.error('DAO error:', error);
       throw error;
     }
   };

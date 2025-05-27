@@ -43,8 +43,14 @@
         .prd-item {
           display: flex;
           border-bottom: 1px solid $border-color;
-          padding: 8px 0;
+          padding: 8px;
           align-items: center;
+          cursor: pointer;
+          transition: all .3s;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+          }
 
           img {
             width: 75px;
@@ -89,9 +95,11 @@
           margin-top: 16px;
           display: flex;
           justify-content: end;
+
           b {
             color: $red-orange-color;
             font-size: 18px;
+
             span {
               color: #000;
               font-size: 16px;

@@ -3,13 +3,13 @@ import FoodService1 from '@/assets/images/service_1.png';
 import FoodService2 from '@/assets/images/service_2.png';
 import FoodService3 from '@/assets/images/service_3.png';
 import FoodService4 from '@/assets/images/service_4.png';
-import { ClientBanner } from "@/components";
+import { BackComponent, ClientBanner } from "@/components";
 import { loadingStore } from "@/store";
 import { ProductDetail } from "@/types/Product";
 import SeparateNumber from "@/utils/separateNumber";
 import { useEffect, useState } from "react";
 import { IoAddOutline, IoRemoveOutline } from "react-icons/io5";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import './ClientFoodDetail.scss';
 import FoodImage from "./FoodImage/FoodImage";
 import { cartStore } from "@/store/cartStore";
@@ -35,6 +35,7 @@ const foodCommits = [
 
 const ClientFoodDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<ProductDetail>();
   const [foodQuantity, setFoodQuantity] = useState(1);
 
@@ -42,10 +43,10 @@ const ClientFoodDetail = () => {
   const { addToCart } = cartStore();
 
   useEffect(() => {
-    fetchProducts();
+    fetchProduct();
   }, []);
 
-  const fetchProducts = async () => {
+  const fetchProduct = async () => {
     showLoading();
     try {
       const response = await getProductById(id as string);
@@ -57,14 +58,13 @@ const ClientFoodDetail = () => {
     }
   };
 
-  console.log(product);
-
   return (
     <>
       {product && (
         <div className="client-food-detail-component">
           <ClientBanner label="Chi tiết thực phẩm" />
           <div className="client-food-detail-content">
+            <BackComponent backTitle="Trở về" onBack={() => { navigate(-1); }} />
             <div className="main-food-detail">
               <FoodImage images={product.hinhAnh} />
               <div className="food-info">
@@ -113,7 +113,7 @@ const ClientFoodDetail = () => {
                 <button
                   className={`btn-add-to-cart ${product.trangThai !== 1 && 'disabled disabled-color disabled-bg-color'}`}
                   disabled={product.trangThai !== 1}
-                  onClick={() => {addToCart({...product, soLuong: foodQuantity})}}
+                  onClick={() => { addToCart({ ...product, soLuong: foodQuantity }); }}
                 >
                   {product.trangThai === 1 ? 'Thêm vào giỏ hàng' : 'Tạm hết hàng'}
                 </button>

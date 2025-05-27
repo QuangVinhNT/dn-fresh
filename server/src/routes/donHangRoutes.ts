@@ -5,5 +5,6 @@ const donHangRoutes = Router();
 const donHangController = new DonHangController();
 
 donHangRoutes.get('/', donHangController.getAll);
+donHangRoutes.get('/:id', donHangController.getById);
 
 export default donHangRoutes;

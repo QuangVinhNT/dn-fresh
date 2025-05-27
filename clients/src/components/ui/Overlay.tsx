@@ -12,8 +12,8 @@ const Overlay = () => {
         top: 0,
         left: 0,
         zIndex: 50,
-        opacity: isShowOverlay ? 1 : 0,
-        transition: 'all .3s'
+        // opacity: isShowOverlay ? 1 : 0,
+        opacity: 1,
       }}
     ></div>
   );

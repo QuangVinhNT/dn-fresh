@@ -1,16 +1,17 @@
-import { ClientFooter, ClientHeader, Overlay } from "@/components";
-import { overlayStore } from "@/store";
+import { ClientFooter, ClientHeader, LoadingComponent, Overlay } from "@/components";
+import { loadingStore, overlayStore } from "@/store";
 import { cartStore } from "@/store/cartStore";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 import CartDrawer from "./CartDrawer/CartDrawer";
 import { useEffect } from "react";
 
 const Client = () => {
-
   const { isShowOverlay } = overlayStore();
   const { isShowCart } = cartStore();
+  const {isShowLoading} = loadingStore();
   useEffect(() => {
-    if (isShowCart) {
+    if (isShowCart || isShowOverlay || isShowLoading) {
+      // Disable body scroll when cart or overlay is shown
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -18,19 +19,21 @@ const Client = () => {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isShowCart]);
+  }, [isShowCart, isShowOverlay, isShowLoading]);
   return (
-    <div className="client-component"
-    >
+    <>
       {isShowOverlay && <Overlay />}
-      <CartDrawer />
-      <ClientHeader />
-      <div className="client-outlet" style={{ margin: '0 auto 80px' }}>
-        <Outlet />
+      {isShowLoading && <LoadingComponent />}
+      <div className="client-component">
+        <CartDrawer />
+        <ClientHeader />
+        <div className="client-outlet" style={{ margin: '0 auto 80px' }}>
+          <Outlet />
+        </div>
+        <ClientFooter />
+        <ScrollRestoration />
       </div>
-      <ClientFooter />
-      <ScrollRestoration />
-    </div>
+    </>
   );
 };
 

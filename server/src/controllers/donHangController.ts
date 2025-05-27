@@ -21,4 +21,15 @@ export class DonHangController {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+  public getById = async (req: Request, res: Response) => {
+    try {
+      const orderId = req.params.id;
+      const order = await this.donHangService.getById(orderId);
+      res.json(order);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
 }

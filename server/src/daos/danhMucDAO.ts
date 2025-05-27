@@ -11,7 +11,7 @@ export class DanhMucDAO {
       `);
       return rows;
     } catch (error) {
-      console.error(`Model error: ${error}`);
+      console.error(`DAO error: ${error}`);
     }
   };
 }

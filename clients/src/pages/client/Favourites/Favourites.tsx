@@ -1,53 +1,22 @@
-import { ClientBanner, ProductCard } from "@/components";
-import './Favourites.scss';
-import ProductImg1 from '@/assets/images/sp1.png';
-import { useEffect, useState } from "react";
-import { ProductList } from "@/types/Product";
-import { loadingStore } from "@/store";
 import { getFavouriteProducts } from "@/api/favouriteProductApi";
-const favouriteFoods: { name: string, standardPrice: number, discount?: number, image: string; }[] = [
-  {
-    name: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-    image: ProductImg1,
-    discount: 0.41,
-  },
-  {
-    name: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-    image: ProductImg1,
-    discount: 0.41,
-  },
-  {
-    name: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-    image: ProductImg1,
-    discount: 0.41,
-  },
-  {
-    name: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-    image: ProductImg1,
-    discount: 0.41,
-  },
-  {
-    name: 'Đào đỏ Mỹ',
-    standardPrice: 68000,
-    image: ProductImg1,
-    discount: 0.41,
-  }
-];
+import { BackComponent, ClientBanner, ProductCard } from "@/components";
+import { loadingStore } from "@/store";
+import { ProductList } from "@/types/Product";
+import { useEffect, useState } from "react";
+import './Favourites.scss';
+import { useNavigate } from "react-router-dom";
 const Favourites = () => {
-  const [products, setProducts] = useState<ProductList[]>([])
+  const [products, setProducts] = useState<ProductList[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(12);
   const [total, setTotal] = useState<number>(0);
+  const navigate = useNavigate();
 
-   const { showLoading, hideLoading } = loadingStore();
+  const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
-    fetchFavouriteProducts()
-  }, [products])
+    fetchFavouriteProducts();
+  }, []);
 
   const fetchFavouriteProducts = async () => {
     showLoading();
@@ -66,21 +35,25 @@ const Favourites = () => {
     <div className="favourites-component">
       <ClientBanner label="Yêu thích" />
       <div className="favourites-content">
+        <BackComponent backTitle="Trở về" onBack={() => { navigate(-1); }} />
         <h3>Danh sách yêu thích của tôi</h3>
-        <div className="favourite-list">
-          {products.map((item, idx) => (
-            <ProductCard 
-              imgSrc={item.hinhAnh[0]}
-              label={item.tenThucPham}
-              standardPrice={item.donGia}
-              discount={item.tiLeKhuyenMai}
-              id={item.maThucPham}
-              status={item.trangThai}
-              key={idx}
-              isFavourite
-            />
-          ))}
-        </div>
+        {products.length > 0 && (
+          <div className="favourite-list">
+            {products.map((item, idx) => (
+              <ProductCard
+                imgSrc={item.hinhAnh[0]}
+                label={item.tenThucPham}
+                standardPrice={item.donGia}
+                discount={item.tiLeKhuyenMai}
+                id={item.maThucPham}
+                status={item.trangThai}
+                key={idx}
+                isFavourite
+                onUpdateFavourite={fetchFavouriteProducts}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
