@@ -1,59 +1,19 @@
-import { ButtonComponent, FilterDrawerComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
-import './FoodCategory.scss';
-import { IoAdd } from "react-icons/io5";
-import { useEffect, useState } from "react";
-import { FilterType } from "@/types";
-import FoodCategoryDetail from "./FoodCategoryDetail/FoodCategoryDetail";
-import EditFoodCategory from "./FoodCategoryDetail/EditFoodCategory/EditFoodCategory";
-import AddFoodCategory from "./AddFoodCategory/AddFoodCategory";
-import { loadingStore } from "@/store";
-import { CategoryList, CategoryStatus } from "@/types/Category";
 import { getCategories } from "@/api/categoryApi";
+import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
+import { loadingStore } from "@/store";
+import { FilterType } from "@/types";
+import { CategoryList, CategoryStatus } from "@/types/Category";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import { useEffect, useRef, useState } from "react";
+import { IoAdd, IoFilter } from "react-icons/io5";
+import AddFoodCategory from "./AddFoodCategory/AddFoodCategory";
+import './FoodCategory.scss';
+import EditFoodCategory from "./FoodCategoryDetail/EditFoodCategory/EditFoodCategory";
+import FoodCategoryDetail from "./FoodCategoryDetail/FoodCategoryDetail";
 
 const headers = ['Mã danh mục', 'Tên danh mục', 'Trạng thái', 'Ngày tạo', 'Số lượng thực phẩm'];
 
-const filtersData: FilterType[] = [
-  {
-    query: 'status',
-    name: 'Trạng thái',
-    values: [
-      {
-        valueName: 'Đang giao dịch',
-        value: 'trading'
-      },
-      {
-        valueName: 'Ngừng giao dịch',
-        value: 'notTrading'
-      }
-    ]
-  },
-  {
-    query: 'productType',
-    name: 'Phân loại',
-    values: [
-      {
-        valueName: 'Sản phẩm thường',
-        value: 'normal'
-      },
-      {
-        valueName: 'Serial',
-        value: 'serial'
-      },
-      {
-        valueName: 'Lô - Hạn sử dụng',
-        value: 'expireDate'
-      },
-      {
-        valueName: 'Combo',
-        value: 'combo'
-      }
-    ]
-  }
-];
-
 const FoodCategory = () => {
-  const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
@@ -61,17 +21,21 @@ const FoodCategory = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
+  const [filters, setFilters] = useState<FilterType[]>([]);
+
+  const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
-    fetchCategories();
-  }, [limit, page]);
+    const statusFilter = filters.find(filter => filter.name === 'status')?.value;
+    fetchCategories(statusFilter);
+  }, [limit, page, filters]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (status?: string) => {
     showLoading();
     try {
-      const response = await getCategories(page, limit);
+      const response = await getCategories(page, limit, keywordRef.current, status);
       setCategories(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -91,11 +55,35 @@ const FoodCategory = () => {
               label="Thêm danh mục"
               variant="primary"
               affix={<IoAdd className="icn-add" />}
-              onClick={() => {setIsShowAdd(true)}}
+              onClick={() => { setIsShowAdd(true); }}
             />
           </div>
           <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo mã danh mục, tên danh mục" setIsShowFilter={setIsShowFilter} />
+            <div className="filter">
+              <h3><IoFilter /> Bộ lọc</h3>
+              <div className="filter-list">
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Ngưng giao dịch',
+                      value: 0,
+                    },
+                    {
+                      name: 'Đang giao dịch',
+                      value: 1,
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Trạng thái',
+                    value: 'status'
+                  }}
+                  setFilters={setFilters}
+                />
+              </div>
+            </div>
+            <div className="search">
+              <SearchComponent placeholder="Nhập tên danh mục..." onSearch={fetchCategories} keywordRef={keywordRef} />
+            </div>
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -108,39 +96,38 @@ const FoodCategory = () => {
               </thead>
               <tbody>
                 {categories?.map((category, idx) => (
-                  <tr key={idx} className="tb-body-row" onClick={() => { 
+                  <tr key={idx} className="tb-body-row" onClick={() => {
                     // handleClickRow(product.id); 
-                    }}>
+                  }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{category.id}</span>
+                      <span>{category.maDanhMuc}</span>
                     </td>
                     <td>
-                      <span>{category.name}</span>
+                      <span>{category.tenDanhMuc}</span>
                     </td>
                     <td>
-                      <span>{CategoryStatus[category.status]}</span>
+                      <span>{CategoryStatus[category.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(category.createdAt)}</span>
+                      <span>{datetimeFormatter(category.ngayTao + '')}</span>
                     </td>
                     <td>
-                      <span>{category.productQuantity}</span>
+                      <span>{category.soLuongThucPham}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
-            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
           </div>
         </div>
       )}
 
-      {isShowDetail && <FoodCategoryDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit}/>}
+      {isShowDetail && <FoodCategoryDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} />}
 
-      {isShowEdit && <EditFoodCategory setIsShowEdit={setIsShowEdit} setIsShowDetail={setIsShowDetail}/>}
+      {isShowEdit && <EditFoodCategory setIsShowEdit={setIsShowEdit} setIsShowDetail={setIsShowDetail} />}
 
-      {isShowAdd && <AddFoodCategory setIsShowAdd={setIsShowAdd}/>}
+      {isShowAdd && <AddFoodCategory setIsShowAdd={setIsShowAdd} />}
     </>
   );
 };

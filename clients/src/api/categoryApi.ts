@@ -1,13 +1,13 @@
 import { CategoryFilter, CategorySelectBox } from "@/types/Category";
 import axiosInstance from "./axiosInstance";
 
-const getCategories = async (page: number, limit: number) => {
-  const res = await axiosInstance.get(`/v1/categories?page=${page}&limit=${limit}`)
+const getCategories = async (page: number, limit: number, categoryName: string, status?: string) => {
+  const res = await axiosInstance.get(`/v1/danh-muc?page=${page}&limit=${limit}&categoryName=${categoryName}&status=${status}`)
   return res.data;
 }
 
 const getCategoriesForSelectBox = async (): Promise<CategorySelectBox[]> => {
-  const res = await axiosInstance.get('/v1/categories/select-box');
+  const res = await axiosInstance.get('/v1/danh-muc/select-box');
   return res.data;
 };
 

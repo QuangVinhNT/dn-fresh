@@ -1,4 +1,5 @@
 import { getCategoriesForSelectBox } from "@/api/categoryApi";
+import { updateProduct } from "@/api/productApi";
 import { postUploadFile } from "@/api/uploadApi";
 import { AdminContainerComponent, BackComponent, ButtonComponent, ImageSlider, InputComponent, SelectComponent, TextComponent, UploadImgComponent } from "@/components";
 import { loadingStore } from "@/store";
@@ -8,25 +9,6 @@ import { UpdateProductPayload } from "@/types/Product";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import './EditFood.scss';
-import { updateProduct } from "@/api/productApi";
-
-const selectItems = [
-  {
-    content: 'Thịt',
-    value: 'Meat',
-    isSelected: false,
-  },
-  {
-    content: 'Rau củ',
-    value: 'Vegetable',
-    isSelected: true,
-  },
-  {
-    content: 'Trái cây',
-    value: 'Fruit',
-    isSelected: false,
-  }
-];
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -80,8 +62,8 @@ const EditFood = (props: IProps) => {
     try {
       const response = await getCategoriesForSelectBox();
       const data = response.map((item, idx) => ({
-        value: item.id,
-        content: item.name,
+        value: item.maDanhMuc,
+        content: item.tenDanhMuc,
         isSelected: idx === 0
       }));
       setCategories(data);

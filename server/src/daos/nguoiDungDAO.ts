@@ -17,7 +17,7 @@ export class NguoiDungDAO {
       `, [limit, offset]);
 
       const [total] = await pool.query(`
-        SELECT COUNT(nguoidung.maNguoiDung) as total
+        SELECT COUNT(DISTINCT nguoidung.maNguoiDung) as total
         FROM nguoidung
         JOIN vaitronguoidung ON nguoidung.maNguoiDung = vaitronguoidung.maNguoiDung
         WHERE maVaiTro = 'VT004' ${customerId.length > 0 ? `AND BINARY LOWER(nguoidung.maNguoiDung) LIKE LOWER('%${customerId}%')` : ''}
@@ -50,7 +50,7 @@ export class NguoiDungDAO {
       `, [limit, offset]);
 
       const [total] = await pool.query(`
-        SELECT COUNT(nguoidung.maNguoiDung) as total
+        SELECT COUNT(DISTINCT nguoidung.maNguoiDung) as total
         FROM nguoidung
         JOIN vaitronguoidung ON nguoidung.maNguoiDung = vaitronguoidung.maNguoiDung
         WHERE maVaiTro IN (${roleId.length > 0 ? roleId : "'VT001', 'VT002', 'VT003'"})

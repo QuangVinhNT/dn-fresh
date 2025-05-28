@@ -27,7 +27,7 @@ export class KhoThucPhamDAO {
     `, [limit, offset]);
 
       const [total] = await pool.query(`
-      SELECT COUNT(maThucPham) as total
+      SELECT COUNT(DISTINCT maThucPham) as total
       FROM khothucpham
       ${categoryId.length > 0 ? `WHERE maDanhMuc = '${categoryId}'` : ''}
       `);
@@ -77,7 +77,7 @@ export class KhoThucPhamDAO {
 
   public getAllForAdmin = async (page: number, limit: number, productName: string, status: string, category: string) => {
     const offset = (page - 1) * limit;
-    let whereClause = [
+    const whereClause = [
       productName.length > 0 ? `BINARY LOWER(tenThucPham) LIKE LOWER('%${productName}%')` : '',
       status.length > 0 ? `p.trangThai IN (${status})` : '',
       category.length > 0 ? `p.maDanhMuc IN (${category})` : ''
@@ -97,7 +97,7 @@ export class KhoThucPhamDAO {
     `, [limit, offset]);
 
       const [total] = await pool.query(`
-      SELECT COUNT(p.maThucPham) as total
+      SELECT COUNT(DISTINCT p.maThucPham) as total
       FROM khothucpham as p
       INNER JOIN danhmuc as c on p.maDanhMuc = c.maDanhMuc
       ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}

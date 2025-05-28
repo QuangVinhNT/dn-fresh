@@ -1,5 +1,4 @@
 import { Router } from "express";
-import categoryRoutes from "./categoryRoutes.js";
 import danhMucRoutes from "./danhMucRoutes.js";
 import donHangRoutes from "./donHangRoutes.js";
 import exportReceiptRoutes from "./exportReceiptRoutes.js";
@@ -15,7 +14,6 @@ import uploadRoutes from "./uploadRoutes.js";
 const router = Router();
 
 router.use('/v1/admin-providers', providerRoutes);
-router.use('/v1/categories', categoryRoutes);
 router.use('/v1/import-receipts', importReceiptRoutes);
 router.use('/v1/export-receipts', exportReceiptRoutes);
 router.use('/v1/admin-orders', orderRoutes);

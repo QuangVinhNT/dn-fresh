@@ -20,7 +20,7 @@ export class ThucPhamYeuThichDAO {
     `, [userId, limit, offset]);
 
       const [total] = await pool.query(`
-      SELECT COUNT(maThucPham) as total
+      SELECT COUNT(DISTINCT maThucPham) as total
       FROM thucphamyeuthich
       WHERE maNguoiDung = ?
       `, [userId]);
@@ -53,7 +53,6 @@ export class ThucPhamYeuThichDAO {
       DELETE FROM thucphamyeuthich
       WHERE (maNguoiDung = ?)  AND (maThucPham = ?)  
     `, [thucPhamYeuThich.getMaNguoiDung(), thucPhamYeuThich.getMaThucPham()]);
-      // console.log(`DELETE FROM thucphamyeuthich WHERE (maNguoiDung = '${userId}') AND (maThucPham = '${productId}')`);
       return result;
     } catch (error) {
       console.error('DAO error:', error);
