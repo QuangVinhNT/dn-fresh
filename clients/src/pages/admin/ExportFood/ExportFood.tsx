@@ -1,78 +1,43 @@
-import { useEffect, useState } from "react";
-import './ExportFood.scss';
-import { FilterType } from "@/types";
-import { TfiExport } from "react-icons/tfi";
-import { ButtonComponent, FilterDrawerComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
-import { IoAdd } from "react-icons/io5";
-import ExportFoodDetail from "./ExportFoodDetail/ExportFoodDetail";
-import EditExportFood from "./ExportFoodDetail/EditExportFood/EditExportFood";
-import AddExportFood from "./AddExportFood/AddExportFood";
-import { datetimeFormatter } from "@/utils/datetimeFormatter";
-import { ExportReceiptList, ExportReceiptStatus } from "@/types/ExportReceipt";
-import { loadingStore } from "@/store";
 import { getExportReceipts } from "@/api/exportReceiptApi";
+import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
+import { loadingStore } from "@/store";
+import { FilterType } from "@/types";
+import { ExportReceiptList, ExportReceiptStatus } from "@/types/ExportReceipt";
+import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import { useEffect, useRef, useState } from "react";
+import { IoAdd, IoFilter } from "react-icons/io5";
+import { TfiExport } from "react-icons/tfi";
+import AddExportFood from "./AddExportFood/AddExportFood";
+import './ExportFood.scss';
+import EditExportFood from "./ExportFoodDetail/EditExportFood/EditExportFood";
+import ExportFoodDetail from "./ExportFoodDetail/ExportFoodDetail";
 
 const headers = ['Mã phiếu xuất', 'Ngày xuất hàng', 'Mã nhân viên', 'Mã quản trị viên', 'Trạng thái', 'Ngày tạo', 'Ngày cập nhật'];
-
-const filtersData: FilterType[] = [
-  {
-    query: 'status',
-    name: 'Trạng thái',
-    values: [
-      {
-        valueName: 'Đang giao dịch',
-        value: 'trading'
-      },
-      {
-        valueName: 'Ngừng giao dịch',
-        value: 'notTrading'
-      }
-    ]
-  },
-  {
-    query: 'productType',
-    name: 'Phân loại',
-    values: [
-      {
-        valueName: 'Sản phẩm thường',
-        value: 'normal'
-      },
-      {
-        valueName: 'Serial',
-        value: 'serial'
-      },
-      {
-        valueName: 'Lô - Hạn sử dụng',
-        value: 'expireDate'
-      },
-      {
-        valueName: 'Combo',
-        value: 'combo'
-      }
-    ]
-  }
-];
 
 const ExportFood = () => {
   const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
-  const [exportReceipts, setExportReceipts] = useState<ExportReceiptList[]>([])
+  const [exportReceipts, setExportReceipts] = useState<ExportReceiptList[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
+  const [filters, setFilters] = useState<FilterType[]>([]);
+
+  const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
-    fetchExportReceipts();
-  }, [limit, page]);
+    const statusFilter = filters.find(filter => filter.name === 'status')?.value;
+    fetchExportReceipts(statusFilter);
+  }, [limit, page, filters]);
 
-  const fetchExportReceipts = async () => {
+  const fetchExportReceipts = async (status?: string) => {
     showLoading();
     try {
-      const response = await getExportReceipts(page, limit);
+      const response = await getExportReceipts(page, limit, keywordRef.current, status);
       setExportReceipts(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -100,7 +65,39 @@ const ExportFood = () => {
             />
           </div>
           <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo mã phiếu xuất, mã người dùng" setIsShowFilter={setIsShowFilter} />
+            <div className="filter">
+              <h3><IoFilter /> Bộ lọc</h3>
+              <div className="filter-list">
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Chưa hoàn thành',
+                      value: 0,
+                    },
+                    {
+                      name: 'Đã hoàn thành',
+                      value: 1,
+                    },
+                    {
+                      name: 'Đang đợi duyệt',
+                      value: 2,
+                    },
+                    {
+                      name: 'Đã hủy',
+                      value: 3,
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Trạng thái',
+                    value: 'status'
+                  }}
+                  setFilters={setFilters}
+                />
+              </div>
+            </div>
+            <div className="search">
+              <SearchComponent placeholder="Nhập mã khách hàng..." onSearch={fetchExportReceipts} keywordRef={keywordRef} />
+            </div>
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -113,36 +110,35 @@ const ExportFood = () => {
               </thead>
               <tbody>
                 {exportReceipts?.map((exportReceipt, idx) => (
-                  <tr key={idx} className="tb-body-row" onClick={() => { 
+                  <tr key={idx} className="tb-body-row" onClick={() => {
                     // handleClickRow(product.id); 
-                    }}>
+                  }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{exportReceipt.id}</span>
+                      <span>{exportReceipt.maPhieuXuat}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(exportReceipt.exportDate)}</span>
+                      <span>{datetimeFormatter(exportReceipt.ngayXuatHang + "")}</span>
                     </td>
                     <td>
-                      <span>{exportReceipt.staffId}</span>
+                      <span>{exportReceipt.maNhanVien}</span>
                     </td>
                     <td>
-                      <span>{exportReceipt.adminId}</span>
+                      <span>{exportReceipt.maQuanTriVien}</span>
                     </td>
                     <td>
-                      <span>{ExportReceiptStatus[exportReceipt.status]}</span>
+                      <span>{ExportReceiptStatus[exportReceipt.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(exportReceipt.createdAt)}</span>
+                      <span>{datetimeFormatter(exportReceipt.ngayTao + "")}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(exportReceipt.updatedAt)}</span>
+                      <span>{datetimeFormatter(exportReceipt.ngayCapNhat + "")}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
-            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
           </div>
         </div>
       )}
@@ -151,7 +147,7 @@ const ExportFood = () => {
 
       {isShowEdit && <EditExportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} />}
 
-      {isShowAdd && <AddExportFood setIsShowAdd={setIsShowAdd}/>}
+      {isShowAdd && <AddExportFood setIsShowAdd={setIsShowAdd} />}
     </>
   );
 };

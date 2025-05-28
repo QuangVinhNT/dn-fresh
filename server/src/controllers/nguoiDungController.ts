@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import { NguoiDungService } from "../services/nguoiDungService.js";
 
 export class NguoiDungController {
@@ -7,7 +8,7 @@ export class NguoiDungController {
     this.nguoiDungService = new NguoiDungService();
   }
 
-  public getAllCustomer = async (req: any, res: any) => {
+  public getAllCustomer = async (req: Request, res: Response) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
@@ -22,7 +23,7 @@ export class NguoiDungController {
     }
   };
 
-  public getAllStaff = async (req: any, res: any) => {
+  public getAllStaff = async (req: Request, res: Response) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;

@@ -7,6 +7,15 @@ type ExportReceipt = {
   adminId: string;
   createdAt: string;
   updatedAt: string;
+
+  maPhieuXuat: string;
+  ngayXuatHang: Date;
+  ghiChu: string;
+  maNhanVien: string;
+  trangThai: number;
+  maQuanTriVien: string;
+  ngayTao: Date | null;
+  ngayCapNhat: Date | null;
 }
 
 export enum ExportReceiptStatus {
@@ -16,7 +25,7 @@ export enum ExportReceiptStatus {
   'Đã hủy' = 3
 }
 
-type ExportReceiptList = Pick<ExportReceipt, 'id' | 'exportDate' | 'staffId' | 'status' | 'adminId' | 'createdAt' | 'updatedAt'>
+type ExportReceiptList = Pick<ExportReceipt, 'maPhieuXuat' | 'ngayXuatHang' | 'maNhanVien' | 'trangThai' | 'maQuanTriVien' | 'ngayTao' | 'ngayCapNhat'>
 
 export type {
   ExportReceiptList
