@@ -3,6 +3,7 @@ import Customer from "./admin/Customer/Customer";
 import ExportFood from "./admin/ExportFood/ExportFood";
 import FoodCategory from "./admin/FoodCategory/FoodCategory";
 import FoodList from "./admin/FoodList/FoodList";
+import FoodProvider from "./admin/FoodProvider/FoodProvider";
 import ImportFood from "./admin/ImportFood/ImportFood";
 import Order from "./admin/Order/Order";
 import Overview from "./admin/Overview/Overview";
@@ -32,7 +33,7 @@ import ISImport from "./inventory-staff/ISImport/ISImport";
 
 export {
   // Admin
-  Admin, Overview, Order, FoodList, FoodCategory, ImportFood, ExportFood, Customer, Staff,
+  Admin, Overview, Order, FoodList, FoodCategory, ImportFood, ExportFood, Customer, Staff, FoodProvider,
 
   // Inventory Staff
   InventoryStaff, ISImport, ISExport,

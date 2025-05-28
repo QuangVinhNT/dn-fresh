@@ -1,73 +1,38 @@
-import { FilterDrawerComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
+import { getAdminOrders } from "@/api/orderApi";
+import { FilterComponent, SearchComponent, TablePagination } from "@/components";
+import { loadingStore } from "@/store";
 import { FilterType } from "@/types";
-import { useEffect, useState } from "react";
+import { AdminOrderList, OrderStatus } from "@/types/Order";
+import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import { useEffect, useRef, useState } from "react";
+import { IoFilter } from "react-icons/io5";
 import { TfiExport } from "react-icons/tfi";
 import './Order.scss';
 import OrderDetail from "./OrderDetail/OrderDetail";
-import { OrderList, OrderStatus } from "@/types/Order";
-import { loadingStore } from "@/store";
-import { getAdminOrders } from "@/api/orderApi";
-import { datetimeFormatter } from "@/utils/datetimeFormatter";
 
 const headers = ['Mã đơn hàng', 'Ngày tạo đơn', 'Khách hàng', 'Trạng thái', 'Mã phiếu xuất', 'Nhân viên giao hàng']
 
-const filtersData: FilterType[] = [
-  {
-    query: 'status',
-    name: 'Trạng thái',
-    values: [
-      {
-        valueName: 'Đang giao dịch',
-        value: 'trading'
-      },
-      {
-        valueName: 'Ngừng giao dịch',
-        value: 'notTrading'
-      }
-    ]
-  },
-  {
-    query: 'productType',
-    name: 'Phân loại',
-    values: [
-      {
-        valueName: 'Sản phẩm thường',
-        value: 'normal'
-      },
-      {
-        valueName: 'Serial',
-        value: 'serial'
-      },
-      {
-        valueName: 'Lô - Hạn sử dụng',
-        value: 'expireDate'
-      },
-      {
-        valueName: 'Combo',
-        value: 'combo'
-      }
-    ]
-  }
-];
-
 const Order = () => {
-  const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
-  const [orders, setOrders] = useState<OrderList[]>([])
+  const [orders, setOrders] = useState<AdminOrderList[]>([])
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
+  const [filters, setFilters] = useState<FilterType[]>([]);
+
+  const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
-    fetchOrders();
-  }, [limit, page]);
+    const statusFilter = filters.find(filter => filter.name === 'status')?.value;
+    fetchOrders(statusFilter);
+  }, [limit, page, filters]);
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (status?: string) => {
     showLoading();
     try {
-      const response = await getAdminOrders(page, limit);
+      const response = await getAdminOrders(page, limit, keywordRef.current, status);
       setOrders(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -89,7 +54,43 @@ const Order = () => {
               </div>
             </div>
             <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo mã phiếu nhập, mã người dùng" setIsShowFilter={setIsShowFilter} />
+            <div className="filter">
+              <h3><IoFilter /> Bộ lọc</h3>
+              <div className="filter-list">
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Đã hủy',
+                      value: 0,
+                    },
+                    {
+                      name: 'Đặt hàng',
+                      value: 1,
+                    },
+                    {
+                      name: 'Đóng gói',
+                      value: 2,
+                    },
+                    {
+                      name: 'Xuất kho',
+                      value: 3,
+                    },
+                    {
+                      name: 'Hoàn thành',
+                      value: 4
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Trạng thái',
+                    value: 'status'
+                  }}
+                  setFilters={setFilters}
+                />
+              </div>
+            </div>
+            <div className="search">
+              <SearchComponent placeholder="Nhập tên nhà cung cấp..." onSearch={fetchOrders} keywordRef={keywordRef} />
+            </div>
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -106,29 +107,28 @@ const Order = () => {
                     // handleClickRow(product.id); 
                     }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{order.id}</span>
+                      <span>{order.maDonHang}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(order.createdAt)}</span>
+                      <span>{datetimeFormatter(order.ngayTao + '')}</span>
                     </td>
                     <td>
-                      <span>{order.customerName}</span>
+                      <span>{order.nguoiNhan}</span>
                     </td>
                     <td>
-                      <span>{OrderStatus[order.status]}</span>
+                      <span>{OrderStatus[order.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{order.exportReceiptId}</span>
+                      <span>{order.maPhieuXuat}</span>
                     </td>
                     <td>
-                      <span>{order.staffName}</span>
+                      <span>{order.tenNhanVien}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
-            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
           </div>
           </div>
         </>

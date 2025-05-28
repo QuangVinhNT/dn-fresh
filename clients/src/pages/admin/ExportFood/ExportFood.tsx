@@ -16,7 +16,6 @@ const headers = ['Mã phiếu xuất', 'Ngày xuất hàng', 'Mã nhân viên', 
 
 const ExportFood = () => {
   const [isShowAdd, setIsShowAdd] = useState(false);
-  const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
   const [exportReceipts, setExportReceipts] = useState<ExportReceiptList[]>([]);

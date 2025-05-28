@@ -12,6 +12,7 @@ type Order = {
   maDiaChi: string;
   diaChiNhan: string;
   maNhanVien: string;
+  tenNhanVien: string;
   maPhieuXuat: string;
   trangThai: number;
   ngayTao: Date;
@@ -51,7 +52,10 @@ type OrderDetail = Pick<Order, 'maDonHang' | 'nguoiNhan' | 'diaChiNhan' | 'ngayT
   thongTinThucPham: OrderProduct[]
 }
 
+type AdminOrderList = Pick<Order, 'maDonHang' | 'ngayTao' | 'nguoiNhan' | 'trangThai' | 'maPhieuXuat' | 'tenNhanVien'>
+
 export type {
   OrderList,
-  OrderDetail
+  OrderDetail,
+  AdminOrderList
 }

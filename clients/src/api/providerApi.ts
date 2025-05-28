@@ -6,6 +6,11 @@ const getProvidersName = async (): Promise<AdminProviderName[]> => {
   return res.data;
 };
 
+const getProviders = async (page: number, limit: number, providerName: string, status?: string) => {
+  const res = await axiosInstance.get(`/v1/admin/nha-cung-cap?page=${page}&limit=${limit}&search=${providerName}&status=${status}`);
+  return res.data;
+}
+
 export {
-  getProvidersName
+  getProvidersName, getProviders
 }

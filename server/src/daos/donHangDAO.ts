@@ -65,4 +65,39 @@ export class DonHangDAO {
       throw error;
     }
   };
+
+  public getAllForAdmin = async (page: number, limit: number, orderId: string, status: string) => {
+    const offset = (page - 1) * limit;
+    const whereClause = [
+      orderId.length > 0 ? `BINARY LOWER(dh.maDonHang) LIKE LOWER('%${orderId}%')` : '',
+      status.length > 0 ? `dh.trangThai IN (${status})` : ''
+    ].filter(item => item.length > 0).join(' AND ');
+
+    try {
+      const [rows] = await pool.query(`
+      SELECT maDonHang, dh.ngayTao, kh.hoTen as nguoiNhan, dh.trangThai, maPhieuXuat, nv.hoTen as tenNhanVien
+      FROM donhang as dh
+      INNER JOIN nguoidung as kh ON kh.maNguoiDung = dh.maKhachHang
+      INNER JOIN nguoidung as nv ON nv.maNguoiDung = dh.maNhanVien
+      ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
+      GROUP BY dh.maDonHang
+      LIMIT ? 
+      OFFSET ?
+    `, [limit, offset]);
+
+      const [total] = await pool.query(`
+      SELECT COUNT(DISTINCT maDonHang) as total
+      FROM donhang AS dh
+      ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
+      `);
+
+      return {
+        data: rows,
+        total,
+      };
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

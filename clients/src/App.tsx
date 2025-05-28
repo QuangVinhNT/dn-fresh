@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './App.css';
-import { Admin, Client, ClientFoodDetail, ClientOrderDetail, ClientOrders, ConfirmCode, Contact, Customer, DeliveryStaff, DSOrder, DSOverview, ExportFood, Favourites, FoodCategory, FoodList, Foods, ForgotPassword, Home, ImportFood, Introduce, InventoryStaff, ISExport, ISImport, Login, Order, Overview, Payment, Register, Staff, UserRole } from "./pages";
+import { Admin, Client, ClientFoodDetail, ClientOrderDetail, ClientOrders, ConfirmCode, Contact, Customer, DeliveryStaff, DSOrder, DSOverview, ExportFood, Favourites, FoodCategory, FoodList, FoodProvider, Foods, ForgotPassword, Home, ImportFood, Introduce, InventoryStaff, ISExport, ISImport, Login, Order, Overview, Payment, Register, Staff, UserRole } from "./pages";
 import ISOverview from "./pages/inventory-staff/ISOverview/ISOverview";
 
 const router = createBrowserRouter([
@@ -78,6 +78,10 @@ const router = createBrowserRouter([
         path: '/admin/staff',
         element: <Staff />
       },
+      {
+        path: '/admin/food-provider',
+        element: <FoodProvider />
+      }
     ]
   },
   {

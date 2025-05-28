@@ -1,5 +1,5 @@
 import { AccountUser } from "@/types/User";
-import { IoDocumentTextOutline, IoHomeOutline, IoPeopleOutline, IoPersonOutline, IoRestaurantOutline } from "react-icons/io5";
+import { IoDocumentTextOutline, IoHomeOutline, IoPeopleOutline, IoPersonOutline, IoRestaurantOutline, IoStorefrontOutline } from "react-icons/io5";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { AdminHeader, AdminSidebar, LoadingComponent, Overlay } from "../../components";
 import { loadingStore, overlayStore } from "../../store";
@@ -57,6 +57,12 @@ const menuItems = [
     affix: <IoPersonOutline size={22} />,
     childrens: [],
   },
+  {
+    name: 'Nhà cung cấp',
+    link: '/admin/food-provider',
+    affix: <IoStorefrontOutline size={22} />,
+    childrens: [],
+  }
 ];
 
 const Admin = () => {
