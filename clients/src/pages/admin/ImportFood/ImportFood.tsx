@@ -1,11 +1,11 @@
 import { getImportReceipts } from "@/api/importReceiptApi";
-import { ButtonComponent, FilterDrawerComponent, TablePagination, TableSearchFilter } from "@/components";
+import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
 import { loadingStore } from "@/store";
 import { FilterType } from "@/types";
 import { ImportReceiptList, ImportReceiptStatus } from "@/types/ImportReceipt";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
-import { useEffect, useState } from "react";
-import { IoAdd } from "react-icons/io5";
+import { useEffect, useRef, useState } from "react";
+import { IoAdd, IoFilter } from "react-icons/io5";
 import { TfiExport } from "react-icons/tfi";
 import AddImportFood from "./AddImportFood/AddImportFood";
 import './ImportFood.scss';
@@ -14,65 +14,29 @@ import ImportFoodDetail from "./ImportFoodDetail/ImportFoodDetail";
 
 const headers = ['Mã phiếu nhập', 'Ngày nhập hàng', 'Mã nhân viên', 'Mã quản trị viên', 'Trạng thái', 'Ngày tạo', 'Ngày cập nhật'];
 
-const filtersData: FilterType[] = [
-  {
-    query: 'status',
-    name: 'Trạng thái',
-    values: [
-      {
-        valueName: 'Đang giao dịch',
-        value: 'trading'
-      },
-      {
-        valueName: 'Ngừng giao dịch',
-        value: 'notTrading'
-      }
-    ]
-  },
-  {
-    query: 'productType',
-    name: 'Phân loại',
-    values: [
-      {
-        valueName: 'Sản phẩm thường',
-        value: 'normal'
-      },
-      {
-        valueName: 'Serial',
-        value: 'serial'
-      },
-      {
-        valueName: 'Lô - Hạn sử dụng',
-        value: 'expireDate'
-      },
-      {
-        valueName: 'Combo',
-        value: 'combo'
-      }
-    ]
-  }
-];
-
 const ImportFood = () => {
   const [isShowAdd, setIsShowAdd] = useState(false);
-  const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
   const [importReceipts, setImportReceipts] = useState<ImportReceiptList[]>([])
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
+    const [filters, setFilters] = useState<FilterType[]>([]);
+  
+    const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
-    fetchImportReceipts();
-  }, [limit, page]);
+    const statusFilter = filters.find(filter => filter.name === 'status')?.value;
+    fetchImportReceipts(statusFilter);
+  }, [limit, page, filters]);
 
-  const fetchImportReceipts = async () => {
+  const fetchImportReceipts = async (status?: string) => {
     showLoading();
     try {
-      const response = await getImportReceipts(page, limit);
+      const response = await getImportReceipts(page, limit, keywordRef.current, status);
       setImportReceipts(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -101,7 +65,39 @@ const ImportFood = () => {
             />
           </div>
           <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo mã phiếu nhập, mã người dùng" setIsShowFilter={setIsShowFilter} />
+            <div className="filter">
+              <h3><IoFilter /> Bộ lọc</h3>
+              <div className="filter-list">
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Chưa hoàn thành',
+                      value: 0,
+                    },
+                    {
+                      name: 'Đã hoàn thành',
+                      value: 1,
+                    },
+                    {
+                      name: 'Đang đợi duyệt',
+                      value: 2,
+                    },
+                    {
+                      name: 'Đã hủy',
+                      value: 3,
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Trạng thái',
+                    value: 'status'
+                  }}
+                  setFilters={setFilters}
+                />
+              </div>
+            </div>
+            <div className="search">
+              <SearchComponent placeholder="Nhập mã phiếu nhập..." onSearch={fetchImportReceipts} keywordRef={keywordRef} />
+            </div>
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -118,32 +114,31 @@ const ImportFood = () => {
                     // handleClickRow(product.id); 
                     }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{importReceipt.id}</span>
+                      <span>{importReceipt.maPhieuNhap}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(importReceipt.importDate)}</span>
+                      <span>{datetimeFormatter(importReceipt.ngayNhapHang + "")}</span>
                     </td>
                     <td>
-                      <span>{importReceipt.staffId}</span>
+                      <span>{importReceipt.maNhanVien}</span>
                     </td>
                     <td>
-                      <span>{importReceipt.adminId}</span>
+                      <span>{importReceipt.maQuanTriVien}</span>
                     </td>
                     <td>
-                      <span>{ImportReceiptStatus[importReceipt.status]}</span>
+                      <span>{ImportReceiptStatus[importReceipt.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(importReceipt.createdAt)}</span>
+                      <span>{datetimeFormatter(importReceipt.ngayTao + "")}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(importReceipt.updatedAt)}</span>
+                      <span>{datetimeFormatter(importReceipt.ngayCapNhat + "")}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
-            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
           </div>
         </div>
       )}

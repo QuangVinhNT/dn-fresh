@@ -1,8 +1,8 @@
 import { CategoryFilter, CategorySelectBox } from "@/types/Category";
 import axiosInstance from "./axiosInstance";
 
-const getCategories = async (page: number, limit: number, categoryName: string, status?: string) => {
-  const res = await axiosInstance.get(`/v1/danh-muc?page=${page}&limit=${limit}&categoryName=${categoryName}&status=${status}`)
+const getCategories = async (page: number, limit: number, search: string, status?: string) => {
+  const res = await axiosInstance.get(`/v1/danh-muc?page=${page}&limit=${limit}&search=${search}&status=${status}`)
   return res.data;
 }
 

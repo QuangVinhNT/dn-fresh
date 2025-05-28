@@ -8,6 +8,16 @@ type ImportReceipt = {
   createdAt: string;
   updatedAt: string;
   providerId: string;
+
+  maPhieuNhap: string;
+  ngayNhapHang: Date;
+  ghiChu: string;
+  maNhanVien: string;
+  trangThai: number;
+  maQuanTriVien: string;
+  ngayTao: Date | null;
+  ngayCapNhat: Date | null;
+  maNhaCungCap: string;
 }
 
 export enum ImportReceiptStatus {
@@ -17,7 +27,7 @@ export enum ImportReceiptStatus {
   'Đã hủy' = 3
 }
 
-type ImportReceiptList = Pick<ImportReceipt, 'id' | 'importDate' | 'staffId' | 'status' | 'adminId' | 'createdAt' | 'updatedAt'>
+type ImportReceiptList = Pick<ImportReceipt, 'maPhieuNhap' | 'ngayNhapHang' | 'maNhanVien' | 'trangThai' | 'maQuanTriVien' | 'ngayTao' | 'ngayCapNhat'>
 
 export type {
   ImportReceiptList
