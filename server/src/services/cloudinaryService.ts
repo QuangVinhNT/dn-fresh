@@ -7,7 +7,6 @@ const uploadToCloudinary = async (filePath: string, folder: string = 'uploads') 
       folder,
       resource_type: 'auto',
     });
-    fs.unlinkSync(filePath);
     return result;
   } catch (error) {
     console.error('Cloudinary service error:', error);

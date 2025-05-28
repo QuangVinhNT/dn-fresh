@@ -1,4 +1,6 @@
+import { PoolConnection } from "mysql2/promise";
 import { pool } from "../configs/database.js";
+import { KhoThucPham } from "../models/khoThucPhamModel.js";
 
 /**
  * COALESCE: Trả về giá trị không phải NULL đầu tiên trong danh sách các tham số được cung cấp.
@@ -94,7 +96,7 @@ export class KhoThucPhamDAO {
       ORDER BY p.maThucPham DESC
       LIMIT ? 
       OFFSET ?
-    `, [limit, offset]); 
+    `, [limit, offset]);
 
       const [total] = await pool.query(`
       SELECT COUNT(p.maThucPham) as total
@@ -102,7 +104,7 @@ export class KhoThucPhamDAO {
       INNER JOIN danhmuc as c on p.maDanhMuc = c.maDanhMuc
       ${whereClause.some(item => item.length > 0) ? `WHERE ${whereClause.join(' AND ')}` : ''}
       `);
-      
+
       return {
         data: rows,
         total,
@@ -112,4 +114,60 @@ export class KhoThucPhamDAO {
       throw error;
     }
   };
+
+  public getByIdForAdmin = async (productId: string) => {
+    try {
+      const [rows] = await pool.query(`
+      SELECT p.maThucPham, tenThucPham, donGia, soLuongTonKho, donViTinh, tenDanhMuc, p.ngayTao, p.ngayCapNhat, p.moTa, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, p.maDanhMuc, p.trangThai, p.tiLeKhuyenMai
+      FROM khothucpham as p
+      INNER JOIN danhmuc as c on p.maDanhMuc = c.maDanhMuc
+      LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
+      WHERE p.maThucPham = ?
+      `, [productId]);
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
+
+  public insertProduct = async (product: KhoThucPham, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        INSERT INTO khothucpham (maThucPham, tenThucPham, donGia, moTa, trangThai, maDanhMuc, tiLeKhuyenMai, ngayTao, ngayCapNhat, soLuongTonKho, donViTinh)
+        VALUES (?, ?, ?, ?, 2, ?, 0, NOW(), NOW(), 0, ?)
+      `, [product.getMaThucPham(), product.getTenThucPham(), product.getDonGia(), product.getMoTa(), product.getMaDanhMuc(), product.getDonViTinh()]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
+
+  public updateProduct = async (product: KhoThucPham, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        UPDATE khothucpham
+        SET tenThucPham = ?, donGia = ?, moTa = ?, maDanhMuc = ?, donViTinh = ?, trangThai = ?, tiLeKhuyenMai = ?, ngayCapNhat = NOW()
+        WHERE maThucPham = ?
+      `, [product.getTenThucPham(), product.getDonGia(), product.getMoTa(), product.getMaDanhMuc(), product.getDonViTinh(), product.getTrangThai(), product.getTiLeKhuyenMai(), product.getMaThucPham()]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
+
+  public deleteProduct = async (productId: string, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        DELETE FROM khothucpham
+        WHERE maThucPham = ?
+      `, [productId]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
 }

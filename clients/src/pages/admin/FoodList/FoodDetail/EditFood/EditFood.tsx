@@ -1,15 +1,14 @@
-import { AdminContainerComponent, BackComponent, ButtonComponent, CheckboxComponent, ImageSlider, InputComponent, SelectComponent, TextComponent, UploadImgComponent } from "@/components";
+import { getCategoriesForSelectBox } from "@/api/categoryApi";
+import { postUploadFile } from "@/api/uploadApi";
+import { AdminContainerComponent, BackComponent, ButtonComponent, ImageSlider, InputComponent, SelectComponent, TextComponent, UploadImgComponent } from "@/components";
+import { loadingStore } from "@/store";
+import { AdminProductDetail } from "@/types";
+import { SelectBox } from "@/types/ComponentType";
+import { UpdateProductPayload } from "@/types/Product";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import './EditFood.scss';
-import { AdminProductDetail } from "@/types";
-import { useEffect, useState } from "react";
-import { SelectBox } from "@/types/ComponentType";
-import { getCategoriesForSelectBox } from "@/api/categoryApi";
-import { loadingStore } from "@/store";
-import FoodImage from "@/pages/client/ClientFoodDetail/FoodImage/FoodImage";
-import { postUploadFile } from "@/api/uploadApi";
-import { getProvidersName } from "@/api/providerApi";
-import { UpdateProductPayload } from "@/types/Product";
+import { updateProduct } from "@/api/productApi";
 
 const selectItems = [
   {
@@ -52,26 +51,27 @@ const EditFood = (props: IProps) => {
 
   const { register, handleSubmit, reset, watch } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const fileArray = data['food-img'];
+  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+    const fileArray = formData['food-img'];
     let imageUrls = [];
     if (fileArray.length > 0 && fileArray instanceof FileList) {
       imageUrls = await handleUpload(fileArray);
     }
     const payload: UpdateProductPayload = {
-      name: data['food-name'].toString(),
-      price: +data['food-price'],
-      categoryId: data['food-type'].toString(),
-      description: data['food-desc'].toString(),
-      unit: data['food-unit'].toString(),
-      imageUrls: imageUrls.length > 0 ? imageUrls.map((image: { url: string, type: string; }) => image.url) : [],
-      discountRate: +data['food-discount']/100,
-      status: +data['food-status']
+      tenThucPham: formData['food-name'].toString(),
+      donGia: +formData['food-price'],
+      maDanhMuc: formData['food-type'].toString(),
+      moTa: formData['food-desc'].toString(),
+      donViTinh: formData['food-unit'].toString(),
+      hinhAnh: imageUrls.length > 0 ? imageUrls.map((image: { url: string, type: string; }) => image.url) : [],
+      tiLeKhuyenMai: +formData['food-discount']/100,
+      trangThai: +formData['food-status']
     };
-    console.log(payload);
-    // setIsShowDetail(false);
-    // setIsShowEditFood(false);
-    // onEdited();
+    const updateResult = await updateProduct(data?.maThucPham + '', payload);
+    console.log('Update result:', updateResult);
+    setIsShowDetail(false);
+    setIsShowEditFood(false);
+    onEdited();
   };
 
   const fetchCategories = async () => {
@@ -124,12 +124,12 @@ const EditFood = (props: IProps) => {
             backTitle="Quay lại chi tiết thực phẩm"
           />
           <TextComponent
-            text={data?.name}
+            text={data?.tenThucPham}
             title
           />
           <form className="edit-food-body" onSubmit={handleSubmit(onSubmit)}>
             <div className="food-image">
-              <ImageSlider images={data.imageUrls} />
+              <ImageSlider images={data.hinhAnh} />
               <UploadImgComponent id="edit-food-img-upload" name="food-img" register={register} watch={watch} />
             </div>
             <AdminContainerComponent
@@ -142,14 +142,14 @@ const EditFood = (props: IProps) => {
                     name="food-code"
                     title="Mã sản phẩm"
                     isReadOnly
-                    placeholder={data.id}
+                    placeholder={data.maThucPham}
                   />
 
                   <InputComponent
                     className="food-name"
                     name="food-name"
                     title="Tên sản phẩm"
-                    placeholder={data.name}
+                    placeholder={data.tenThucPham}
                     register={register}
                     defaultValue
                   />
@@ -159,14 +159,14 @@ const EditFood = (props: IProps) => {
                     name="food-quantity"
                     title="Số lượng tồn kho"
                     isReadOnly
-                    placeholder={data.quantity.toString()}
+                    placeholder={data.soLuongTonKho.toString()}
                   />
 
                   <InputComponent
                     className="food-price"
                     name="food-price"
                     title="Giá bán"
-                    placeholder={data.price.toString()}
+                    placeholder={data.donGia.toString()}
                     register={register}
                     suffix={'VND'}
                     defaultValue
@@ -176,7 +176,7 @@ const EditFood = (props: IProps) => {
                     className="food-unit"
                     name="food-unit"
                     title="Đơn vị tính"
-                    placeholder={data.unit}
+                    placeholder={data.donViTinh}
                     register={register}
                     defaultValue
                   />
@@ -188,7 +188,7 @@ const EditFood = (props: IProps) => {
                     title="Loại thực phẩm"
                     register={register}
                     defaultValue
-                    placeholder={data.categoryId}
+                    placeholder={data.maDanhMuc}
                   />
 
                   <SelectComponent
@@ -212,7 +212,7 @@ const EditFood = (props: IProps) => {
                         isSelected: false,
                       }
                     ]}
-                    placeholder={data.status.toString()}
+                    placeholder={data.trangThai.toString()}
                     register={register}
                     defaultValue
                   />
@@ -221,7 +221,7 @@ const EditFood = (props: IProps) => {
                     className="food-discount"
                     name='food-discount'
                     title='Giảm giá'
-                    placeholder={(data.discountRate * 100).toString()}
+                    placeholder={(data.tiLeKhuyenMai * 100).toString()}
                     register={register}
                     defaultValue
                     suffix={'%'}
@@ -231,7 +231,7 @@ const EditFood = (props: IProps) => {
                     className="food-desc"
                     name="food-desc"
                     title="Mô tả"
-                    placeholder={data.description}
+                    placeholder={data.moTa}
                     register={register}
                     isTextarea
                     defaultValue

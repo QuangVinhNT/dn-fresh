@@ -9,7 +9,6 @@ const uploadFile = async (req: Request, res: Response) => {
     if (!files || files.length === 0) {
       res.status(400).json({ error: 'File not found!' });
     } else {
-      // const uploadPromises = files.map(file => uploadToCloudinary(file.path));
       const results = []
       for (const file of files) {
         const result = await uploadToCloudinary(file.path);

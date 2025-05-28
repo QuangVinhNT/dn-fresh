@@ -1,8 +1,8 @@
 import { getAdminProductById, getAdminProducts } from "@/api/productApi";
-import { FilterComponent, FilterDrawerComponent, SearchComponent, TablePagination } from "@/components";
+import { FilterComponent, SearchComponent, TablePagination } from "@/components";
 import { loadingStore } from "@/store";
 import { FilterType } from "@/types";
-import { AdminProductDetail, AdminProductList, ProductStatus } from "@/types/Product";
+import { AdminProductDetail, AdminProductList, ProductPackage, ProductStatus } from "@/types/Product";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useEffect, useRef, useState } from "react";
 import { IoAdd, IoFilter } from "react-icons/io5";
@@ -17,12 +17,12 @@ const headers = ['Sản phẩm', 'Ảnh', 'Loại', 'Tồn kho', 'Đơn vị tí
 
 
 const FoodList = () => {
-  const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEditFood, setIsShowEditFood] = useState(false);
   const [isShowAddFood, setIsShowAddFood] = useState(false);
   const [products, setProducts] = useState<AdminProductList[]>([]);
   const [product, setProduct] = useState<AdminProductDetail>();
+  const [productPackages, setProductPackages] = useState<ProductPackage[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
@@ -54,7 +54,8 @@ const FoodList = () => {
   const handleClickRow = async (productId: string) => {
     try {
       const response = await getAdminProductById(productId);
-      setProduct(response);
+      setProduct(response.product);
+      setProductPackages(response.productPackages);
       setIsShowDetail(true);
     } catch (error) {
       console.error('Error when get product:', error);
@@ -177,7 +178,7 @@ const FoodList = () => {
       )}
 
       {/* Food Detail */}
-      {isShowDetail && <FoodDetail setIsShowDetail={setIsShowDetail} data={product} setIsShowEditFood={setIsShowEditFood} />}
+      {isShowDetail && <FoodDetail setIsShowDetail={setIsShowDetail} detailData={product} setIsShowEditFood={setIsShowEditFood} packageData={productPackages} onDelete={fetchProducts}/>}
 
 
       {/* Edit food component */}

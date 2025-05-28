@@ -2,22 +2,28 @@ import { AdminContainerComponent, BackComponent, ButtonComponent, ImageSlider, O
 import { overlayStore } from "@/store";
 import { useState } from "react";
 import './FoodDetail.scss';
-import { AdminProductDetail, ProductStatus } from "@/types/Product";
+import { AdminProductDetail, ProductPackage, ProductStatus } from "@/types/Product";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import { deleteProduct } from "@/api/productApi";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
   setIsShowEditFood: React.Dispatch<React.SetStateAction<boolean>>;
-  data: AdminProductDetail | undefined;
+  detailData: AdminProductDetail | undefined;
+  packageData: ProductPackage[] | undefined;
+  onDelete?: () => void;
 }
 
-const statusClass = ['no-trading', 'trading', 'out-of-stock']
+const statusClass = ['no-trading', 'trading', 'out-of-stock'];
+const headers = ['Mã lô hàng', 'Số lượng tồn kho', 'Đơn vị tính', 'Hạn sử dụng', 'Nhà cung cấp'];
 
 const FoodDetail = (props: IProps) => {
-  const { setIsShowDetail, data, setIsShowEditFood } = props;
+  const { setIsShowDetail, detailData, setIsShowEditFood, packageData, onDelete } = props;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const deleteFood = () => {
-    console.log('Delete Food');
+  const deleteFood = async () => {
+    const deleteResult = await deleteProduct(detailData?.maThucPham ?? '');
+    console.log('Delete result:', deleteResult);
+    onDelete?.();
     setShowDeleteModal(false);
     hideOverlay();
     setIsShowDetail(false);
@@ -25,11 +31,11 @@ const FoodDetail = (props: IProps) => {
   const { hideOverlay, showOverlay } = overlayStore();
   return (
     <>
-      {data && (
+      {detailData && (
         <div className="food-detail-component">
           <BackComponent onBack={() => setIsShowDetail(false)} backTitle="Quay lại danh sách sản phẩm" />
           <TextComponent
-            text={data.name ?? "Chưa có dữ liệu"}
+            text={detailData.tenThucPham ?? "Chưa có dữ liệu"}
             title
           />
           <AdminContainerComponent
@@ -37,7 +43,7 @@ const FoodDetail = (props: IProps) => {
             title={
               <div className="food-info-header">
                 <span className="title">Thông tin chung</span>
-                <span className={`status ${statusClass[data.status]}`} style={{}}>{ProductStatus[data.status]}</span>
+                <span className={`status ${statusClass[detailData.trangThai]}`} style={{}}>{ProductStatus[detailData.trangThai]}</span>
               </div>
             }
             extraTitle={
@@ -64,44 +70,44 @@ const FoodDetail = (props: IProps) => {
               </div>
             }
             children={
-              data && (
+              detailData && (
                 <div className="food-info-body">
                   <div className="content">
                     <div>
                       <span className="title">Mã thực phẩm</span>
-                      <span className="detail">: {data.id}</span>
+                      <span className="detail">: {detailData.maThucPham}</span>
                     </div>
                     <div>
                       <span className="title">Tên thực phẩm</span>
-                      <span className="detail">: {data.name}</span>
+                      <span className="detail">: {detailData.tenThucPham}</span>
                     </div>
                     <div>
                       <span className="title">Giá bán</span>
-                      <span className="detail">: {data.price}</span>
+                      <span className="detail">: {detailData.donGia}</span>
                     </div>
                     <div>
                       <span className="title">Loại thực phẩm</span>
-                      <span className="detail">: {data.category}</span>
+                      <span className="detail">: {detailData.tenDanhMuc}</span>
                     </div>
                     <div>
                       <span className="title">Số lượng tồn kho</span>
-                      <span className="detail">: {data.quantity}</span>
+                      <span className="detail">: {detailData.soLuongTonKho}</span>
                     </div>
                     <div>
                       <span className="title">Đơn vị tính</span>
-                      <span className="detail">: {data.unit}</span>
+                      <span className="detail">: {detailData.donViTinh}</span>
                     </div>
                     <div>
                       <span className="title">Ngày tạo</span>
-                      <span className="detail">: {datetimeFormatter(data.createdAt)}</span>
+                      <span className="detail">: {datetimeFormatter(detailData.ngayTao + '')}</span>
                     </div>
                     <div>
                       <span className="title">Ngày cập nhật cuối</span>
-                      <span className="detail">: {datetimeFormatter(data.updatedAt)}</span>
+                      <span className="detail">: {datetimeFormatter(detailData.ngayCapNhat + '')}</span>
                     </div>
                   </div>
                   <div className="image">
-                    <ImageSlider images={data.imageUrls} />
+                    <ImageSlider images={detailData.hinhAnh} />
                   </div>
                 </div>
               )
@@ -113,7 +119,7 @@ const FoodDetail = (props: IProps) => {
             className="food-desc"
             children={
               <p>
-                {data?.description}
+                {detailData?.moTa ?? "Chưa có mô tả cho thực phẩm này."}
               </p>
             }
           />
@@ -121,45 +127,38 @@ const FoodDetail = (props: IProps) => {
           <div className="package-detail">
             <span className="package-detail-header">Chi tiết thực phẩm - lô hàng</span>
             <div className="package-detail-body">
-              <TableComponent
-                headers={['Mã lô hàng', 'Số lượng tồn kho', 'Đơn vị tính', 'Hạn sử dụng', 'Nhà cung cấp']}
-                data={[
-                  {
-                    packageCode: 'LH0001',
-                    quantity: 10,
-                    unit: 'kg',
-                    expiredDate: '30/03/2025 16:02',
-                    provider: 'Hợp tác xã Hòa Vang'
-                  },
-                  {
-                    packageCode: 'LH0002',
-                    quantity: 10,
-                    unit: 'kg',
-                    expiredDate: '30/03/2025 16:02',
-                    provider: 'Hợp tác xã Hòa Vang'
-                  },
-                  {
-                    packageCode: 'LH0003',
-                    quantity: 10,
-                    unit: 'kg',
-                    expiredDate: '30/03/2025 16:02',
-                    provider: 'Hợp tác xã Hòa Vang'
-                  },
-                  {
-                    packageCode: 'LH0004',
-                    quantity: 10,
-                    unit: 'kg',
-                    expiredDate: '30/03/2025 16:02',
-                    provider: 'Hợp tác xã Hòa Vang'
-                  },
-                  {
-                    packageCode: 'LH0005',
-                    quantity: 10,
-                    unit: 'kg',
-                    expiredDate: '30/03/2025 16:02',
-                    provider: 'Hợp tác xã Hòa Vang'
-                  }
-                ]} />
+              <table className="table">
+                <thead>
+                  <tr className="tb-header-row">
+                    {headers.map((value, index) => (
+                      <th key={index} className="table-data">
+                        {value}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {packageData?.map((productPackage, idx) => (
+                    <tr key={idx} className="tb-body-row">
+                      <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
+                        <span>{productPackage.maLoHang}</span>
+                      </td>
+                      <td>
+                        <span>{productPackage.soLuongTonKho}</span>
+                      </td>
+                      <td>
+                        <span>{productPackage.donViTinh}</span>
+                      </td>
+                      <td>
+                        <span>{datetimeFormatter(productPackage.hanSuDung + '')}</span>
+                      </td>
+                      <td>
+                        <span>{productPackage.nhaCungCap}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -169,7 +168,7 @@ const FoodDetail = (props: IProps) => {
         <OkCancelModal
           message={
             <p>Bạn chắc chắn muốn xóa sản phẩm {' '}
-              <span style={{ fontWeight: 700 }}>{data?.name}</span> ?
+              <span style={{ fontWeight: 700 }}>{detailData?.tenThucPham}</span> ?
             </p>
           }
           onOk={() => {

@@ -31,6 +31,9 @@ type Product = {
   soLuongTonKho: number;
   donViTinh: string;
   hinhAnh: string[];
+  nhaCungCap: string;
+  maLoHang: string;
+  hanSuDung: Date;
 }
 
 export enum ProductStatus {
@@ -43,14 +46,16 @@ type AdminProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' |
 
 type ProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'donGia' | 'tiLeKhuyenMai' | 'trangThai'>
 
-type AdminProductDetail = Pick<Product, 'id' | 'name' | 'imageUrls' | 'price' | 'quantity' | 'unit' | 'category' | 'createdAt' | 'updatedAt' | 'description' | 'categoryId' | 'status' | 'discountRate'>
+type AdminProductDetail = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'donGia' | 'soLuongTonKho' | 'donViTinh' | 'tenDanhMuc' | 'ngayTao' | 'ngayCapNhat' | 'moTa' | 'maDanhMuc' | 'trangThai' | 'tiLeKhuyenMai'>
+
+type ProductPackage = Pick<Product, 'maLoHang' | 'soLuongTonKho' | 'donViTinh' | 'hanSuDung' | 'nhaCungCap'>
 
 type ProductDetail = Pick<Product, 'maThucPham' | 'tenThucPham' | 'donGia' | 'soLuongTonKho' | 'donViTinh' | 'moTa' | 'hinhAnh' | 'trangThai' | 'tiLeKhuyenMai'>
 
-type InsertProductPayload = Pick<Product, 'name' | 'price' | 'unit' | 'description' | 'categoryId' | 'imageUrls'>
+type InsertProductPayload = Pick<Product, 'tenThucPham' | 'donGia' | 'donViTinh' | 'moTa' | 'maDanhMuc' | 'hinhAnh'>
 
-type UpdateProductPayload = Pick<Product, 'name' | 'price' | 'unit' | 'categoryId' | 'status' | 'discountRate' | 'description' | 'imageUrls'>
+type UpdateProductPayload = Pick<Product, 'tenThucPham' | 'donGia' | 'donViTinh' | 'maDanhMuc' | 'trangThai' | 'tiLeKhuyenMai' | 'moTa' | 'hinhAnh'>
 
 export type {
-  AdminProductList, AdminProductDetail, InsertProductPayload, UpdateProductPayload, ProductList, ProductDetail
+  AdminProductList, AdminProductDetail, InsertProductPayload, UpdateProductPayload, ProductList, ProductDetail, ProductPackage
 }

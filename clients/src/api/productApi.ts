@@ -25,7 +25,7 @@ const getAdminProducts = async (page: number, limit: number, productName: string
   return res.data;
 }
 
-const getAdminProductById = async (id: string): Promise<AdminProductDetail> => {
+const getAdminProductById = async (id: string) => {
   const res = await axiosInstance.get(`/v1/admin/kho-thuc-pham/${id}`)
   return res.data;
 }
@@ -35,4 +35,15 @@ const insertProduct = async (payload: InsertProductPayload) => {
   return res.data;
 }
 
-export { getAdminProductById, getAdminProducts, insertProduct, getProducts, getProductById, getDiscountProducts };
+const updateProduct = async (id: string, payload: InsertProductPayload) => {
+  const res = await axiosInstance.put(`/v1/admin/kho-thuc-pham/${id}`, payload)
+  return res.data;
+}
+
+const deleteProduct = async (id: string) => {
+  const res = await axiosInstance.delete(`/v1/admin/kho-thuc-pham/${id}`)
+  return res.data;
+}
+
+
+export { getAdminProductById, getAdminProducts, insertProduct, getProducts, getProductById, getDiscountProducts, updateProduct, deleteProduct };

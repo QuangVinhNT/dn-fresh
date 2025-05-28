@@ -36,12 +36,12 @@ const AddFood = (props: IProps) => {
     if (fileArray instanceof FileList) {
       const imageUrls = await handleUpload(fileArray);
       const payload: InsertProductPayload = {
-        name: data['food-name'].toString(),
-        price: +data['food-price'],
-        categoryId: data['food-type'].toString(),
-        description: data['food-desc'].toString(),
-        unit: data['food-unit'].toString(),
-        imageUrls: imageUrls.map((image: { url: string, type: string; }) => image.url),
+        tenThucPham: data['food-name'].toString(),
+        donGia: +data['food-price'],
+        maDanhMuc: data['food-type'].toString(),
+        moTa: data['food-desc'].toString(),
+        donViTinh: data['food-unit'].toString(),
+        hinhAnh: imageUrls.map((image: { url: string, type: string; }) => image.url),
       };
       const insertResult = await insertProduct(payload);
       console.log('Insert result:', insertResult);
