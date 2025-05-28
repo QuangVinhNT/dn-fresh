@@ -1,78 +1,43 @@
-import { useEffect, useState } from "react";
-import './Customer.scss';
-import { TfiExport } from "react-icons/tfi";
-import { ButtonComponent, FilterDrawerComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
-import { IoAdd } from "react-icons/io5";
+import { getCustomers } from "@/api/userApi";
+import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
+import { loadingStore } from "@/store";
 import { FilterType } from "@/types";
+import { CustomerList, Gender, UserStatus } from "@/types/User";
+import { dateFormatter, datetimeFormatter } from "@/utils/datetimeFormatter";
+import { useEffect, useRef, useState } from "react";
+import { IoAdd, IoFilter } from "react-icons/io5";
+import { TfiExport } from "react-icons/tfi";
 import AddCustomer from "./AddCustomer/AddCustomer";
+import './Customer.scss';
 import CustomerDetail from "./CustomerDetail/CustomerDetail";
 import EditCustomer from "./CustomerDetail/EditCustomer/EditCustomer";
-import { dateFormatter, datetimeFormatter } from "@/utils/datetimeFormatter";
-import { loadingStore } from "@/store";
-import { getCustomers } from "@/api/userApi";
-import { CustomerList, Gender, UserStatus } from "@/types/User";
 
 const headers = ['Mã người dùng', 'Họ tên', 'Ngày sinh', 'Giới tính', 'Email', 'Trạng thái', 'Ngày tạo'];
 
-const filtersData: FilterType[] = [
-  {
-    query: 'status',
-    name: 'Trạng thái',
-    values: [
-      {
-        valueName: 'Đang giao dịch',
-        value: 'trading'
-      },
-      {
-        valueName: 'Ngừng giao dịch',
-        value: 'notTrading'
-      }
-    ]
-  },
-  {
-    query: 'productType',
-    name: 'Phân loại',
-    values: [
-      {
-        valueName: 'Sản phẩm thường',
-        value: 'normal'
-      },
-      {
-        valueName: 'Serial',
-        value: 'serial'
-      },
-      {
-        valueName: 'Lô - Hạn sử dụng',
-        value: 'expireDate'
-      },
-      {
-        valueName: 'Combo',
-        value: 'combo'
-      }
-    ]
-  }
-];
 
 const Customer = () => {
   const [isShowAdd, setIsShowAdd] = useState(false);
-  const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
   const [customers, setCustomers] = useState<CustomerList[]>([])
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
+  const [filters, setFilters] = useState<FilterType[]>([]);
+
+  const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
-    fetchCustomers();
-  }, [limit, page]);
+    const statusFilter = filters.find(filter => filter.name === 'status')?.value;
+    fetchCustomers(statusFilter);
+  }, [limit, page, filters]);
 
-  const fetchCustomers = async () => {
+  const fetchCustomers = async (status?: string) => {
     showLoading();
     try {
-      const response = await getCustomers(page, limit);
+      const response = await getCustomers(page, limit, keywordRef.current, status);
       setCustomers(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -101,7 +66,31 @@ const Customer = () => {
             />
           </div>
           <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo tên khách hàng, mã khách hàng" setIsShowFilter={setIsShowFilter} />
+            <div className="filter">
+              <h3><IoFilter /> Bộ lọc</h3>
+              <div className="filter-list">
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Vô hiệu hóa',
+                      value: 0,
+                    },
+                    {
+                      name: 'Hoạt động',
+                      value: 1,
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Trạng thái',
+                    value: 'status'
+                  }}
+                  setFilters={setFilters}
+                />
+              </div>
+            </div>
+            <div className="search">
+              <SearchComponent placeholder="Nhập mã khách hàng..." onSearch={fetchCustomers} keywordRef={keywordRef} />
+            </div>            
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -118,32 +107,31 @@ const Customer = () => {
                     // handleClickRow(product.id); 
                     }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{customer.id}</span>
+                      <span>{customer.maNguoiDung}</span>
                     </td>                    
                     <td>
-                      <span>{customer.fullname}</span>
+                      <span>{customer.hoTen}</span>
                     </td>
                     <td>
-                      <span>{dateFormatter.format(new Date(customer.dob))}</span>
+                      <span>{dateFormatter.format(new Date(customer.ngaySinh))}</span>
                     </td>
                     <td>
-                      <span>{Gender[customer.gender]}</span>
+                      <span>{Gender[customer.gioiTinh]}</span>
                     </td>
                     <td>
                       <span>{customer.email}</span>
                     </td>
                     <td>
-                      <span>{UserStatus[customer.status]}</span>
+                      <span>{UserStatus[customer.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(customer.createdAt)}</span>
+                      <span>{datetimeFormatter(customer.ngayTao + '')}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
-            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
           </div>
         </div>
       )}

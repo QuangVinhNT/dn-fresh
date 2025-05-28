@@ -45,21 +45,7 @@
     }    
   }
   .table-component {
-      margin-top: 20px;
-
-      .filter {
-        h3 {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-bottom: 8px;
-        }
-
-        .filter-list {
-          display: flex;
-          gap: 8px;
-        }
-      }
+      margin-top: 20px;      
 
       .search {
         margin-top: 12px;

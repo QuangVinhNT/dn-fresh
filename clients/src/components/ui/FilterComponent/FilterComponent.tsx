@@ -40,31 +40,35 @@ const FilterComponent = (props: IProps) => {
               </span>
             ))}
           </div>
-          <div className="close-apply">
-            <span
-              className="close"
-              onClick={() => {
-                setIsActive(false);
-              }}
-            >
-              Đóng
-            </span>
-            <span
-              className="apply"
-              onClick={() => {
-                setIsActive(false);
-                setFilters(prev => {
-                  const newFilters = prev.filter(filter => filter.name !== filterType.value);
-                  if (chosenItems.length > 0) {
-                    newFilters.push({ name: filterType.value, value: chosenItems.join(',') });
-                  }
-                  return newFilters;
-                });
-              }}
-            >
-              Xem kết quả
-            </span>
-          </div>
+          {chosenItems.length > 0 && (
+            <div className="close-apply">
+              <span
+                className="close"
+                onClick={() => {
+                  setIsActive(false);
+                  setChosenItems([]);
+                  setFilters(prev => prev.filter(filter => filter.name !== filterType.value));
+                }}
+              >
+                Bỏ chọn tất cả
+              </span>
+              <span
+                className="apply"
+                onClick={() => {
+                  setIsActive(false);
+                  setFilters(prev => {
+                    const newFilters = prev.filter(filter => filter.name !== filterType.value);
+                    if (chosenItems.length > 0) {
+                      newFilters.push({ name: filterType.value, value: chosenItems.join(',') });
+                    }
+                    return newFilters;
+                  });
+                }}
+              >
+                Xem kết quả
+              </span>
+            </div>
+          )}
         </div>
       )}
     </div>

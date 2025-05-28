@@ -1,23 +1,4 @@
 type Product = {
-  id: string;
-  name: string;
-  imageUrls: string[];
-  price: number;
-  description: string;
-  status: number;
-  category: string;
-  discountRate: number;
-  createdAt: string;
-  updatedAt: string;
-  quantity: number;
-  unit: string;
-  packageCode: string;
-  mfgDate: string;
-  expDate: string;
-  inboundPrice: number;
-  inboundQuantity: number;
-  categoryId: string;
-
   maThucPham: string;
   tenThucPham: string;
   donGia: number;
@@ -42,7 +23,7 @@ export enum ProductStatus {
   'Tạm hết hàng' = 2
 }
 
-type AdminProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'category' | 'tenDanhMuc' | 'donViTinh' | 'ngayTao' | 'trangThai' | 'soLuongTonKho'>
+type AdminProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'tenDanhMuc' | 'donViTinh' | 'ngayTao' | 'trangThai' | 'soLuongTonKho'>
 
 type ProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'donGia' | 'tiLeKhuyenMai' | 'trangThai'>
 

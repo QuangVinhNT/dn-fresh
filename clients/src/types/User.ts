@@ -4,10 +4,23 @@ type User = {
   avatar: string;
   dob: string;
   gender: number;
-  email: string;
   status: number;
   roleId: string;
   createdAt: string;
+
+  maNguoiDung: string;
+  hoTen: string;
+  gioiTinh: number;
+  ngaySinh: Date;
+  soDienThoai: string;
+  maDiaChi: string;
+  email: string;
+  matKhau: string;
+  hinhAnh: string;
+  ngayTao: Date;
+  ngayCapNhat: Date;
+  trangThai: number;
+  maVaiTro: string;
 }
 
 export enum UserStatus {
@@ -18,7 +31,8 @@ export enum UserStatus {
 export enum Role {
   'VT001' = 'Quản trị viên',
   'VT002' = 'Nhân viên kho',
-  'VT003' = 'Nhân viên giao hàng'
+  'VT003' = 'Nhân viên giao hàng',
+  'VT004' = 'Khách hàng',
 }
 
 export enum Gender {
@@ -28,9 +42,9 @@ export enum Gender {
 
 type AccountUser = Pick<User, 'fullname' | 'avatar'>
 
-type CustomerList = Pick<User, 'id' | 'fullname' | 'dob' | 'gender' | 'email' | 'status' | 'createdAt'>
+type CustomerList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'email' | 'trangThai' | 'ngayTao'>
 
-type StaffList = Pick<User, 'id' | 'fullname' | 'dob' | 'gender' | 'roleId' | 'status' | 'createdAt'>
+type StaffList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'maVaiTro' | 'trangThai' | 'ngayTao'>
 
 export type {
   AccountUser, CustomerList, StaffList

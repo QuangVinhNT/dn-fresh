@@ -1,109 +1,22 @@
-import { useEffect, useState } from "react";
-import './Staff.scss';
-import { TfiExport } from "react-icons/tfi";
-import { ButtonComponent, FilterDrawerComponent, TableComponent, TablePagination, TableSearchFilter } from "@/components";
-import { IoAdd, IoCalendarOutline } from "react-icons/io5";
-import { FilterType } from "@/types";
-import AddStaff from "./AddStaff/AddStaff";
-import StaffDetail from "./StaffDetail/StaffDetail";
-import EditStaff from "./StaffDetail/EditStaff/EditStaff";
-import SchedulingStaff from "./SchedulingStaff/SchedulingStaff";
 import { getStaffs } from "@/api/userApi";
+import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
 import { loadingStore } from "@/store";
+import { FilterType } from "@/types";
 import { Gender, Role, StaffList, UserStatus } from "@/types/User";
 import { dateFormatter, datetimeFormatter } from "@/utils/datetimeFormatter";
+import { useEffect, useRef, useState } from "react";
+import { IoAdd, IoCalendarOutline, IoFilter } from "react-icons/io5";
+import { TfiExport } from "react-icons/tfi";
+import AddStaff from "./AddStaff/AddStaff";
+import SchedulingStaff from "./SchedulingStaff/SchedulingStaff";
+import './Staff.scss';
+import EditStaff from "./StaffDetail/EditStaff/EditStaff";
+import StaffDetail from "./StaffDetail/StaffDetail";
 
 const headers = ['Mã người dùng', 'Họ tên', 'Ngày sinh', 'Giới tính', 'Trạng thái', 'Vai trò', 'Ngày tạo'];
-const data = [
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  },
-  {
-    name: 'Nước mắm Nam Ngư mới',
-    image: 'https://product.hstatic.net/1000141988/product/nuoc_mam_nam_ngu_500_ml_598924383d4f44cab9b0d22b7d9fc80e.jpg',
-    type: 'Gia vị',
-    brand: 'Nam Ngư',
-    sellable: 48,
-    warehouse: 48,
-    createDate: '07/09/2021'
-  }
-];
-
-const filtersData: FilterType[] = [
-  {
-    query: 'status',
-    name: 'Trạng thái',
-    values: [
-      {
-        valueName: 'Đang giao dịch',
-        value: 'trading'
-      },
-      {
-        valueName: 'Ngừng giao dịch',
-        value: 'notTrading'
-      }
-    ]
-  },
-  {
-    query: 'productType',
-    name: 'Phân loại',
-    values: [
-      {
-        valueName: 'Sản phẩm thường',
-        value: 'normal'
-      },
-      {
-        valueName: 'Serial',
-        value: 'serial'
-      },
-      {
-        valueName: 'Lô - Hạn sử dụng',
-        value: 'expireDate'
-      },
-      {
-        valueName: 'Combo',
-        value: 'combo'
-      }
-    ]
-  }
-];
 
 const Staff = () => {
   const [isShowAdd, setIsShowAdd] = useState(false);
-  const [isShowFilter, setIsShowFilter] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
   const [isShowScheduling, setIsShowScheduling] = useState(false);
@@ -111,17 +24,22 @@ const Staff = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
+  const [filters, setFilters] = useState<FilterType[]>([]);
+
+  const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
-    fetchStaffs();
-  }, [limit, page]);
+    const statusFilter = filters.find(filter => filter.name === 'status')?.value;
+    const roleFilter = filters.find(filter => filter.name === 'role')?.value;
+    fetchStaffs(statusFilter, roleFilter);
+  }, [limit, page, filters]);
 
-  const fetchStaffs = async () => {
+  const fetchStaffs = async (status?: string, roleId?: string) => {
     showLoading();
     try {
-      const response = await getStaffs(page, limit);
+      const response = await getStaffs(page, limit, keywordRef.current, status, roleId);
       setStaffs(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -155,7 +73,52 @@ const Staff = () => {
             />
           </div>
           <div className="table-component">
-            <TableSearchFilter searchPlaceholder="Tìm theo tên nhân viên, mã nhân viên" setIsShowFilter={setIsShowFilter} />
+            <div className="filter">
+              <h3><IoFilter /> Bộ lọc</h3>
+              <div className="filter-list">
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Vô hiệu hóa',
+                      value: 0,
+                    },
+                    {
+                      name: 'Hoạt động',
+                      value: 1,
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Trạng thái',
+                    value: 'status'
+                  }}
+                  setFilters={setFilters}
+                />
+                <FilterComponent
+                  filterItems={[
+                    {
+                      name: 'Quản trị viên',
+                      value: 'VT001',
+                    },
+                    {
+                      name: 'Nhân viên kho',
+                      value: 'VT002',
+                    },
+                    {
+                      name: 'Nhân viên giao hàng',
+                      value: 'VT003',
+                    }
+                  ]}
+                  filterType={{
+                    name: 'Vai trò',
+                    value: 'role'
+                  }}
+                  setFilters={setFilters}
+                />
+              </div>
+            </div>
+            <div className="search">
+              <SearchComponent placeholder="Nhập mã nhân viên..." onSearch={fetchStaffs} keywordRef={keywordRef} />
+            </div>
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -172,32 +135,31 @@ const Staff = () => {
                     // handleClickRow(product.id); 
                     }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{staff.id}</span>
+                      <span>{staff.maNguoiDung}</span>
                     </td>                    
                     <td>
-                      <span>{staff.fullname}</span>
+                      <span>{staff.hoTen}</span>
                     </td>
                     <td>
-                      <span>{dateFormatter.format(new Date(staff.dob))}</span>
+                      <span>{dateFormatter.format(new Date(staff.ngaySinh))}</span>
                     </td>
                     <td>
-                      <span>{Gender[staff.gender]}</span>
+                      <span>{Gender[staff.gioiTinh]}</span>
                     </td>
                     <td>
-                      <span>{UserStatus[staff.status]}</span>
+                      <span>{UserStatus[staff.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{Role[staff.roleId as keyof typeof Role]}</span>
+                      <span>{Role[staff.maVaiTro as keyof typeof Role]}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(staff.createdAt)}</span>
+                      <span>{datetimeFormatter(staff.ngayTao + '')}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
-            <FilterDrawerComponent filters={filtersData} isShowFilter={isShowFilter} setIsShowFilter={setIsShowFilter} />
           </div>
         </div>
       )}

@@ -81,9 +81,7 @@ export class KhoThucPhamDAO {
       productName.length > 0 ? `BINARY LOWER(tenThucPham) LIKE LOWER('%${productName}%')` : '',
       status.length > 0 ? `p.trangThai IN (${status})` : '',
       category.length > 0 ? `p.maDanhMuc IN (${category})` : ''
-    ];
-
-    whereClause = whereClause.filter(item => item.length > 0);
+    ].filter(item => item.length > 0).join(' AND ');
 
     try {
       const [rows] = await pool.query(`
@@ -91,7 +89,7 @@ export class KhoThucPhamDAO {
       FROM khothucpham as p
       INNER JOIN danhmuc as c on p.maDanhMuc = c.maDanhMuc
       LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
-      ${whereClause.some(item => item.length > 0) ? `WHERE ${whereClause.join(' AND ')}` : ''}
+      ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
       GROUP BY p.maThucPham
       ORDER BY p.maThucPham DESC
       LIMIT ? 
@@ -102,7 +100,7 @@ export class KhoThucPhamDAO {
       SELECT COUNT(p.maThucPham) as total
       FROM khothucpham as p
       INNER JOIN danhmuc as c on p.maDanhMuc = c.maDanhMuc
-      ${whereClause.some(item => item.length > 0) ? `WHERE ${whereClause.join(' AND ')}` : ''}
+      ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
       `);
 
       return {

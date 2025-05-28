@@ -36,7 +36,7 @@ const FoodList = () => {
     const statusFilter = filters.find(filter => filter.name === 'status')?.value;
     const categoryFilter = filters.find(filter => filter.name === 'category')?.value;
     fetchProducts(statusFilter, categoryFilter);
-  }, [limit, page, keywordRef.current, filters]);
+  }, [limit, page, filters]);
 
   const fetchProducts = async (status?: string, category?: string) => {
     showLoading();

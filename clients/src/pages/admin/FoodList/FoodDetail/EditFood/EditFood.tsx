@@ -67,6 +67,7 @@ const EditFood = (props: IProps) => {
       tiLeKhuyenMai: +formData['food-discount']/100,
       trangThai: +formData['food-status']
     };
+    console.log('Form data:', formData);
     const updateResult = await updateProduct(data?.maThucPham + '', payload);
     console.log('Update result:', updateResult);
     setIsShowDetail(false);
