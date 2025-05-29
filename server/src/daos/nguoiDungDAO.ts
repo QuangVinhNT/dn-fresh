@@ -66,4 +66,18 @@ export class NguoiDungDAO {
       throw error;
     }
   }
+
+  public getById = async (userId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT *
+        FROM nguoidung
+        WHERE maNguoiDung = ?
+        `, [userId])
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
 }

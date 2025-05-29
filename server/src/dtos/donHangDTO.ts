@@ -1,3 +1,5 @@
+import { NguoiDungDTO } from "./nguoiDungDTO.js";
+
 export interface DonHangDTO {
   maDonHang: string;
   nguoiNhan: string;
@@ -7,6 +9,21 @@ export interface DonHangDTO {
   trangThai: number;
   phuongThucThanhToan: number;
   ghiChu: string;
+  thongTinThucPham: ThucPhamDonHangDTO[];
+  tongTien: number;
+}
+
+export interface DonHangAdminDTO {
+  maDonHang: string;
+  thongTinKhachHang: Pick<NguoiDungDTO, 'maNguoiDung' | 'hoTen' | 'gioiTinh' | 'soDienThoai' | 'email'> & {diaChi: string};
+  diaChiNhan: string;
+  thongTinNhanVien: Pick<NguoiDungDTO, 'maNguoiDung' | 'hoTen'>;
+  maPhieuXuat: string;
+  trangThai: number;
+  ngayTao: Date;
+  ngayCapNhat: Date;
+  ghiChu: string;
+  phuongThucThanhToan: number;
   thongTinThucPham: ThucPhamDonHangDTO[];
   tongTien: number;
 }

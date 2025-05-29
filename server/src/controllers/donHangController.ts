@@ -27,9 +27,9 @@ export class DonHangController {
 
   public getById = async (req: Request, res: Response) => {
     try {
-      const orderId = req.params.id;
-      const order = await this.donHangService.getById(orderId);
-      res.json(order);
+      const orderId = req.params.id as string || '';
+      const data = await this.donHangService.getById(orderId);
+      res.json(data);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
@@ -58,11 +58,22 @@ export class DonHangController {
         res.status(400).json({ message: 'Invalid order data' });
         return;
       }
-      const order = new DonHang('', payload.maKhachHang, '', '', '', 1, null, null, payload.ghiChu, payload.phuongThucThanhToan)
-      const orderDetails = payload.chiTietDonHang.map((item: { maThucPham: string; soLuong: number; }) => new ChiTietDonHang('', item.maThucPham, item.soLuong))
-      const address = new DiaChi('', payload.chiTietDiaChi, payload.maPhuongXa)
-      const result = await this.donHangService.insertOrder(order, orderDetails, address)
+      const order = new DonHang('', payload.maKhachHang, '', '', '', 1, null, null, payload.ghiChu, payload.phuongThucThanhToan);
+      const orderDetails = payload.chiTietDonHang.map((item: { maThucPham: string; soLuong: number; }) => new ChiTietDonHang('', item.maThucPham, item.soLuong));
+      const address = new DiaChi('', payload.chiTietDiaChi.trim(), payload.maPhuongXa);
+      const result = await this.donHangService.insertOrder(order, orderDetails, address);
       res.status(201).json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+  public getByIdForAdmin = async (req: Request, res: Response) => {
+    try {
+      const orderId = req.params.id as string || '';
+      const data = await this.donHangService.getByIdForAdmin(orderId);
+      res.json(data);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });

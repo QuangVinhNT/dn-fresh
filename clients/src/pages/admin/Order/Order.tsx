@@ -1,8 +1,8 @@
-import { getAdminOrders } from "@/api/orderApi";
+import { getAdminOrderById, getAdminOrders } from "@/api/orderApi";
 import { FilterComponent, SearchComponent, TablePagination } from "@/components";
 import { loadingStore } from "@/store";
 import { FilterType } from "@/types";
-import { AdminOrderList, OrderStatus } from "@/types/Order";
+import { AdminOrderDetail, AdminOrderList, OrderStatus } from "@/types/Order";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useEffect, useRef, useState } from "react";
 import { IoFilter } from "react-icons/io5";
@@ -14,7 +14,8 @@ const headers = ['Mã đơn hàng', 'Ngày tạo đơn', 'Khách hàng', 'Trạn
 
 const Order = () => {
   const [isShowDetail, setIsShowDetail] = useState(false);
-  const [orders, setOrders] = useState<AdminOrderList[]>([])
+  const [orders, setOrders] = useState<AdminOrderList[]>([]);
+  const [order, setOrder] = useState<AdminOrderDetail>()
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
@@ -39,6 +40,16 @@ const Order = () => {
       console.error('Error when load product:', error);
     } finally {
       hideLoading();
+    }
+  };
+
+  const handleClickRow = async (productId: string) => {
+    try {
+      const response = await getAdminOrderById(productId);
+      setOrder(response);
+      setIsShowDetail(true);
+    } catch (error) {
+      console.error('Error when get product:', error);
     }
   };
 
@@ -104,7 +115,7 @@ const Order = () => {
               <tbody>
                 {orders?.map((order, idx) => (
                   <tr key={idx} className="tb-body-row" onClick={() => { 
-                    // handleClickRow(product.id); 
+                    handleClickRow(order.maDonHang); 
                     }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
                       <span>{order.maDonHang}</span>
@@ -119,10 +130,10 @@ const Order = () => {
                       <span>{OrderStatus[order.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{order.maPhieuXuat}</span>
+                      <span>{order.maPhieuXuat || <i>Chưa xuất kho</i>}</span>
                     </td>
                     <td>
-                      <span>{order.tenNhanVien}</span>
+                      <span>{order.tenNhanVien || <i>Chưa nhận đơn</i>}</span>
                     </td>
                   </tr>
                 ))}
@@ -135,7 +146,7 @@ const Order = () => {
       )}
 
       {/* Order detail */}
-      {isShowDetail && <OrderDetail setIsShowDetail={setIsShowDetail} />}
+      {isShowDetail && <OrderDetail setIsShowDetail={setIsShowDetail} detailData={order}/>}
     </>
   );
 };

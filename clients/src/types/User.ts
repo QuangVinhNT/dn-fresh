@@ -1,13 +1,4 @@
 type User = {
-  id: string;
-  fullname: string;
-  avatar: string;
-  dob: string;
-  gender: number;
-  status: number;
-  roleId: string;
-  createdAt: string;
-
   maNguoiDung: string;
   hoTen: string;
   gioiTinh: number;
@@ -40,12 +31,12 @@ export enum Gender {
   'Nam' = 1
 }
 
-type AccountUser = Pick<User, 'fullname' | 'avatar'>
+type AccountUser = Pick<User, 'hoTen' | 'hinhAnh'>
 
 type CustomerList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'email' | 'trangThai' | 'ngayTao'>
 
 type StaffList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'maVaiTro' | 'trangThai' | 'ngayTao'>
 
 export type {
-  AccountUser, CustomerList, StaffList
+  AccountUser, CustomerList, StaffList, User
 }

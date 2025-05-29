@@ -47,6 +47,7 @@ export class DanhMucDAO {
       return rows;
     } catch (error) {
       console.error(`DAO error: ${error}`);
+      throw error;
     }
   };
 
@@ -61,6 +62,15 @@ export class DanhMucDAO {
       return rows;
     } catch (error) {
       console.error(`DAO error: ${error}`);
+      throw error;
     }
   };
+
+  public getById = async (categoryId: string) => {
+    try {
+      
+    } catch (error) {
+      
+    }
+  } 
 }

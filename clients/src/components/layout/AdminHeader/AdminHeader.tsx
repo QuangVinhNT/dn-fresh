@@ -20,9 +20,9 @@ const AdminHeader = (props: Props) => {
           </div>
         </div>
         <div className="user-container">
-          <img className="avatar-image" src={user.avatar} alt="" />
+          <img className="avatar-image" src={user.hinhAnh} alt="" />
           <div className="username-container">
-            <p className="username">{user.fullname}</p>
+            <p className="username">{user.hoTen}</p>
           </div>
         </div>
       </div>

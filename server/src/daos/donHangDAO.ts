@@ -79,8 +79,8 @@ export class DonHangDAO {
       const [rows] = await pool.query(`
       SELECT maDonHang, dh.ngayTao, kh.hoTen as nguoiNhan, dh.trangThai, maPhieuXuat, nv.hoTen as tenNhanVien
       FROM donhang as dh
-      INNER JOIN nguoidung as kh ON kh.maNguoiDung = dh.maKhachHang
-      INNER JOIN nguoidung as nv ON nv.maNguoiDung = dh.maNhanVien
+      LEFT JOIN nguoidung as kh ON kh.maNguoiDung = dh.maKhachHang
+      LEFT JOIN nguoidung as nv ON nv.maNguoiDung = dh.maNhanVien
       ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
       GROUP BY dh.maDonHang
       LIMIT ? 
@@ -114,5 +114,19 @@ export class DonHangDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
+
+  public getByIdForAdmin = async (orderId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT *
+        FROM donhang
+        WHERE maDonHang = ?
+        `, [orderId]);
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

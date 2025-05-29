@@ -21,7 +21,7 @@ const Payment = () => {
   const [communes, setCommunes] = useState<SelectBox[]>([]);
   const navigate = useNavigate();
 
-  const { cart } = cartStore();
+  const { cart, clearCart } = cartStore();
   const { showLoading, hideLoading } = loadingStore();
 
   const { register, watch, handleSubmit } = useForm<FormValues>();
@@ -81,6 +81,7 @@ const Payment = () => {
     };
     const insertResult = await insertOrder(payload);
     console.log('Insert result:', insertResult)
+    clearCart();
     navigate('/')
   };
 

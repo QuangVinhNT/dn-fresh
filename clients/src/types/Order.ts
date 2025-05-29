@@ -1,4 +1,5 @@
 import { ProductList } from "./Product";
+import { User } from "./User";
 
 type Order = {
   id: string;
@@ -61,9 +62,16 @@ type InsertOrderPayload = Pick<Order, 'maKhachHang' | 'ghiChu' | 'phuongThucThan
 
 type AdminOrderList = Pick<Order, 'maDonHang' | 'ngayTao' | 'nguoiNhan' | 'trangThai' | 'maPhieuXuat' | 'tenNhanVien'>
 
+type AdminOrderDetail = Pick<Order, 'maDonHang' | 'diaChiNhan' | 'maPhieuXuat' | 'trangThai' | 'ngayTao' | 'ngayCapNhat' | 'ghiChu' | 'phuongThucThanhToan' | 'tongTien'> & {
+  thongTinKhachHang: Pick<User, 'maNguoiDung' | 'hoTen' | 'gioiTinh' | 'soDienThoai' | 'email'> & {diaChi: string},
+  thongTinNhanVien: Pick<User, 'maNguoiDung' | 'hoTen'>,
+  thongTinThucPham: OrderProduct[]
+}
+
 export type {
   OrderList,
   OrderDetail,
   AdminOrderList,
-  InsertOrderPayload
+  InsertOrderPayload,
+  AdminOrderDetail
 }
