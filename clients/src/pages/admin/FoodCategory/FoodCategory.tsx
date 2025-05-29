@@ -1,8 +1,8 @@
-import { getCategories } from "@/api/categoryApi";
+import { getCategories, getCategoryById } from "@/api/categoryApi";
 import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
 import { loadingStore } from "@/store";
 import { FilterType } from "@/types";
-import { CategoryList, CategoryStatus } from "@/types/Category";
+import { CategoryDetail, CategoryList, CategoryStatus } from "@/types/Category";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useEffect, useRef, useState } from "react";
 import { IoAdd, IoFilter } from "react-icons/io5";
@@ -18,6 +18,7 @@ const FoodCategory = () => {
   const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
   const [categories, setCategories] = useState<CategoryList[]>([]);
+  const [category, setCategory] = useState<CategoryDetail>();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
@@ -44,6 +45,17 @@ const FoodCategory = () => {
       hideLoading();
     }
   };
+
+  const handleClickRow = async (categoryId: string) => {
+    try {
+      const response = await getCategoryById(categoryId);
+      setCategory(response);
+      setIsShowDetail(true);
+    } catch (error) {
+      console.error('Error when get product:', error);
+    }
+  };
+
   return (
     <>
       {(!isShowDetail && !isShowAdd && !isShowEdit) && (
@@ -97,7 +109,7 @@ const FoodCategory = () => {
               <tbody>
                 {categories?.map((category, idx) => (
                   <tr key={idx} className="tb-body-row" onClick={() => {
-                    // handleClickRow(product.id); 
+                    handleClickRow(category.maDanhMuc); 
                   }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
                       <span>{category.maDanhMuc}</span>
@@ -123,11 +135,11 @@ const FoodCategory = () => {
         </div>
       )}
 
-      {isShowDetail && <FoodCategoryDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} />}
+      {isShowDetail && <FoodCategoryDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} detailData={category} onDelete={fetchCategories}/>}
 
-      {isShowEdit && <EditFoodCategory setIsShowEdit={setIsShowEdit} setIsShowDetail={setIsShowDetail} />}
+      {isShowEdit && <EditFoodCategory setIsShowEdit={setIsShowEdit} setIsShowDetail={setIsShowDetail} data={category} onEdited={fetchCategories}/>}
 
-      {isShowAdd && <AddFoodCategory setIsShowAdd={setIsShowAdd} />}
+      {isShowAdd && <AddFoodCategory setIsShowAdd={setIsShowAdd} onAdded={fetchCategories}/>}
     </>
   );
 };

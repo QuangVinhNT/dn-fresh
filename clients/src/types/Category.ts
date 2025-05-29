@@ -1,10 +1,4 @@
 type Category = {
-  id: string;
-  name: string;
-  status: number;
-  createdAt: string;
-  productQuantity: number;
-
   maDanhMuc: string;
   tenDanhMuc: string;
   moTa: string;
@@ -25,6 +19,10 @@ type CategoryFilter = Pick<Category, 'maDanhMuc' | 'tenDanhMuc'>;
 
 type CategoryList = Pick<Category, 'maDanhMuc' | 'tenDanhMuc' | 'trangThai' | 'ngayTao' | 'soLuongThucPham'>;
 
+type CategoryDetail = Pick<Category, 'maDanhMuc' | 'tenDanhMuc' | 'moTa' | 'trangThai' | 'ngayTao' | 'ngayCapNhat'>
+
+type InsertCategoryPayload = Pick<Category, 'tenDanhMuc' | 'moTa' | 'trangThai'>
+
 export type {
-  CategorySelectBox, CategoryList, CategoryFilter
+  CategorySelectBox, CategoryList, CategoryFilter, CategoryDetail, InsertCategoryPayload
 };

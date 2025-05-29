@@ -1,4 +1,6 @@
+import { PoolConnection } from "mysql2/promise";
 import { pool } from "../configs/database.js";
+import { DanhMuc } from "../models/danhMucModel.js";
 
 export class DanhMucDAO {
 
@@ -12,7 +14,7 @@ export class DanhMucDAO {
       const [rows] = await pool.query(`
       SELECT danhmuc.maDanhMuc, tenDanhMuc, danhmuc.trangThai, danhmuc.ngayTao, COUNT(maThucPham) as soLuongThucPham 
       FROM danhmuc
-      JOIN khothucpham ON danhmuc.maDanhMuc = khothucpham.maDanhMuc
+      LEFT JOIN khothucpham ON danhmuc.maDanhMuc = khothucpham.maDanhMuc
       ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
       GROUP BY danhmuc.maDanhMuc
       ORDER BY danhmuc.tenDanhMuc ASC
@@ -22,7 +24,7 @@ export class DanhMucDAO {
       const [total] = await pool.query(`
       SELECT COUNT(DISTINCT danhmuc.maDanhMuc) as total
       FROM danhmuc
-      JOIN khothucpham ON danhmuc.maDanhMuc = khothucpham.maDanhMuc
+      LEFT JOIN khothucpham ON danhmuc.maDanhMuc = khothucpham.maDanhMuc
       ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
       `);
 
@@ -68,9 +70,55 @@ export class DanhMucDAO {
 
   public getById = async (categoryId: string) => {
     try {
-      
+      const [rows] = await pool.query(`
+        SELECT *
+        FROM danhmuc
+        WHERE maDanhMuc = ?
+        `, [categoryId]);
+      return rows;
     } catch (error) {
-      
+      console.error(`DAO error: ${error}`);
+      throw error;
     }
-  } 
+  };
+
+  public insertCategory = async (category: DanhMuc, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        INSERT INTO danhmuc(maDanhMuc, tenDanhMuc, moTa, trangThai, ngayTao, ngayCapNhat)
+        VALUES (?, ?, ?, ?, NOW(), NOW())
+        `, [category.getMaDanhMuc(), category.getTenDanhMuc(), category.getMoTa(), category.getTrangThai()]);
+      return result;
+    } catch (error) {
+      console.error(`DAO error: ${error}`);
+      throw error;
+    }
+  };
+
+  public updateCategory = async (category: DanhMuc, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        UPDATE danhmuc
+        SET tenDanhMuc = ?, moTa = ?, trangThai = ?, ngayCapNhat = NOW()
+        WHERE maDanhMuc = ?
+        `, [category.getTenDanhMuc(), category.getMoTa(), category.getTrangThai(), category.getMaDanhMuc()]);
+      return result;
+    } catch (error) {
+      console.error(`DAO error: ${error}`);
+      throw error;
+    }
+  };
+
+  public deleteCategory = async (categoryId: string, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        DELETE FROM danhmuc
+        WHERE maDanhMuc = ?
+        `, [categoryId])
+      return result;
+    } catch (error) {
+      console.error(`DAO error: ${error}`);
+      throw error;
+    }
+  }
 }

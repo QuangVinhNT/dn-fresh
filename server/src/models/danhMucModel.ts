@@ -3,16 +3,16 @@ export class DanhMuc {
   private tenDanhMuc: string;
   private moTa: string;
   private trangThai: number;
-  private ngayTao: Date;
-  private ngayCapNhat: Date;
+  private ngayTao: Date | null;
+  private ngayCapNhat: Date | null;
 
   constructor(
     maDanhMuc: string,
     tenDanhMuc: string,
     moTa: string,
     trangThai: number,
-    ngayTao: Date,
-    ngayCapNhat: Date
+    ngayTao: Date | null,
+    ngayCapNhat: Date | null
   ) {
     this.maDanhMuc = maDanhMuc;
     this.tenDanhMuc = tenDanhMuc;
@@ -54,19 +54,19 @@ export class DanhMuc {
     this.trangThai = value;
   }
 
-  public getNgayTao(): Date {
+  public getNgayTao(): Date | null {
     return this.ngayTao;
   }
 
-  public setNgayTao(value: Date): void {
+  public setNgayTao(value: Date | null): void {
     this.ngayTao = value;
   }
 
-  public getNgayCapNhat(): Date {
+  public getNgayCapNhat(): Date | null {
     return this.ngayCapNhat;
   }
 
-  public setNgayCapNhat(value: Date): void {
+  public setNgayCapNhat(value: Date | null): void {
     this.ngayCapNhat = value;
   }
 }
