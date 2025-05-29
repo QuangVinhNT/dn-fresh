@@ -25,7 +25,7 @@ export enum ProductStatus {
 
 type AdminProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'tenDanhMuc' | 'donViTinh' | 'ngayTao' | 'trangThai' | 'soLuongTonKho'>
 
-type ProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'donGia' | 'tiLeKhuyenMai' | 'trangThai'>
+type ProductList = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'donGia' | 'tiLeKhuyenMai' | 'trangThai' | 'donViTinh'>
 
 type AdminProductDetail = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh' | 'donGia' | 'soLuongTonKho' | 'donViTinh' | 'tenDanhMuc' | 'ngayTao' | 'ngayCapNhat' | 'moTa' | 'maDanhMuc' | 'trangThai' | 'tiLeKhuyenMai'>
 

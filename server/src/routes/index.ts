@@ -10,6 +10,7 @@ import phieuNhapRoutes from "./phieuNhapRoutes.js";
 import phieuXuatRoutes from "./phieuXuatRoutes.js";
 import thucPhamYeuThichRoutes from "./thucPhamYeuThichRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
+import diaChiRoutes from "./diaChiRoutes.js";
 
 const router = Router();
 
@@ -26,5 +27,6 @@ router.use('/v1/admin/nha-cung-cap', nhaCungCapRoutes);
 router.use('/v1/admin/don-hang', donHangAdminRoutes);
 
 router.use('/upload', uploadRoutes);
+router.use('/dia-chi', diaChiRoutes);
 
 export default router;

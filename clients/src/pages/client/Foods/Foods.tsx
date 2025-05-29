@@ -86,7 +86,7 @@ const Foods = () => {
           </div>
           <div className="foods">
             <div className="foods-item">
-              {products.map((product, index) => <ProductCard id={product.maThucPham} imgSrc={product.hinhAnh[0]} label={product.tenThucPham} standardPrice={product.donGia} discount={+product.tiLeKhuyenMai} status={product.trangThai} key={index} />)}
+              {products.map((product, index) => <ProductCard id={product.maThucPham} imgSrc={product.hinhAnh[0]} label={product.tenThucPham} standardPrice={product.donGia} discount={+product.tiLeKhuyenMai} status={product.trangThai} unit={product.donViTinh} key={index} />)}
             </div>
             <Pagination limit={limit} page={page} setLimit={setLimit} setPage={setPage} total={total} />
           </div>

@@ -75,8 +75,8 @@ const AddFood = (props: IProps) => {
     try {
       const response = await getCategoriesForSelectBox();
       const data = response.map((item, idx) => ({
-        value: item.id,
-        content: item.name,
+        value: item.maDanhMuc,
+        content: item.tenDanhMuc,
         isSelected: idx === 0
       }));
       setCategories(data);

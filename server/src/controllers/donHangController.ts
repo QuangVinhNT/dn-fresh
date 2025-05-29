@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import { DonHangService } from "../services/donHangService.js";
+import { DonHang } from "../models/donHangModel.js";
+import { ChiTietDonHang } from "../models/chiTietDonHangModel.js";
+import { DiaChi } from "../models/diaChiModel.js";
 
 export class DonHangController {
   private donHangService: DonHangService;
@@ -39,12 +42,30 @@ export class DonHangController {
       const limit = parseInt(req.query.limit as string) || 5;
       const orderId = req.query.search as string || '';
       const rawStatus = req.query.status as string || '';
-      const status = rawStatus === 'undefined' ? '' : rawStatus.split(',').map(s => `'${s}'`).join(','); 
+      const status = rawStatus === 'undefined' ? '' : rawStatus.split(',').map(s => `'${s}'`).join(',');
       const data = await this.donHangService.getAllForAdmin(page, limit, orderId, status);
       res.json(data);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
+
+  public insertOrder = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body;
+      if (!payload) {
+        res.status(400).json({ message: 'Invalid order data' });
+        return;
+      }
+      const order = new DonHang('', payload.maKhachHang, '', '', '', 1, null, null, payload.ghiChu, payload.phuongThucThanhToan)
+      const orderDetails = payload.chiTietDonHang.map((item: { maThucPham: string; soLuong: number; }) => new ChiTietDonHang('', item.maThucPham, item.soLuong))
+      const address = new DiaChi('', payload.chiTietDiaChi, payload.maPhuongXa)
+      const result = await this.donHangService.insertOrder(order, orderDetails, address)
+      res.status(201).json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
 }

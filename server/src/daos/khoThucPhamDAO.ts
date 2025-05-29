@@ -15,7 +15,7 @@ export class KhoThucPhamDAO {
     const offset = (page - 1) * limit;
     try {
       const [rows] = await pool.query(`
-      SELECT p.maThucPham, tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, donGia, tiLeKhuyenMai, p.trangThai
+      SELECT p.maThucPham, tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, donGia, tiLeKhuyenMai, p.trangThai, donViTinh
       FROM khothucpham as p
       LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
       ${categoryId.length > 0 ? `WHERE maDanhMuc = '${categoryId}'` : ''}
@@ -60,7 +60,7 @@ export class KhoThucPhamDAO {
   public getAllDiscount = async () => {
     try {
       const [rows] = await pool.query(`
-      SELECT p.maThucPham, tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, donGia, tiLeKhuyenMai, p.trangThai
+      SELECT p.maThucPham, tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, donGia, tiLeKhuyenMai, p.trangThai, donViTinh
       FROM khothucpham as p
       LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
       WHERE tiLeKhuyenMai > 0

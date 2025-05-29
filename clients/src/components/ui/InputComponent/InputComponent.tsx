@@ -26,7 +26,7 @@ const InputComponent = (props: IProps) => {
   return (
     <div className={`input-component ${className}`}>
       {title && (
-        <label className="input-title">{title} {(!isReadOnly && title) && <span className="input-required">*</span>}</label>
+        <label className="input-title">{title} {(!isReadOnly && title && isRequired) && <span className="input-required">*</span>}</label>
       )}
       <div className="input-container">
         {affix && affix}

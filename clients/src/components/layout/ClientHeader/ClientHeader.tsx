@@ -1,11 +1,13 @@
 import DecoHeader from '@/assets/images/deco-header.png';
 import Logo from '@/assets/svgs/dnfresh-logo-white.svg';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoCartOutline, IoHeartOutline } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import './ClientHeader.scss';
 import { cartStore } from "@/store/cartStore";
 import { overlayStore } from "@/store";
+import { ProductList } from "@/types/Product";
+import { getFavouriteProducts } from "@/api/favouriteProductApi";
 
 const menuItems = [
   {
@@ -32,11 +34,25 @@ const menuItems = [
 
 const ClientHeader = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [total, setTotal] = useState<number>(0);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {showCart} = cartStore();
+  const {showCart, cart} = cartStore();
   const {showOverlay} = overlayStore();
+
+  useEffect(() => {
+    fetchFavouriteProducts();
+  }, []);
+
+  const fetchFavouriteProducts = async () => {
+    try {
+      const response = await getFavouriteProducts(1, 5, 'ND003');
+      setTotal(response.total);
+    } catch (error) {
+      console.error('Error when load product:', error);
+    }
+  };
 
   return (
     <div className="client-header-component">
@@ -52,14 +68,14 @@ const ClientHeader = () => {
         </div>
         <div className="client-header-tools">
           <div className="favourite tool" onClick={() => navigate('/favourites')}>
-            <span className="quantity">0</span>
+            <span className="quantity">{total}</span>
             <IoHeartOutline size={24} className="icon"/>
           </div>
           <div className="cart tool" onClick={() => {
             showCart();
             showOverlay();
           }}>
-            <span className="quantity">0</span>
+            <span className="quantity">{cart.length}</span>
             <IoCartOutline size={24} className="icon"/>
           </div>
           <div className="user">

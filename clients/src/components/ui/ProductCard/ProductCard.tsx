@@ -13,12 +13,13 @@ interface IProps {
   label: string;
   standardPrice: number;
   status: number;
+  unit: string;
   isFavourite?: boolean;
   onUpdateFavourite?: () => void;
 }
 
 const ProductCard = (props: IProps) => {
-  const { imgSrc, discount, label, standardPrice, id, status, isFavourite, onUpdateFavourite } = props;
+  const { imgSrc, discount, label, standardPrice, id, status, isFavourite, onUpdateFavourite, unit } = props;
   const { addToCart } = cartStore();
   return (
     <Link to={`/foods/${id}`} className="product-card-component">
@@ -61,7 +62,7 @@ const ProductCard = (props: IProps) => {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                status === 1 && addToCart({ maThucPham: id, tiLeKhuyenMai: discount, hinhAnh: [imgSrc], tenThucPham: label, donGia: standardPrice, trangThai: status, soLuong: 1 });
+                status === 1 && addToCart({ maThucPham: id, tiLeKhuyenMai: discount, hinhAnh: [imgSrc], tenThucPham: label, donGia: standardPrice, trangThai: status, soLuong: 1, donViTinh: unit });
               }} />
           </div>
         </div>

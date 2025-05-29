@@ -181,8 +181,14 @@
         .pay {
           background-color: #000;
           color: #fff;
-          border: none;
+          border: 1px solid #000;
           padding: 12px 20px;
+          transition: all .3s;
+          &:hover {
+            filter: brightness(100%);
+            background-color: #fff;
+            color: #000;
+          }
         }
       }
     }

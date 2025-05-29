@@ -1,7 +1,6 @@
+import { SelectBox } from "@/types/ComponentType";
 import { UseFormRegister } from "react-hook-form";
 import './SelectComponent.scss';
-import { SelectBox } from "@/types/ComponentType";
-import { placeholder } from "@cloudinary/react";
 
 type QueryData = {
   [key: string]: string | string[] | File[] | FileList;
@@ -23,7 +22,7 @@ const SelectComponent = (props: IProps) => {
   // console.log(items)
   return items.length > 0 && (
     <div className={`select-component ${className}`}>
-      <label>{title} {(!isDisabled && title) && <span style={{ color: 'red' }}>*</span>}</label>
+      <label>{title} {(!isDisabled && title && isRequired) && <span style={{ color: 'red' }}>*</span>}</label>
       <select
       {...(register && register(name))}
       required={isRequired}

@@ -1,3 +1,5 @@
+import { ProductList } from "./Product";
+
 type Order = {
   id: string;
   createdAt: string;
@@ -20,6 +22,9 @@ type Order = {
   ghiChu: string;
   phuongThucThanhToan: number;
   tongTien: number;
+  chiTietDiaChi: string;
+  maPhuongXa: string;
+  chiTietDonHang: (ProductList & {soLuong: number})[];
 }
 
 export enum OrderStatus {
@@ -52,10 +57,13 @@ type OrderDetail = Pick<Order, 'maDonHang' | 'nguoiNhan' | 'diaChiNhan' | 'ngayT
   thongTinThucPham: OrderProduct[]
 }
 
+type InsertOrderPayload = Pick<Order, 'maKhachHang' | 'ghiChu' | 'phuongThucThanhToan' | 'chiTietDiaChi' | 'maPhuongXa' | 'chiTietDonHang'>
+
 type AdminOrderList = Pick<Order, 'maDonHang' | 'ngayTao' | 'nguoiNhan' | 'trangThai' | 'maPhieuXuat' | 'tenNhanVien'>
 
 export type {
   OrderList,
   OrderDetail,
-  AdminOrderList
+  AdminOrderList,
+  InsertOrderPayload
 }

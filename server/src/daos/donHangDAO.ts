@@ -1,4 +1,6 @@
+import { PoolConnection } from "mysql2/promise";
 import { pool } from "../configs/database.js";
+import { DonHang } from "../models/donHangModel.js";
 
 export class DonHangDAO {
 
@@ -100,4 +102,17 @@ export class DonHangDAO {
       throw error;
     }
   };
+
+  public insertOrder = async (order: DonHang, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        INSERT INTO donhang (maDonHang, maKhachHang, maDiaChi, maNhanVien, maPhieuXuat, trangThai, ngayTao, ngayCapNhat, ghiChu, phuongThucThanhToan)
+        VALUES (?, ?, ?, NULL, NULL, 1, NOW(), NOW(), ?, ?)
+      `, [order.getMaDonHang(), order.getMaKhachHang(), order.getMaDiaChi(), order.getGhiChu(), order.getPhuongThucThanhToan()]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
 }
