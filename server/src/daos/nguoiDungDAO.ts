@@ -99,6 +99,22 @@ export class NguoiDungDAO {
     }
   }
 
+  public updateAccountStatus = async (userId: string, status: number, connection: PoolConnection) => {
+    try {
+      const result = await connection.query(`
+        UPDATE nguoidung
+        SET trangThai = ?
+        WHERE maNguoiDung = ?
+        `, [status, userId])
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
+
+
+
   // public insertCustomer = async (customer: NguoiDung, connection: PoolConnection) => {
   //   try {
   //     const dob = `${customer.getNgaySinh().getFullYear()}-${customer.getNgaySinh().getMonth()}-${customer.getNgaySinh().getDay()}`

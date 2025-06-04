@@ -12,10 +12,20 @@ const getStaffs = async (page: number, limit: number, staffId: string, status?: 
 };
 
 const getCustomerById = async (customerId: string) => {
-  const res = await axiosInstance.get(`v1/admin/nguoi-dung/khach-hang/${customerId}`)
+  const res = await axiosInstance.get(`v1/admin/nguoi-dung/khach-hang/${customerId}`);
   return res.data;
-}
+};
+
+const lockAccount = async (userId: string) => {
+  const res = await axiosInstance.patch(`v1/admin/nguoi-dung/${userId}/lock`);
+  return res.data;
+};
+
+const unlockAccount = async (userId: string) => {
+  const res = await axiosInstance.patch(`v1/admin/nguoi-dung/${userId}/unlock`);
+  return res.data;
+};
 
 export {
-  getCustomers, getStaffs, getCustomerById
+  getCustomers, getStaffs, getCustomerById, lockAccount, unlockAccount
 };

@@ -4,14 +4,16 @@ import { CustomerDetailType, Gender, UserStatus } from "@/types/User";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { IoClose } from "react-icons/io5";
 import './CustomerDetail.scss';
+import { lockAccount, unlockAccount } from "@/api/userApi";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
   detailData: CustomerDetailType | undefined;
+  onUpdated: () => void;
 }
 
 const CustomerDetail = (props: IProps) => {
-  const { setIsShowDetail, detailData } = props;
+  const { setIsShowDetail, detailData, onUpdated } = props;
   const { hideOverlay } = overlayStore();
   return (
     <>
@@ -27,7 +29,14 @@ const CustomerDetail = (props: IProps) => {
                     className="btn-lock"
                     type="no-submit"
                     label="Khóa tài khoản"
-                    onClick={() => { }}
+                    variant="danger"
+                    onClick={async () => {
+                      const lockResult = await lockAccount(detailData.maNguoiDung);
+                      console.log(lockResult);
+                      onUpdated();
+                      setIsShowDetail(false);
+                      hideOverlay();
+                    }}
                   />
                 ) : (
                   <ButtonComponent
@@ -35,8 +44,12 @@ const CustomerDetail = (props: IProps) => {
                     type="no-submit"
                     label="Mở tài khoản"
                     variant="primary"
-                    onClick={() => {
+                    onClick={async () => {
+                      const unlockResult = await unlockAccount(detailData.maNguoiDung);
+                      console.log(unlockResult);
+                      onUpdated();
                       setIsShowDetail(false);
+                      hideOverlay();
                     }}
                   />
                 )}
@@ -86,6 +99,10 @@ const CustomerDetail = (props: IProps) => {
                 <InfoItemComponent
                   content={datetimeFormatter(detailData.ngayCapNhat + '')}
                   title="Thời gian cập nhật tài khoản:"
+                />
+                <InfoItemComponent
+                  content={detailData.soLuongDonHang.toString()}
+                  title="Số lượng đơn hàng đã mua:"
                 />
                 <InfoItemComponent
                   content={UserStatus[detailData.trangThai]}

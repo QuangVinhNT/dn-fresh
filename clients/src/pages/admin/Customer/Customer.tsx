@@ -142,7 +142,7 @@ const Customer = () => {
             <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
           </div>
           <div className="customer-detail-modal" style={{top: isShowDetail ? '50%' : '-100%'}}>
-            <CustomerDetail setIsShowDetail={setIsShowDetail} detailData={customer} />
+            <CustomerDetail setIsShowDetail={setIsShowDetail} detailData={customer} onUpdated={fetchCustomers}/>
           </div>
         </div>
       )}

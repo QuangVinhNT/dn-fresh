@@ -83,6 +83,38 @@ export class NguoiDungService {
     }
   };
 
+  public lockAccount = async (userId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.nguoiDungDAO.updateAccountStatus(userId, 0, connection)
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  public unlockAccount = async (userId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.nguoiDungDAO.updateAccountStatus(userId, 1, connection)
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
   // public insertCustomer = async (customer: NguoiDung, address: DiaChi) => {
   //   const connection = await pool.getConnection();
   //   try {

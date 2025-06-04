@@ -57,6 +57,36 @@ export class NguoiDungController {
     }
   };
 
+  public lockAccount = async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.id as string || '';
+      if (!userId) {
+        res.status(404).json({ message: 'User not found!' });
+        return;
+      }
+      const result = await this.nguoiDungService.lockAccount(userId);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  public unlockAccount = async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.id as string || '';
+      if (!userId) {
+        res.status(404).json({ message: 'User not found!' });
+        return;
+      }
+      const result = await this.nguoiDungService.unlockAccount(userId);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
   // public insertCustomer = async (req: Request, res: Response) => {
   //   try {
   //     const payload = req.body;
