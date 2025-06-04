@@ -26,4 +26,20 @@ export interface KhachHangDTO {
   ngayCapNhat: Date | null;
   trangThai: number;
   soLuongDonHang: number;
+  danhSachVaiTro: string[];
+}
+
+export interface NhanVienDTO {
+  maNguoiDung: string;
+  hoTen: string;
+  gioiTinh: number;
+  ngaySinh: Date;
+  soDienThoai: string;
+  diaChi: string;
+  email: string;
+  hinhAnh: string;
+  ngayTao: Date | null;
+  ngayCapNhat: Date | null;
+  trangThai: number;
+  danhSachVaiTro: string[];
 }

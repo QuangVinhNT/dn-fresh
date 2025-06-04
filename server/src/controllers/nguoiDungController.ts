@@ -57,6 +57,21 @@ export class NguoiDungController {
     }
   };
 
+  public getStaffById = async (req: Request, res: Response) => {
+    try {
+      const staffId = req.params.id as string || '';
+      if (!staffId) {
+        res.status(404).json({ message: 'Staff not found!' });
+        return;
+      }
+      const data = await this.nguoiDungService.getStaffById(staffId);
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
   public lockAccount = async (req: Request, res: Response) => {
     try {
       const userId = req.params.id as string || '';
@@ -87,20 +102,20 @@ export class NguoiDungController {
     }
   }
 
-  // public insertCustomer = async (req: Request, res: Response) => {
-  //   try {
-  //     const payload = req.body;
-  //     if (!payload) {
-  //       res.status(400).json({ message: 'Invalid order data' });
-  //       return;
-  //     }
-  //     const customer = new NguoiDung('', payload.hoTen, payload.gioiTinh, new Date(payload.ngaySinh), payload.soDienThoai, '', payload.email, '', payload.hinhAnh, null, null, 1);
-  //     const address = new DiaChi('', payload.chiTietDiaChi, payload.maPhuongXa);
-  //     const result = await this.nguoiDungService.insertCustomer(customer, address);
-  //     res.status(201).json(result);
-  //   } catch (error) {
-  //     console.error('Controller error:', error);
-  //     res.status(500).json({ message: 'Server error' });
-  //   }
-  // };
+  public insertUser = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body;
+      if (!payload) {
+        res.status(400).json({ message: 'Invalid order data' });
+        return;
+      }
+      const user = new NguoiDung('', payload.hoTen, payload.gioiTinh, new Date(payload.ngaySinh), payload.soDienThoai, '', payload.email, payload.matKhau || 'Dnfresh123@', payload.hinhAnh, null, null, 1);
+      const address = new DiaChi('', payload.chiTietDiaChi, payload.maPhuongXa);
+      const result = await this.nguoiDungService.insertUser(user, address, payload.maVaiTro);
+      res.status(201).json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
 }

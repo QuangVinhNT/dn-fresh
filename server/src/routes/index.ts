@@ -11,6 +11,7 @@ import phieuXuatRoutes from "./phieuXuatRoutes.js";
 import thucPhamYeuThichRoutes from "./thucPhamYeuThichRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
 import diaChiRoutes from "./diaChiRoutes.js";
+import vaiTroNguoiDungRoutes from "./vaiTroNguoiDungRoutes.js";
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use('/v1/admin/don-hang', donHangAdminRoutes);
 
 router.use('/upload', uploadRoutes);
 router.use('/dia-chi', diaChiRoutes);
+router.use('/vai-tro', vaiTroNguoiDungRoutes);
 
 export default router;

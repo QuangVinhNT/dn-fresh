@@ -8,12 +8,13 @@ import './CustomerDetail.scss';
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
   detailData: CustomerDetailType | undefined;
-  setIsShowOkCancel: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsShowLockOkCancel: React.Dispatch<React.SetStateAction<boolean>>;
   setAccountStatusData: React.Dispatch<React.SetStateAction<{ id: string, type: 'lock' | 'unlock'; }>>;
+  setIsShowRoles: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CustomerDetail = (props: IProps) => {
-  const { setIsShowDetail, detailData, setIsShowOkCancel, setAccountStatusData } = props;
+  const { setIsShowDetail, detailData, setIsShowLockOkCancel, setAccountStatusData, setIsShowRoles } = props;
   const { hideOverlay } = overlayStore();
   return (
     <>
@@ -22,7 +23,21 @@ const CustomerDetail = (props: IProps) => {
           title='Thông tin khách hàng'
           className="customer-info-container"
           extraTitle={
-            <div style={{ display: 'flex', alignItems: 'center', gap: '48px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+              {detailData.danhSachVaiTro.length === 1 && (
+                <div className="add-role">
+                  <ButtonComponent
+                    className="btn-add-role"
+                    type="no-submit"
+                    label="Thêm vai trò"
+                    variant="secondary"
+                    onClick={() => {                      
+                      setIsShowDetail(false);
+                      setIsShowRoles(true);
+                    }}
+                  />
+                </div>
+              )}
               <div className="lock-unlock">
                 {detailData.trangThai === 1 ? (
                   <ButtonComponent
@@ -31,7 +46,7 @@ const CustomerDetail = (props: IProps) => {
                     label="Khóa tài khoản"
                     variant="danger"
                     onClick={() => {
-                      setIsShowOkCancel(true);
+                      setIsShowLockOkCancel(true);
                       setIsShowDetail(false);
                       setAccountStatusData({
                         id: detailData.maNguoiDung,
@@ -46,7 +61,7 @@ const CustomerDetail = (props: IProps) => {
                     label="Mở tài khoản"
                     variant="primary"
                     onClick={() => {
-                      setIsShowOkCancel(true);
+                      setIsShowLockOkCancel(true);
                       setIsShowDetail(false);
                       setAccountStatusData({
                         id: detailData.maNguoiDung,
@@ -56,7 +71,7 @@ const CustomerDetail = (props: IProps) => {
                   />
                 )}
               </div>
-              <div className="close-modal">
+              <div className="close-btn">
                 <IoClose size={28} className="close-icon" onClick={() => {
                   setIsShowDetail(false);
                   hideOverlay();

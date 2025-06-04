@@ -1,35 +1,54 @@
-.staff-detail-component {
-  .staff-detail-header {
+@use '@/styles' as *;
+.staff-info-container {
+  width: 65%;
+  margin: auto;
+
+  .change-cancel {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
 
-    .delete-edit {
-      display: flex;
+    .btn-cancel-role {
+      border: 1px solid $text-color !important;
+      transition: all .3s;
 
-      .btn-delete {
-        background-color: transparent;
-        border: 2px solid red;
-        color: red;
-        font-size: 14px;
-        padding: 8px 12px;
-        font-weight: 500;
-        margin-right: 8px;
-        transition: all .3s;
-        cursor: pointer;
-
-        &:hover {
-          background-color: red;
-          color: #fff;
-        }
+      &:hover {
+        background-color: $text-color;
+        color: #fff;
       }
     }
   }
-  .staff-detail-body {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+
+  .close-btn {
+    .close-icon {
+      transition: all .3s;
+      cursor: pointer;
+      &:hover {
+        color: red;
+      }
+    }
   }
 
+  .staff-info {
+    display: flex;
+    gap: 24px;
+
+    .avatar {
+      width: 240px;
+      height: 240px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
 }

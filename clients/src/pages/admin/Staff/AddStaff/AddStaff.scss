@@ -1,6 +1,7 @@
 @use '@/styles' as *;
-.add-staff-component {
-  .add-staff-header {
+
+.add-customer-component {
+  .add-customer-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -21,7 +22,34 @@
       }
     }
   }
-  .add-staff-body {
+
+  .add-customer-body {
     margin-top: 20px;
+    display: flex;
+    gap: 20px;
+
+    .box-avatar {
+      height: fit-content;
+    }
+
+    .box-info {
+      .customer-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .box-address {
+      .address {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .box-role {
+      height: fit-content;
+    }
   }
 }

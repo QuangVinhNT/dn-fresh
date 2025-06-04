@@ -1,4 +1,4 @@
-import { InsertCustomerPayload } from "@/types/User";
+import { InsertUserPayload, InsertUserRolePayload } from "@/types/User";
 import axiosInstance from "./axiosInstance";
 
 const getCustomers = async (page: number, limit: number, search: string, status?: string) => {
@@ -16,6 +16,11 @@ const getCustomerById = async (customerId: string) => {
   return res.data;
 };
 
+const getStaffById = async (staffId: string) => {
+  const res = await axiosInstance.get(`v1/admin/nguoi-dung/nhan-vien/${staffId}`);
+  return res.data;
+};
+
 const lockAccount = async (userId: string) => {
   const res = await axiosInstance.patch(`v1/admin/nguoi-dung/${userId}/lock`);
   return res.data;
@@ -26,6 +31,25 @@ const unlockAccount = async (userId: string) => {
   return res.data;
 };
 
-export {
-  getCustomers, getStaffs, getCustomerById, lockAccount, unlockAccount
+const insertUser = async (payload: InsertUserPayload) => {
+  const res = await axiosInstance.post(`v1/admin/nguoi-dung`, payload);
+  return res.data;
 };
+
+const insertUserRole = async (payload: InsertUserRolePayload) => {
+  const res = await axiosInstance.post(`/vai-tro`, payload);
+  return res.data;
+};
+
+const deleteAllStaffRole = async (userId: string) => {
+  const res = await axiosInstance.delete(`/vai-tro/staffs/${userId}`);
+  return res.data;
+};
+
+const updateRole = async (userId: string, roleId: string) => {
+  const res = await axiosInstance.put(`/vai-tro/${userId}`, {maVaiTro: roleId})
+  return res.data;
+}
+
+export { getCustomerById, getCustomers, getStaffs, lockAccount, unlockAccount, insertUser, insertUserRole, getStaffById, deleteAllStaffRole, updateRole };
+

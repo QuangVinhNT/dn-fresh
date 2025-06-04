@@ -39,13 +39,21 @@ type CustomerList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh'
 
 type StaffList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'maVaiTro' | 'trangThai' | 'ngayTao'>
 
-type InsertCustomerPayload = Pick <User, 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'hinhAnh' > & Pick<DiaChi, 'chiTietDiaChi' | 'maPhuongXa'>
+type InsertUserPayload = Pick <User, 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'matKhau' | 'hinhAnh' | 'maVaiTro' > & Pick<DiaChi, 'chiTietDiaChi' | 'maPhuongXa'>
 
 type CustomerDetailType = Pick<User, 'maNguoiDung' | 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'hinhAnh' | 'ngayTao' | 'ngayCapNhat' | 'trangThai'> & {
   diaChi: string,
-  soLuongDonHang: number
+  soLuongDonHang: number,
+  danhSachVaiTro: string[]
 }
 
+type StaffDetailType = Pick<User, 'maNguoiDung' | 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'hinhAnh' | 'ngayTao' | 'ngayCapNhat' | 'trangThai'> & {
+  diaChi: string,
+  danhSachVaiTro: string[]
+}
+
+type InsertUserRolePayload = Pick<User, 'maNguoiDung' | 'maVaiTro'>
+
 export type {
-  AccountUser, CustomerList, StaffList, User, InsertCustomerPayload, CustomerDetailType
+  AccountUser, CustomerList, StaffList, User, InsertUserPayload, CustomerDetailType, InsertUserRolePayload, StaffDetailType
 }
