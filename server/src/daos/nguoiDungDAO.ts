@@ -1,4 +1,6 @@
+import { PoolConnection } from "mysql2/promise";
 import { pool } from "../configs/database.js";
+import { NguoiDung } from "../models/nguoiDungModel.js";
 
 export class NguoiDungDAO {
 
@@ -80,4 +82,34 @@ export class NguoiDungDAO {
       throw error;
     }
   }
+
+  public getCustomerById = async (customerId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT kh.maNguoiDung, hoTen, gioiTinh, ngaySinh, soDienThoai, kh.maDiaChi, email, hinhAnh, kh.ngayTao, kh.ngayCapNhat, kh.trangThai, COUNT(dh.maDonHang) as soLuongDonHang
+        FROM nguoidung AS kh
+        LEFT JOIN donhang AS dh ON dh.maKhachHang = kh.maNguoiDung
+        WHERE kh.maNguoiDung = ?
+        GROUP BY kh.maNguoiDung
+        `, [customerId])
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
+
+  // public insertCustomer = async (customer: NguoiDung, connection: PoolConnection) => {
+  //   try {
+  //     const dob = `${customer.getNgaySinh().getFullYear()}-${customer.getNgaySinh().getMonth()}-${customer.getNgaySinh().getDay()}`
+  //     const [result] = await connection.query(`
+  //       INSERT INTO nguoidung (maNguoiDung, hoTen, gioiTinh, ngaySinh, soDienThoai, maDiaChi, email, matKhau, hinhAnh, ngayTao, ngayCapNhat, trangThai)
+  //       VALUES (?, ?, ?, '${dob}', ?, ?, ?, 'Dnfresh123@', ?, NOW(), NOW(), 1)
+  //       `, [customer.getMaNguoiDung(), customer.getHoTen(), customer.getGioiTinh(), customer.getSoDienThoai(), customer.getMaDiaChi(), customer.getEmail(), customer.getHinhAnh()])
+  //     return result;
+  //   } catch (error) {
+  //     console.error('DAO error:', error);
+  //     throw error;
+  //   }
+  // }
 }

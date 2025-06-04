@@ -1,3 +1,5 @@
+import { DiaChi } from "./Address";
+
 type User = {
   maNguoiDung: string;
   hoTen: string;
@@ -37,6 +39,13 @@ type CustomerList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh'
 
 type StaffList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'maVaiTro' | 'trangThai' | 'ngayTao'>
 
+type InsertCustomerPayload = Pick <User, 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'hinhAnh' > & Pick<DiaChi, 'chiTietDiaChi' | 'maPhuongXa'>
+
+type CustomerDetailType = Pick<User, 'maNguoiDung' | 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'hinhAnh' | 'ngayTao' | 'ngayCapNhat' | 'trangThai'> & {
+  diaChi: string,
+  soLuongDonHang: number
+}
+
 export type {
-  AccountUser, CustomerList, StaffList, User
+  AccountUser, CustomerList, StaffList, User, InsertCustomerPayload, CustomerDetailType
 }

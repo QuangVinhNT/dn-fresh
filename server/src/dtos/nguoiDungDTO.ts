@@ -12,3 +12,18 @@ export interface NguoiDungDTO {
   ngayCapNhat: Date | null;
   trangThai: number;
 }
+
+export interface KhachHangDTO {
+  maNguoiDung: string;
+  hoTen: string;
+  gioiTinh: number;
+  ngaySinh: Date;
+  soDienThoai: string;
+  diaChi: string;
+  email: string;
+  hinhAnh: string;
+  ngayTao: Date | null;
+  ngayCapNhat: Date | null;
+  trangThai: number;
+  soLuongDonHang: number;
+}

@@ -18,8 +18,8 @@ interface MenuItem {
 }
 
 const user: AccountUser = {
-  fullname: 'Inventory Staff',
-  avatar: 'https://i.pinimg.com/736x/5b/cf/1b/5bcf1b2636aae39616d08ee72d1b9569.jpg'
+  hoTen: 'Inventory Staff',
+  hinhAnh: 'https://i.pinimg.com/736x/5b/cf/1b/5bcf1b2636aae39616d08ee72d1b9569.jpg'
 };
 
 const menuItems: MenuItem[] = [

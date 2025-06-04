@@ -12,19 +12,20 @@ interface IProps {
   placeholder?: string;
   affix?: ReactNode;
   suffix?: ReactNode;
-  type?: 'text' | 'email' | 'password';
+  type?: 'text' | 'email' | 'password' | 'date';
   className?: string;
   isReadOnly?: boolean;
   register?: UseFormRegister<FormValues>;
   name: string;
   isTextarea?: boolean;
   defaultValue?: boolean;
+  styles?: React.CSSProperties;
 }
 
 const InputComponent = (props: IProps) => {
-  const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea, defaultValue } = props;
+  const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea, defaultValue, styles } = props;
   return (
-    <div className={`input-component ${className}`}>
+    <div className={`input-component ${className}`} style={styles}>
       {title && (
         <label className="input-title">{title} {(!isReadOnly && title && isRequired) && <span className="input-required">*</span>}</label>
       )}

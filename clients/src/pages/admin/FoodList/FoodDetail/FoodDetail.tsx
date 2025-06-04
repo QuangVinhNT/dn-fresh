@@ -1,10 +1,10 @@
-import { AdminContainerComponent, BackComponent, ButtonComponent, ImageSlider, OkCancelModal, TableComponent, TextComponent } from "@/components";
+import { deleteProduct } from "@/api/productApi";
+import { AdminContainerComponent, BackComponent, ButtonComponent, ImageSlider, OkCancelModal, TextComponent } from "@/components";
 import { overlayStore } from "@/store";
-import { useState } from "react";
-import './FoodDetail.scss';
 import { AdminProductDetail, ProductPackage, ProductStatus } from "@/types/Product";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
-import { deleteProduct } from "@/api/productApi";
+import { useState } from "react";
+import './FoodDetail.scss';
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;

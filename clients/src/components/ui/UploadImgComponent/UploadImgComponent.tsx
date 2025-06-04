@@ -13,14 +13,15 @@ interface IProps {
   watch: UseFormWatch<QueryData>;
   title?: string;
   defaultImages?: string;
+  isGrid2?: boolean;
 }
 const UploadImgComponent = (props: IProps) => {
-  const { id, register, name, watch, title } = props;
+  const { id, register, name, watch, title, isGrid2 } = props;
   const watched = watch(name);
   return (
     <div className="upload-component">
       {title && <p className="upload-title">{title} {(<span style={{ color: 'red' }}>*</span>)}</p>}
-      <div className="img-list">
+      <div className="img-list" style={{display: isGrid2 ? 'grid' : 'block'}}>
         {watched instanceof FileList && watched?.length > 0 && Array.from(watched).map((img, idx) => (
           <div className="img-item" key={idx}>
             <img

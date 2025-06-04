@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 import { NguoiDungService } from "../services/nguoiDungService.js";
+import { NguoiDung } from "../models/nguoiDungModel.js";
+import { DiaChi } from "../models/diaChiModel.js";
 
 export class NguoiDungController {
   private nguoiDungService: NguoiDungService;
 
-  constructor() {
+  constructor () {
     this.nguoiDungService = new NguoiDungService();
   }
 
@@ -39,4 +41,36 @@ export class NguoiDungController {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+  public getCustomerById = async (req: Request, res: Response) => {
+    try {
+      const customerId = req.params.id as string || '';
+      if (!customerId) {
+        res.status(404).json({ message: 'Customer not found!' });
+        return;
+      }
+      const data = await this.nguoiDungService.getCustomerById(customerId);
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+  // public insertCustomer = async (req: Request, res: Response) => {
+  //   try {
+  //     const payload = req.body;
+  //     if (!payload) {
+  //       res.status(400).json({ message: 'Invalid order data' });
+  //       return;
+  //     }
+  //     const customer = new NguoiDung('', payload.hoTen, payload.gioiTinh, new Date(payload.ngaySinh), payload.soDienThoai, '', payload.email, '', payload.hinhAnh, null, null, 1);
+  //     const address = new DiaChi('', payload.chiTietDiaChi, payload.maPhuongXa);
+  //     const result = await this.nguoiDungService.insertCustomer(customer, address);
+  //     res.status(201).json(result);
+  //   } catch (error) {
+  //     console.error('Controller error:', error);
+  //     res.status(500).json({ message: 'Server error' });
+  //   }
+  // };
 }

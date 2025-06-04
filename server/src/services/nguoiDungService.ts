@@ -1,12 +1,23 @@
 import { RowDataPacket } from "mysql2";
 import { NguoiDungDAO } from "../daos/nguoiDungDAO.js";
-import { NguoiDungDTO } from "../dtos/nguoiDungDTO.js";
+import { KhachHangDTO, NguoiDungDTO } from "../dtos/nguoiDungDTO.js";
+import { NguoiDung } from "../models/nguoiDungModel.js";
+import { pool } from "../configs/database.js";
+import generateUUID from "../utils/generateUUID.js";
+import { DiaChiService } from "./diaChiService.js";
+import { DiaChi } from "../models/diaChiModel.js";
+import { VaiTroNguoiDungService } from "./vaiTroNguoiDungService.js";
+import { VaiTroNguoiDung } from "../models/vaiTroNguoiDungModel.js";
 
 export class NguoiDungService {
   private nguoiDungDAO: NguoiDungDAO;
+  private diaChiService: DiaChiService;
+  private vaiTroNguoiDungService: VaiTroNguoiDungService;
 
   constructor () {
     this.nguoiDungDAO = new NguoiDungDAO();
+    this.diaChiService = new DiaChiService();
+    this.vaiTroNguoiDungService = new VaiTroNguoiDungService();
   }
 
   public getAllCustomer = async (page: number, limit: number, customerId: string, status: string) => {
@@ -46,4 +57,60 @@ export class NguoiDungService {
       throw error;
     }
   };
+
+  public getCustomerById = async (customerId: string): Promise<KhachHangDTO> => {
+    try {
+      const rows = await this.nguoiDungDAO.getCustomerById(customerId) as RowDataPacket[];
+      const customer = rows[0]
+      const address = await this.diaChiService.getById(customer.maDiaChi)
+      return {
+        maNguoiDung: customer.maNguoiDung,
+        hoTen: customer.hoTen,
+        gioiTinh: customer.gioiTinh,
+        ngaySinh: customer.ngaySinh,
+        soDienThoai: customer.soDienThoai,
+        diaChi: address,
+        email: customer.email,
+        hinhAnh: customer.hinhAnh,
+        ngayTao: customer.ngayTao,
+        ngayCapNhat: customer.ngayCapNhat,
+        trangThai: customer.trangThai,
+        soLuongDonHang: customer.soLuongDonHang
+      };
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  };
+
+  // public insertCustomer = async (customer: NguoiDung, address: DiaChi) => {
+  //   const connection = await pool.getConnection();
+  //   try {
+  //     connection.beginTransaction();
+  //     const userId = await generateUUID(10, connection, 'nguoidung', 'maNguoiDung', 'ND');
+  //     let addressId = '';
+  //     if ((await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa())).length > 0) {
+  //       addressId = (await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa()))[0].maDiaChi;
+  //     } else {
+  //       addressId = await generateUUID(255, connection, 'diachi', 'maDiaChi', 'DC');
+  //       await this.diaChiService.insertAddress(address, connection);
+  //     }
+  //     customer.setMaNguoiDung(userId);
+  //     customer.setMaDiaChi(addressId);
+  //     console.log(customer)
+  //     const customerResult = await this.nguoiDungDAO.insertCustomer(customer, connection);
+
+  //     const userRoleResult = await this.vaiTroNguoiDungService.insertUserRole(new VaiTroNguoiDung(customer.getMaNguoiDung(), 'VT004'));
+  //     connection.commit();
+  //     return {
+  //       result: {customerResult, userRoleResult}
+  //     };
+  //   } catch (error) {
+  //     connection.rollback();
+  //     console.error('Error service:', error);
+  //     throw error;
+  //   } finally {
+  //     connection.release();
+  //   }
+  // };
 }

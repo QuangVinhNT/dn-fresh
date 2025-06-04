@@ -100,7 +100,6 @@ export class DonHangService {
         addressId = (await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa()))[0].maDiaChi;
       } else {
         addressId = await generateUUID(255, connection, 'diachi', 'maDiaChi', 'DC');
-        address.setMaDiaChi(addressId);
         await this.diaChiService.insertAddress(address, connection);
       }
       const orderId = await generateUUID(255, connection, 'donhang', 'maDonHang', 'DH');

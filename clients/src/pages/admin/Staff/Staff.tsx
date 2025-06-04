@@ -66,7 +66,7 @@ const Staff = () => {
             <ButtonComponent
               className="btn-add"
               type="no-submit"
-              label="Thêm nhân viên"
+              label="Thêm nhân sự"
               variant="primary"
               affix={<IoAdd className="icn-add" />}
               onClick={() => { setIsShowAdd(true); }}

@@ -1,56 +1,102 @@
-import { AdminContainerComponent, BackComponent, ButtonComponent } from "@/components";
+import { AdminContainerComponent, ButtonComponent, InfoItemComponent } from "@/components";
+import { overlayStore } from "@/store";
+import { CustomerDetailType, Gender, UserStatus } from "@/types/User";
+import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import { IoClose } from "react-icons/io5";
 import './CustomerDetail.scss';
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  detailData: CustomerDetailType | undefined;
 }
 
 const CustomerDetail = (props: IProps) => {
-  const { setIsShowDetail, setIsShowEdit } = props;
+  const { setIsShowDetail, detailData } = props;
+  const { hideOverlay } = overlayStore();
   return (
-    <div className="customer-detail-component">
-      <div className="customer-detail-header">
-        <BackComponent
-          backTitle="Quay lại danh sách khách hàng"
-          onBack={() => { setIsShowDetail(false); }}
-        />
-        <div className="delete-edit">
-          <ButtonComponent
-            className="btn-delete"
-            type="no-submit"
-            label="Xóa khách hàng"
-            onClick={() => { }}
-          />
-          <ButtonComponent
-            className="btn-edit"
-            type="no-submit"
-            label="Sửa khách hàng"
-            variant="primary"
-            onClick={() => {
-              setIsShowEdit(true);
-              setIsShowDetail(false);
-            }}
-          />
-        </div>
-      </div>
-      <div className="customer-detail-body">
+    <>
+      {detailData && (
         <AdminContainerComponent
-          title='Thông tin chung'
+          title='Thông tin khách hàng'
+          className="customer-info-container"
+          extraTitle={
+            <div style={{ display: 'flex', alignItems: 'center', gap: '48px' }}>
+              <div className="lock-unlock">
+                {detailData.trangThai === 1 ? (
+                  <ButtonComponent
+                    className="btn-lock"
+                    type="no-submit"
+                    label="Khóa tài khoản"
+                    onClick={() => { }}
+                  />
+                ) : (
+                  <ButtonComponent
+                    className="btn-unlock"
+                    type="no-submit"
+                    label="Mở tài khoản"
+                    variant="primary"
+                    onClick={() => {
+                      setIsShowDetail(false);
+                    }}
+                  />
+                )}
+              </div>
+              <div className="close-modal">
+                <IoClose size={28} className="close-icon" onClick={() => {
+                  setIsShowDetail(false);
+                  hideOverlay();
+                }} />
+              </div>
+            </div>
+          }
           children={
-            <>
-            </>
+            <div className="customer-info">
+              <div className="avatar">
+                <img src={detailData.hinhAnh || 'https://res.cloudinary.com/deu6ox2tv/image/upload/v1748832089/uploads/kvvrnblwls3vbesc09yi.png'} alt="Avatar" />
+              </div>
+              <div className="info">
+                <InfoItemComponent
+                  content={detailData.maNguoiDung}
+                  title="Mã khách hàng:"
+                />
+                <InfoItemComponent
+                  content={detailData.hoTen}
+                  title="Tên khách hàng:"
+                />
+                <InfoItemComponent
+                  content={Gender[detailData.gioiTinh]}
+                  title="Giới tính:"
+                />
+                <InfoItemComponent
+                  content={detailData.soDienThoai}
+                  title="Số điện thoại:"
+                />
+                <InfoItemComponent
+                  content={detailData.diaChi}
+                  title="Địa chỉ:"
+                />
+                <InfoItemComponent
+                  content={detailData.email}
+                  title="Email:"
+                />
+                <InfoItemComponent
+                  content={datetimeFormatter(detailData.ngayTao + '')}
+                  title="Thời gian tài khoản:"
+                />
+                <InfoItemComponent
+                  content={datetimeFormatter(detailData.ngayCapNhat + '')}
+                  title="Thời gian cập nhật tài khoản:"
+                />
+                <InfoItemComponent
+                  content={UserStatus[detailData.trangThai]}
+                  title="Trạng thái tài khoản:"
+                />
+              </div>
+            </div>
           }
         />
-        <AdminContainerComponent
-          title='Thông tin thêm'
-          children={
-            <>
-            </>
-          }
-        />
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

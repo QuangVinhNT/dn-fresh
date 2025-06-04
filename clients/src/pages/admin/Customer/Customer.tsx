@@ -1,25 +1,22 @@
-import { getCustomers } from "@/api/userApi";
-import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
-import { loadingStore } from "@/store";
+import { getCustomerById, getCustomers } from "@/api/userApi";
+import { FilterComponent, SearchComponent, TablePagination } from "@/components";
+import { loadingStore, overlayStore } from "@/store";
 import { FilterType } from "@/types";
-import { CustomerList, Gender, UserStatus } from "@/types/User";
+import { CustomerDetailType, CustomerList, Gender, UserStatus } from "@/types/User";
 import { dateFormatter, datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useEffect, useRef, useState } from "react";
-import { IoAdd, IoFilter } from "react-icons/io5";
+import { IoFilter } from "react-icons/io5";
 import { TfiExport } from "react-icons/tfi";
-import AddCustomer from "./AddCustomer/AddCustomer";
 import './Customer.scss';
 import CustomerDetail from "./CustomerDetail/CustomerDetail";
-import EditCustomer from "./CustomerDetail/EditCustomer/EditCustomer";
 
 const headers = ['Mã người dùng', 'Họ tên', 'Ngày sinh', 'Giới tính', 'Email', 'Trạng thái', 'Ngày tạo'];
 
 
 const Customer = () => {
-  const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
-  const [isShowEdit, setIsShowEdit] = useState(false);
-  const [customers, setCustomers] = useState<CustomerList[]>([])
+  const [customers, setCustomers] = useState<CustomerList[]>([]);
+  const [customer, setCustomer] = useState<CustomerDetailType>();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
@@ -28,6 +25,7 @@ const Customer = () => {
   const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
+  const { showOverlay } = overlayStore();
 
   useEffect(() => {
     const statusFilter = filters.find(filter => filter.name === 'status')?.value;
@@ -47,23 +45,33 @@ const Customer = () => {
     }
   };
 
+  const fetchCustomerById = async (customerId: string) => {
+    showLoading();
+    try {
+      const response = await getCustomerById(customerId);
+      setCustomer(response);
+    } catch (error) {
+      console.error('Error when load product:', error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const handleClickRow = (customerId: string) => {
+    fetchCustomerById(customerId);
+    setIsShowDetail(true);
+    showOverlay();
+  };
+
   return (
     <>
-      {(!isShowAdd && !isShowDetail && !isShowEdit) && (
+      {customers && (
         <div className="customer-component">
           <div className="customer-header">
             <div className="export-file">
               <TfiExport className="icn-download" />
               <span>Xuất file</span>
             </div>
-            <ButtonComponent
-              className="btn-add"
-              type="no-submit"
-              label="Thêm khách hàng"
-              variant="primary"
-              affix={<IoAdd className="icn-add" />}
-              onClick={() => { setIsShowAdd(true); }}
-            />
           </div>
           <div className="table-component">
             <div className="filter">
@@ -90,7 +98,7 @@ const Customer = () => {
             </div>
             <div className="search">
               <SearchComponent placeholder="Nhập mã khách hàng..." onSearch={fetchCustomers} keywordRef={keywordRef} />
-            </div>            
+            </div>
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -103,12 +111,12 @@ const Customer = () => {
               </thead>
               <tbody>
                 {customers?.map((customer, idx) => (
-                  <tr key={idx} className="tb-body-row" onClick={() => { 
-                    // handleClickRow(product.id); 
-                    }}>
+                  <tr key={idx} className="tb-body-row" onClick={() => {
+                    handleClickRow(customer.maNguoiDung);
+                  }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
                       <span>{customer.maNguoiDung}</span>
-                    </td>                    
+                    </td>
                     <td>
                       <span>{customer.hoTen}</span>
                     </td>
@@ -131,16 +139,13 @@ const Customer = () => {
                 ))}
               </tbody>
             </table>
-            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
+          </div>
+          <div className="customer-detail-modal" style={{top: isShowDetail ? '50%' : '-100%'}}>
+            <CustomerDetail setIsShowDetail={setIsShowDetail} detailData={customer} />
           </div>
         </div>
       )}
-
-      {isShowAdd && <AddCustomer setIsShowAdd={setIsShowAdd}/>}
-      
-      {isShowDetail && <CustomerDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit}/>}
-
-      {isShowEdit && <EditCustomer setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit}/>}
     </>
   );
 };
