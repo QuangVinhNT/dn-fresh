@@ -1,5 +1,5 @@
-import { getCustomerById, getCustomers } from "@/api/userApi";
-import { FilterComponent, SearchComponent, TablePagination } from "@/components";
+import { getCustomerById, getCustomers, lockAccount, unlockAccount } from "@/api/userApi";
+import { FilterComponent, OkCancelModal, SearchComponent, TablePagination } from "@/components";
 import { loadingStore, overlayStore } from "@/store";
 import { FilterType } from "@/types";
 import { CustomerDetailType, CustomerList, Gender, UserStatus } from "@/types/User";
@@ -9,12 +9,15 @@ import { IoFilter } from "react-icons/io5";
 import { TfiExport } from "react-icons/tfi";
 import './Customer.scss';
 import CustomerDetail from "./CustomerDetail/CustomerDetail";
+import webColors from "@/constants/webColors";
 
 const headers = ['Mã người dùng', 'Họ tên', 'Ngày sinh', 'Giới tính', 'Email', 'Trạng thái', 'Ngày tạo'];
 
 
 const Customer = () => {
   const [isShowDetail, setIsShowDetail] = useState(false);
+  const [isShowOkCancel, setIsShowOkCancel] = useState(false);
+  const [accountStatusData, setAccountStatusData] = useState<{ id: string, type: 'lock' | 'unlock'; }>({ id: '', type: 'lock' });
   const [customers, setCustomers] = useState<CustomerList[]>([]);
   const [customer, setCustomer] = useState<CustomerDetailType>();
   const [page, setPage] = useState<number>(1);
@@ -25,7 +28,7 @@ const Customer = () => {
   const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
-  const { showOverlay } = overlayStore();
+  const { showOverlay, hideOverlay } = overlayStore();
 
   useEffect(() => {
     const statusFilter = filters.find(filter => filter.name === 'status')?.value;
@@ -141,8 +144,44 @@ const Customer = () => {
             </table>
             <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
           </div>
-          <div className="customer-detail-modal" style={{top: isShowDetail ? '50%' : '-100%'}}>
-            <CustomerDetail setIsShowDetail={setIsShowDetail} detailData={customer} onUpdated={fetchCustomers}/>
+          <div className="customer-detail-modal" style={{ top: isShowDetail ? '50%' : '-100%' }}>
+            <CustomerDetail
+              setIsShowDetail={setIsShowDetail}
+              detailData={customer}
+              setIsShowOkCancel={setIsShowOkCancel}
+              setAccountStatusData={setAccountStatusData} />
+          </div>
+          <div className="ok-cancel-modal" style={{ top: isShowOkCancel ? '50%' : '-100%' }}>
+            <OkCancelModal
+              data={{
+                message: <p>Bạn chắc chắn muốn <b style={{color: accountStatusData.type === 'lock' ? 'red' : webColors.adminPrimary}}>{accountStatusData.type === 'lock' ? 'khóa' : 'mở khóa'}</b> tài khoản <b>{accountStatusData.id}</b> chứ?</p>
+              }}
+              onOk={async () => {
+                if (accountStatusData.type === 'lock') {
+                  const lockResult = await lockAccount(accountStatusData.id);
+                  console.log(lockResult);
+                  setIsShowDetail(false);
+                  setIsShowOkCancel(false);
+                  fetchCustomers();
+                  hideOverlay();
+                } else {
+                  const unlockResult = await unlockAccount(accountStatusData.id);
+                  console.log(unlockResult);
+                  setIsShowDetail(false);
+                  setIsShowOkCancel(false);
+                  fetchCustomers();
+                  hideOverlay();
+                }
+              }}
+              onCancel={() => {
+                setIsShowOkCancel(false);
+                setIsShowDetail(true);
+              }}
+              onClose={() => {
+                setIsShowOkCancel(false);
+                setIsShowDetail(true);
+              }}
+            />
           </div>
         </div>
       )}

@@ -4,16 +4,16 @@ import { CustomerDetailType, Gender, UserStatus } from "@/types/User";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { IoClose } from "react-icons/io5";
 import './CustomerDetail.scss';
-import { lockAccount, unlockAccount } from "@/api/userApi";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
   detailData: CustomerDetailType | undefined;
-  onUpdated: () => void;
+  setIsShowOkCancel: React.Dispatch<React.SetStateAction<boolean>>;
+  setAccountStatusData: React.Dispatch<React.SetStateAction<{ id: string, type: 'lock' | 'unlock'; }>>;
 }
 
 const CustomerDetail = (props: IProps) => {
-  const { setIsShowDetail, detailData, onUpdated } = props;
+  const { setIsShowDetail, detailData, setIsShowOkCancel, setAccountStatusData } = props;
   const { hideOverlay } = overlayStore();
   return (
     <>
@@ -30,12 +30,13 @@ const CustomerDetail = (props: IProps) => {
                     type="no-submit"
                     label="Khóa tài khoản"
                     variant="danger"
-                    onClick={async () => {
-                      const lockResult = await lockAccount(detailData.maNguoiDung);
-                      console.log(lockResult);
-                      onUpdated();
+                    onClick={() => {
+                      setIsShowOkCancel(true);
                       setIsShowDetail(false);
-                      hideOverlay();
+                      setAccountStatusData({
+                        id: detailData.maNguoiDung,
+                        type: 'lock'
+                      });
                     }}
                   />
                 ) : (
@@ -44,12 +45,13 @@ const CustomerDetail = (props: IProps) => {
                     type="no-submit"
                     label="Mở tài khoản"
                     variant="primary"
-                    onClick={async () => {
-                      const unlockResult = await unlockAccount(detailData.maNguoiDung);
-                      console.log(unlockResult);
-                      onUpdated();
+                    onClick={() => {
+                      setIsShowOkCancel(true);
                       setIsShowDetail(false);
-                      hideOverlay();
+                      setAccountStatusData({
+                        id: detailData.maNguoiDung,
+                        type: 'unlock'
+                      });
                     }}
                   />
                 )}
