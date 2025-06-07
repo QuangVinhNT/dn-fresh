@@ -101,7 +101,7 @@ const Staff = () => {
 
   return (
     <>
-      {(staffs && !isShowScheduling) && (
+      {(staffs && !isShowScheduling && !isShowAdd) && (
         <div className="staff-component">
           <div className="staff-header">
             <div className="staff-header-tools">

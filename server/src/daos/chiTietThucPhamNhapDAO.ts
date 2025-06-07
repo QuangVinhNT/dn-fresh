@@ -18,4 +18,21 @@ export class ChiTietThucPhamNhapDAO {
       throw error;
     }
   };
+
+  public getAllByProviderId = async (providerId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT cttp.maThucPham, tenThucPham, SUM(cttp.soLuong) as tongSoLuong
+        FROM chitietthucphamnhap AS cttp
+        JOIN phieunhap AS pn ON pn.maPhieuNhap = cttp.maPhieuNhap
+        JOIN khothucpham as tp ON tp.maThucPham = cttp.maThucPham
+        WHERE pn.maNhaCungCap = ?
+        GROUP BY cttp.maThucPham;
+        `, [providerId]);
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

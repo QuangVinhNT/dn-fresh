@@ -1,0 +1,67 @@
+@use '@/styles' as *;
+.upload-component {
+  border: 1px dashed rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  .upload-title {
+    font-size: 14px;
+    font-weight: 500;
+  } 
+  
+  .doc-list {
+    width: 100%;
+    .doc-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: rgba(0, 0, 0, 0.05);
+      padding: 8px;
+      font-size: 14px;
+      border-bottom: 1px solid $border-color;
+
+      &:last-child {
+        border: none;
+      }
+
+      span {
+        &:last-child {
+          width: 40%;
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: $admin-primary-color;
+    transition: all .3s;
+
+    &:hover {
+      text-decoration: underline;
+      filter: brightness(125%);
+    }
+
+    .upload-icon {
+      font-size: 24px;
+    }
+
+    .upload-content {
+      font-size: 14px;
+    }
+  }
+
+  input {
+    display: none;
+  }
+}

@@ -8,7 +8,7 @@ import { PoolConnection } from "mysql2/promise";
 export class DiaChiService {
   private diaChiDAO: DiaChiDAO;
 
-  constructor() {
+  constructor () {
     this.diaChiDAO = new DiaChiDAO();
   }
 
@@ -25,6 +25,19 @@ export class DiaChiService {
     }
   };
 
+  public getDetailById = async (addressId: string) => {
+    try {
+      const rows = await this.diaChiDAO.getDetailById(addressId) as RowDataPacket[];
+      if (rows.length === 0) {
+        throw new Error(`No address found with ID: ${addressId}`);
+      } 
+      return rows[0];
+    } catch (error) {
+      console.error(`Service error: ${error}`);
+      throw error;
+    }
+  };
+
   public insertAddress = async (address: DiaChi, connection: PoolConnection) => {
     try {
       const result = await this.diaChiDAO.insertAddress(address, connection);
@@ -33,7 +46,7 @@ export class DiaChiService {
       console.error(`Service error: ${error}`);
       throw error;
     }
-  } 
+  };
 
   public getIdByTheRestField = async (addressDetail: string, communeId: string) => {
     try {
@@ -43,25 +56,25 @@ export class DiaChiService {
       console.error(`Service error: ${error}`);
       throw error;
     }
-  }
+  };
 
   public getAllCity = async () => {
     try {
-      const result = await this.diaChiDAO.getAllCity()
+      const result = await this.diaChiDAO.getAllCity();
       return result;
     } catch (error) {
       console.error(`Service error: ${error}`);
       throw error;
     }
-  }
+  };
 
   public getAllCommuneByCityId = async (cityId: string) => {
     try {
-      const result = await this.diaChiDAO.getAllCommuneByCityId(cityId)
+      const result = await this.diaChiDAO.getAllCommuneByCityId(cityId);
       return result;
     } catch (error) {
       console.error(`Service error: ${error}`);
       throw error;
     }
-  }
+  };
 }

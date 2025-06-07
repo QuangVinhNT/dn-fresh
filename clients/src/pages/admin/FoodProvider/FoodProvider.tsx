@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import './FoodProvider.scss';
-import { ProviderList, ProviderStatus } from "@/types/Provider";
-import { FilterType } from "@/types";
-import { loadingStore } from "@/store";
-import { TfiExport } from "react-icons/tfi";
+import { getProviderById, getProviders } from "@/api/providerApi";
 import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
-import { IoAdd, IoFilter } from "react-icons/io5";
+import { loadingStore, overlayStore } from "@/store";
+import { FilterType } from "@/types";
+import { ProviderDetailType, ProviderList, ProviderStatus } from "@/types/Provider";
 import { dateFormatter } from "@/utils/datetimeFormatter";
+import { useEffect, useRef, useState } from "react";
+import { IoAdd, IoFilter } from "react-icons/io5";
+import { TfiExport } from "react-icons/tfi";
 import AddProvider from "./AddProvider/AddProvider";
-import ProviderDetail from "./ProviderDetail/ProviderDetail";
+import './FoodProvider.scss';
 import EditProvider from "./ProviderDetail/EditProvider/EditProvider";
-import { getProviders } from "@/api/providerApi";
+import ProviderDetail from "./ProviderDetail/ProviderDetail";
 
 const headers = ['Mã nhà cung cấp', 'Tên nhà cung cấp', 'Ngày đăng ký', 'Trạng thái hoạt động'];
 
@@ -18,7 +18,8 @@ const FoodProvider = () => {
   const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
-  const [providers, setProviders] = useState<ProviderList[]>([])
+  const [providers, setProviders] = useState<ProviderList[]>([]);
+  const [provider, setProvider] = useState<ProviderDetailType>();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
@@ -45,6 +46,17 @@ const FoodProvider = () => {
       hideLoading();
     }
   };
+
+  const handleClickRow = async (providerId: string) => {
+    try {
+      const response = await getProviderById(providerId);
+      setProvider(response);
+      setIsShowDetail(true);
+    } catch (error) {
+      console.log('Error when get provider:', error);
+    }
+  };
+
   return (
     <>
       {(!isShowAdd && !isShowDetail && !isShowEdit) && (
@@ -92,7 +104,7 @@ const FoodProvider = () => {
             </div>
             <div className="search">
               <SearchComponent placeholder="Nhập tên nhà cung cấp..." onSearch={fetchProviders} keywordRef={keywordRef} />
-            </div>            
+            </div>
             <table className="table">
               <thead>
                 <tr className="tb-header-row">
@@ -105,12 +117,12 @@ const FoodProvider = () => {
               </thead>
               <tbody>
                 {providers?.map((provider, idx) => (
-                  <tr key={idx} className="tb-body-row" onClick={() => { 
-                    // handleClickRow(product.id); 
-                    }}>
+                  <tr key={idx} className="tb-body-row" onClick={() => {
+                    handleClickRow(provider.maNhaCungCap);
+                  }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
                       <span>{provider.maNhaCungCap}</span>
-                    </td>                    
+                    </td>
                     <td>
                       <span>{provider.tenNhaCungCap}</span>
                     </td>
@@ -124,18 +136,18 @@ const FoodProvider = () => {
                 ))}
               </tbody>
             </table>
-            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
           </div>
         </div>
       )}
 
-      {isShowAdd && <AddProvider setIsShowAdd={setIsShowAdd}/>}
+      {isShowAdd && <AddProvider setIsShowAdd={setIsShowAdd} onAdded={fetchProviders} />}
 
-      {isShowDetail && <ProviderDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit}/>}
+      {isShowDetail && <ProviderDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} detailData={provider} onDeleted={fetchProviders} />}
 
-      {isShowEdit && <EditProvider setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit}/>}
+      {isShowEdit && <EditProvider setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} data={provider} onEdited={fetchProviders} />}
     </>
-  )
-}
+  );
+};
 
-export default FoodProvider
+export default FoodProvider;

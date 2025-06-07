@@ -47,7 +47,7 @@ const InputComponent = (props: IProps) => {
             placeholder={placeholder ?? ''}
             required={isRequired}
             readOnly={isReadOnly}
-            defaultValue={defaultValue ? placeholder : ''}
+            defaultValue={defaultValue ? placeholder : ''}        
             {...(register && register(name))}
           />
         )}

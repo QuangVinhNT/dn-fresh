@@ -1,7 +1,5 @@
-type Provider = {
-  id: string;
-  name: string;
 
+type Provider = {
   maNhaCungCap: string;
   tenNhaCungCap: string;
   moTa: string;
@@ -11,9 +9,9 @@ type Provider = {
   trangThaiHoatDong: number;
   giayToPhapLy: string;
   ngayCapNhat: Date | null;
-}
+};
 
-type AdminProviderName = Pick<Provider, 'id' | 'name'>
+type AdminProviderName = Pick<Provider, 'maNhaCungCap' | 'tenNhaCungCap'>;
 
 export enum ProviderStatus {
   'Ngưng hoạt động' = 0,
@@ -21,8 +19,32 @@ export enum ProviderStatus {
   'Tạm khóa' = 2,
 }
 
-type ProviderList = Pick<Provider, 'maNhaCungCap' | 'tenNhaCungCap' |  'ngayDangKy' | 'trangThaiHoatDong'>;
+type ProviderList = Pick<Provider, 'maNhaCungCap' | 'tenNhaCungCap' | 'ngayDangKy' | 'trangThaiHoatDong'>;
+
+type InsertProviderPayload = Pick<Provider, 'tenNhaCungCap' | 'moTa' | 'ngayThanhLap' | 'trangThaiHoatDong' | 'giayToPhapLy'> & {
+  chiTietDiaChi: string,
+  maPhuongXa: string;
+};
+
+type UpdateProviderPayload = Pick<Provider, 'tenNhaCungCap' | 'moTa' | 'ngayThanhLap' | 'trangThaiHoatDong' | 'giayToPhapLy'> & {
+  chiTietDiaChi: string,
+  maPhuongXa: string;
+};
+
+type ProviderDetailType = Pick<Provider, 'maNhaCungCap' | 'tenNhaCungCap' | 'moTa' | 'ngayCapNhat' | 'ngayDangKy' | 'trangThaiHoatDong' | 'giayToPhapLy' | 'ngayThanhLap'> & {
+  diaChi: string,
+  chiTietDiaChi: string,
+  maPhuongXa: string,
+  maTinhThanhPho: string,
+  danhMucCungCap: string,
+  thucPhamCungCap: {
+    maThucPham: string,
+    tenThucPham: string,
+    soLuong: number;
+  }[];
+};
 
 export type {
-  AdminProviderName, ProviderList
-}
+  AdminProviderName, InsertProviderPayload, ProviderDetailType, ProviderList, UpdateProviderPayload
+};
+

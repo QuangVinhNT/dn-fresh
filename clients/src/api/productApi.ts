@@ -1,6 +1,6 @@
-import { AdminProductDetail, InsertProductPayload, ProductDetail } from "@/types/Product";
-import axiosInstance from "./axiosInstance";
 import { OrderBy } from "@/types";
+import { InsertProductPayload, ProductDetail } from "@/types/Product";
+import axiosInstance from "./axiosInstance";
 
 // Client-side API
 const getProducts = async (page: number, limit: number, maThucPham: string, orderBy: OrderBy, productName: string) => {
@@ -46,4 +46,4 @@ const deleteProduct = async (id: string) => {
 }
 
 
-export { getAdminProductById, getAdminProducts, insertProduct, getProducts, getProductById, getDiscountProducts, updateProduct, deleteProduct };
+export { deleteProduct, getAdminProductById, getAdminProducts, getDiscountProducts, getProductById, getProducts, insertProduct, updateProduct };

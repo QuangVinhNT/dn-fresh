@@ -27,37 +27,14 @@ import TableComponent from "./ui/TableComponent/TableComponent";
 import TablePagination from "./ui/TablePagination/TablePagination";
 import TableSearchFilter from "./ui/TableSearchFilter/TableSearchFilter";
 import TextComponent from "./ui/TextComponent";
+import UploadDocumentComponent from "./ui/UploadDocumentComponent/UploadDocumentComponent";
 import UploadImgComponent from "./ui/UploadImgComponent/UploadImgComponent";
 
 export {
-  // UI
-  SpaceComponent,
-  TextComponent,
-  FlexContainer,
-  TableComponent,
-  FilterDrawerComponent,
-  Overlay,
-  OkCancelModal,
   AdminContainerComponent,
-  InputComponent,
-  BackComponent,
-  SelectComponent,
-  UploadImgComponent,
-  CheckboxComponent,
-  ButtonComponent,
-  OrderStatusComponent,
-  InfoItemComponent,
-  ProductCard,
-  AsideBox,
-  TablePagination,
-  Pagination,
-  TableSearchFilter,
-  ImageSlider,
-  LoadingComponent,
-  SearchComponent,
-  FilterComponent,
-
   // Layout
-  AdminHeader, AdminSidebar,
-  ClientHeader, ClientFooter, ClientBanner,
-}
+  AdminHeader, AdminSidebar, AsideBox, BackComponent, ButtonComponent, CheckboxComponent, ClientBanner, ClientFooter, ClientHeader, FilterComponent, FilterDrawerComponent, FlexContainer, ImageSlider, InfoItemComponent, InputComponent, LoadingComponent, OkCancelModal, OrderStatusComponent, Overlay, Pagination, ProductCard, SearchComponent, SelectComponent, UploadDocumentComponent,
+  // UI
+  SpaceComponent, TableComponent, TablePagination, TableSearchFilter, TextComponent, UploadImgComponent
+};
+

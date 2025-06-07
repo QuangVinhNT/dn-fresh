@@ -23,6 +23,21 @@ export class DiaChiDAO {
     }
   };
 
+  public getDetailById = async (addressId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT dc.chiTietDiaChi, dc.maPhuongXa, px.maTinhThanhPho
+        FROM DIACHI dc
+        JOIN PHUONGXA px ON dc.maPhuongXa = px.maPhuongXa
+        WHERE dc.maDiaChi = ?;
+        `, [addressId])
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
+
   public insertAddress = async (address: DiaChi, connection: PoolConnection) => {
     try {
       const [result] = await connection.query(`

@@ -113,7 +113,7 @@ const EditFood = (props: IProps) => {
           <form className="edit-food-body" onSubmit={handleSubmit(onSubmit)}>
             <div className="food-image">
               <ImageSlider images={data.hinhAnh} />
-              <UploadImgComponent id="edit-food-img-upload" name="food-img" register={register} watch={watch} />
+              <UploadImgComponent id="edit-food-img-upload" name="food-img" register={register} watch={watch} multiple/>
             </div>
             <AdminContainerComponent
               className="food-info-container"

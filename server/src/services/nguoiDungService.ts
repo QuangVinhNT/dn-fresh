@@ -154,6 +154,7 @@ export class NguoiDungService {
         addressId = (await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa()))[0].maDiaChi;
       } else {
         addressId = await generateUUID(255, connection, 'diachi', 'maDiaChi', 'DC');
+        address.setMaDiaChi(addressId)
         await this.diaChiService.insertAddress(address, connection);
       }
       user.setMaNguoiDung(userId);

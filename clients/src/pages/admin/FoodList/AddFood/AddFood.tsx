@@ -105,6 +105,7 @@ const AddFood = (props: IProps) => {
                       placeholder="Nhập tên thực phẩm"
                       title="Tên thực phẩm"
                       register={register}
+                      isRequired
                     />
                     <InputComponent
                       className="food-price"
@@ -113,6 +114,7 @@ const AddFood = (props: IProps) => {
                       title="Giá bán"
                       register={register}
                       suffix={'VND'}
+                      isRequired
                     />
                     <InputComponent
                       className="food-unit"
@@ -120,6 +122,7 @@ const AddFood = (props: IProps) => {
                       placeholder="Nhập đơn vị tính"
                       title="Đơn vị tính"
                       register={register}
+                      isRequired
                     />
                     <InputComponent
                       className="food-desc"
@@ -128,6 +131,7 @@ const AddFood = (props: IProps) => {
                       title="Mô tả"
                       isTextarea
                       register={register}
+                      isRequired
                     />
                   </div>
                 }
@@ -143,6 +147,7 @@ const AddFood = (props: IProps) => {
                       name="food-type"
                       title="Loại thực phẩm"
                       register={register}
+                      isRequired
                     />
 
                     <UploadImgComponent
@@ -151,6 +156,7 @@ const AddFood = (props: IProps) => {
                       register={register}
                       watch={watch}
                       title="Ảnh thực phẩm (tối đa 4 ảnh)"
+                      multiple
                     />
                   </div>
                 }

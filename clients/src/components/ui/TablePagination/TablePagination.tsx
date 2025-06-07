@@ -16,7 +16,10 @@ const TablePagination = (props: IProps) => {
     <div className="table-pagination-component">
       <div className="data-number-container">
         <p>Hiển thị</p>
-        <select name="" id="" onChange={(e) => setLimit(parseInt(e.target.value))}>
+        <select name="" id="" onChange={(e) => {
+          setLimit(parseInt(e.target.value))
+          setPage(1)
+          }}>
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>

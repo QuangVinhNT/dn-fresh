@@ -164,7 +164,7 @@ const FoodDetail = (props: IProps) => {
         </div>
       )}
       {/* Delete modal */}
-      {showDeleteModal && (
+      {/* {showDeleteModal && (
         <OkCancelModal
           message={
             <p>Bạn chắc chắn muốn xóa sản phẩm {' '}
@@ -179,7 +179,7 @@ const FoodDetail = (props: IProps) => {
             setShowDeleteModal(false);
           }}
         />
-      )}
+      )} */}
     </>
   );
 };

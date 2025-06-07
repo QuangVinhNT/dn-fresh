@@ -114,11 +114,26 @@ export class DanhMucDAO {
       const [result] = await connection.query(`
         DELETE FROM danhmuc
         WHERE maDanhMuc = ?
-        `, [categoryId])
+        `, [categoryId]);
       return result;
     } catch (error) {
       console.error(`DAO error: ${error}`);
       throw error;
     }
-  }
+  };
+
+  public getAllByProviderId = async (providerId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT tenDanhMuc
+        FROM danhmuc AS dm
+        JOIN danhmucnhacungcap AS dmncc ON dm.maDanhMuc = dmncc.maDanhMuc
+        WHERE maNhaCungCap = ?;
+        `, [providerId]);
+      return rows;
+    } catch (error) {
+      console.error(`DAO error: ${error}`);
+      throw error;
+    }
+  };
 }

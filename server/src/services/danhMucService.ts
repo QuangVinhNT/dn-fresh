@@ -104,4 +104,14 @@ export class DanhMucService {
       connection.release();
     }
   };
+
+  public getAllByProviderId = async (providerId: string) => {
+    try {
+      const rows = await this.danhMucDAO.getAllByProviderId(providerId) as RowDataPacket[];
+      return rows;
+    } catch (error) {
+      console.error(`Service error: ${error}`);
+      throw error;
+    }
+  }
 }

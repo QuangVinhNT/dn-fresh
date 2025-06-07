@@ -38,5 +38,5 @@ type InsertProductPayload = Pick<Product, 'tenThucPham' | 'donGia' | 'donViTinh'
 type UpdateProductPayload = Pick<Product, 'tenThucPham' | 'donGia' | 'donViTinh' | 'maDanhMuc' | 'trangThai' | 'tiLeKhuyenMai' | 'moTa' | 'hinhAnh'>
 
 export type {
-  AdminProductList, AdminProductDetail, InsertProductPayload, UpdateProductPayload, ProductList, ProductDetail, ProductPackage
+  AdminProductList, AdminProductDetail, InsertProductPayload, UpdateProductPayload, ProductList, ProductDetail, ProductPackage, Product
 }

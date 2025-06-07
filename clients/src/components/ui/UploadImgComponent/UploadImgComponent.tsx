@@ -14,9 +14,10 @@ interface IProps {
   title?: string;
   defaultImages?: string;
   isGrid2?: boolean;
+  multiple?: boolean;
 }
 const UploadImgComponent = (props: IProps) => {
-  const { id, register, name, watch, title, isGrid2 } = props;
+  const { id, register, name, watch, title, isGrid2, multiple } = props;
   const watched = watch(name);
   return (
     <div className="upload-component">
@@ -47,7 +48,7 @@ const UploadImgComponent = (props: IProps) => {
         id={id} 
         accept="image/png, image/jpeg, image/jpg" 
         {...(register && register(name))} 
-        multiple 
+        multiple={multiple}
         // onChange={() => {setValue(name, imageFiles)}}
         />
     </div>

@@ -1,0 +1,61 @@
+@use '@/styles' as *;
+.provider-detail-component {
+  .body {
+    display: flex;
+    flex-direction: column;
+
+    .general-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .download-delete-edit {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .btn-download {
+          border: 1px solid $text-color;
+          color: $text-color;
+          transition: all .3s;
+          padding: 8px 16px;
+          font-size: 14px;
+          text-decoration: none;
+          border-radius: 4px;
+
+          &:hover {
+            background-color: $text-color;
+            color: #fff;
+          }
+        }
+      }
+
+      .provider-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+    }
+
+    .provider-products {
+      margin-top: 12px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+      .provider-products-header {
+        display: inline-block;
+        margin: 24px 0 12px 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .ok-cancel-delete-modal {
+    position: absolute;
+    width: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    transition: all .5s;
+  }
+}

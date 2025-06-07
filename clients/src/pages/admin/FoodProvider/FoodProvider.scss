@@ -1,4 +1,5 @@
 .provider-component {
+  position: relative;
   .provider-header {
     display: flex;
     justify-content: space-between;
@@ -30,5 +31,14 @@
     .search {
       margin-top: 12px;
     }
+  }
+
+  .ok-cancel-delete-modal {
+    position: absolute;
+    width: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    transition: all .5s;
   }
 }

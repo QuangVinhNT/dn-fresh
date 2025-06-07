@@ -1,0 +1,59 @@
+@use '@/styles' as *;
+.edit-provider-component {
+  .edit-provider-body {
+    display: flex;
+    gap: 12px;
+    position: relative;
+
+    .info-container {
+      flex: 1;
+
+      .general-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .address {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .description {
+        margin-top: 12px;
+      }
+    }
+
+    .docs-container {
+      height: fit-content;
+    }
+
+    .provider-info-footer {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      transform: translateY(100%);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      grid-column: span 2;
+
+      .btn-cancel {
+        padding: 8px 16px;
+        font-size: 14px;
+        background-color: transparent;
+        border: 1px solid $admin-primary-color;
+        color: $admin-primary-color;
+        cursor: pointer;
+        transition: all .3s;
+
+        &:hover {
+          color: red;
+          border-color: red;
+        }
+      }
+    }
+  }
+}
