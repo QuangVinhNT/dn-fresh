@@ -1,13 +1,4 @@
 type ExportReceipt = {
-  id: string;
-  exportDate: string;
-  note: string;
-  staffId: string;
-  status: number;
-  adminId: string;
-  createdAt: string;
-  updatedAt: string;
-
   maPhieuXuat: string;
   ngayXuatHang: Date;
   ghiChu: string;
@@ -16,17 +7,34 @@ type ExportReceipt = {
   maQuanTriVien: string;
   ngayTao: Date | null;
   ngayCapNhat: Date | null;
-}
+};
 
 export enum ExportReceiptStatus {
-  'Chưa hoàn thành' = 0,
+  'Đã hủy' = 0,
   'Đã hoàn thành' = 1,
   'Đang đợi duyệt' = 2,
-  'Đã hủy' = 3
+  'Chưa hoàn thành' = 3,
 }
 
-type ExportReceiptList = Pick<ExportReceipt, 'maPhieuXuat' | 'ngayXuatHang' | 'maNhanVien' | 'trangThai' | 'maQuanTriVien' | 'ngayTao' | 'ngayCapNhat'>
+type ExportReceiptList = Pick<ExportReceipt, 'maPhieuXuat' | 'ngayXuatHang' | 'maNhanVien' | 'trangThai' | 'maQuanTriVien' | 'ngayTao' | 'ngayCapNhat'>;
+
+type ExportReceiptDetailType = ExportReceipt & {
+  tenNhanVien: string,
+  tenQuanTriVien: string,
+  tenNhaCungCap: string,
+  danhSachThucPham: {
+    maLoHang: string,
+    maThucPham: string,
+    tenThucPham: string,
+    soLuong: number,
+    donViTinh: string;
+  }[];
+};
+
+type InsertExportReceiptPayload = Pick<ExportReceipt, 'ghiChu' | 'maQuanTriVien'>;
+
+type UpdateExportReceiptPayload = Pick<ExportReceipt, 'ghiChu' | 'maQuanTriVien'>;
 
 export type {
-  ExportReceiptList
-}
+  ExportReceiptList, InsertExportReceiptPayload, UpdateExportReceiptPayload, ExportReceiptDetailType
+};

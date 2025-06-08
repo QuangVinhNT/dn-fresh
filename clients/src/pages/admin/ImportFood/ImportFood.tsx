@@ -73,8 +73,8 @@ const ImportFood = () => {
               label="Thêm phiếu nhập"
               variant="primary"
               affix={<IoAdd className="icn-add" />}
-              onClick={() => { 
-                setIsShowAdd(true); 
+              onClick={() => {
+                setIsShowAdd(true);
                 showOverlay();
               }}
             />
@@ -124,30 +124,30 @@ const ImportFood = () => {
                 </tr>
               </thead>
               <tbody>
-                {importReceipts?.map((importReceipt, idx) => (
+                {importReceipts?.map((receipt, idx) => (
                   <tr key={idx} className="tb-body-row" onClick={() => {
-                    handleClickRow(importReceipt.maPhieuNhap);
+                    handleClickRow(receipt.maPhieuNhap);
                   }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{importReceipt.maPhieuNhap}</span>
+                      <span>{receipt.maPhieuNhap}</span>
                     </td>
                     <td>
-                      <span>{importReceipt.ngayNhapHang ? datetimeFormatter(importReceipt.ngayNhapHang + "") : <i>Chưa nhập hàng</i>}</span>
+                      <span>{receipt.ngayNhapHang ? datetimeFormatter(receipt.ngayNhapHang + "") : <i>Chưa nhập hàng</i>}</span>
                     </td>
                     <td>
-                      <span>{importReceipt.maNhanVien || <i>Chưa nhập hàng</i>}</span>
+                      <span>{receipt.maNhanVien || <i>Chưa nhập hàng</i>}</span>
                     </td>
                     <td>
-                      <span>{importReceipt.maQuanTriVien}</span>
+                      <span>{receipt.maQuanTriVien}</span>
                     </td>
                     <td>
-                      <span>{ImportReceiptStatus[importReceipt.trangThai]}</span>
+                      <span>{ImportReceiptStatus[receipt.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(importReceipt.ngayTao + "")}</span>
+                      <span>{datetimeFormatter(receipt.ngayTao + "")}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(importReceipt.ngayCapNhat + "")}</span>
+                      <span>{datetimeFormatter(receipt.ngayCapNhat + "")}</span>
                     </td>
                   </tr>
                 ))}
@@ -158,14 +158,14 @@ const ImportFood = () => {
 
           {/* Import food modal */}
           <div className="add-receipt-modal" style={{ top: isShowAdd ? '50%' : '-100%' }}>
-            <AddImportFood setIsShowAdd={setIsShowAdd} onAdded={fetchImportReceipts}/>
+            <AddImportFood setIsShowAdd={setIsShowAdd} onAdded={fetchImportReceipts} />
           </div>
         </div>
       )}
 
-      {isShowDetail && <ImportFoodDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} detailData={importReceipt} onSoftDeleted={fetchImportReceipts}/>}
+      {isShowDetail && <ImportFoodDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} detailData={importReceipt} onSoftDeleted={fetchImportReceipts} />}
 
-      {isShowEdit && <EditImportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} data={importReceipt} onEdited={fetchImportReceipts}/>}
+      {isShowEdit && <EditImportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} data={importReceipt} onEdited={fetchImportReceipts} />}
     </>
   );
 };

@@ -46,7 +46,7 @@ export class PhieuNhapController {
         res.status(404).json({ message: 'Data not found!' });
         return;
       }
-      const importReceipt = new PhieuNhap('', null, payload.ghiChu, '', 0, payload.maQuanTriVien, null, null, payload.maNhaCungCap);
+      const importReceipt = new PhieuNhap('', null, payload.ghiChu, '', 3, payload.maQuanTriVien, null, null, payload.maNhaCungCap);
       const result = await this.phieuNhapService.insert(importReceipt);
       res.status(201).json(result);
     } catch (error) {

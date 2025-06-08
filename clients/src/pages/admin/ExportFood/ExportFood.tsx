@@ -1,8 +1,8 @@
-import { getExportReceipts } from "@/api/exportReceiptApi";
+import { getExportReceiptById, getExportReceipts } from "@/api/exportReceiptApi";
 import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
-import { loadingStore } from "@/store";
+import { loadingStore, overlayStore } from "@/store";
 import { FilterType } from "@/types";
-import { ExportReceiptList, ExportReceiptStatus } from "@/types/ExportReceipt";
+import { ExportReceiptDetailType, ExportReceiptList, ExportReceiptStatus } from "@/types/ExportReceipt";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useEffect, useRef, useState } from "react";
 import { IoAdd, IoFilter } from "react-icons/io5";
@@ -19,6 +19,7 @@ const ExportFood = () => {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
   const [exportReceipts, setExportReceipts] = useState<ExportReceiptList[]>([]);
+  const [exportReceipt, setExportReceipt] = useState<ExportReceiptDetailType>();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
@@ -27,6 +28,7 @@ const ExportFood = () => {
   const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
+  const { showOverlay } = overlayStore();
 
   useEffect(() => {
     const statusFilter = filters.find(filter => filter.name === 'status')?.value;
@@ -45,9 +47,19 @@ const ExportFood = () => {
       hideLoading();
     }
   };
+
+  const handleClickRow = async (exportReceiptId: string) => {
+    try {
+      const response = await getExportReceiptById(exportReceiptId);
+      setExportReceipt(response);
+      setIsShowDetail(true);
+    } catch (error) {
+      console.log('Error when get receipt:', error);
+    }
+  };
   return (
     <>
-      {(!isShowAdd && !isShowDetail && !isShowEdit) && (
+      {(!isShowDetail && !isShowEdit) && (
         <div className="export-food-component">
           <div className="export-food-header">
             <div className="export-file">
@@ -60,7 +72,10 @@ const ExportFood = () => {
               label="Thêm phiếu xuất"
               variant="primary"
               affix={<IoAdd className="icn-add" />}
-              onClick={() => { setIsShowAdd(true); }}
+              onClick={() => {
+                setIsShowAdd(true);
+                showOverlay();
+              }}
             />
           </div>
           <div className="table-component">
@@ -108,45 +123,48 @@ const ExportFood = () => {
                 </tr>
               </thead>
               <tbody>
-                {exportReceipts?.map((exportReceipt, idx) => (
+                {exportReceipts?.map((receipt, idx) => (
                   <tr key={idx} className="tb-body-row" onClick={() => {
-                    // handleClickRow(product.id); 
+                    handleClickRow(receipt.maPhieuXuat);
                   }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
-                      <span>{exportReceipt.maPhieuXuat}</span>
+                      <span>{receipt.maPhieuXuat}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(exportReceipt.ngayXuatHang + "")}</span>
+                      <span>{receipt.ngayXuatHang ? datetimeFormatter(receipt.ngayXuatHang + "") : <i>Chưa xuất hàng</i>}</span>
                     </td>
                     <td>
-                      <span>{exportReceipt.maNhanVien}</span>
+                      <span>{receipt.maNhanVien || <i>Chưa xuất hàng</i>}</span>
                     </td>
                     <td>
-                      <span>{exportReceipt.maQuanTriVien}</span>
+                      <span>{receipt.maQuanTriVien}</span>
                     </td>
                     <td>
-                      <span>{ExportReceiptStatus[exportReceipt.trangThai]}</span>
+                      <span>{ExportReceiptStatus[receipt.trangThai]}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(exportReceipt.ngayTao + "")}</span>
+                      <span>{datetimeFormatter(receipt.ngayTao + "")}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(exportReceipt.ngayCapNhat + "")}</span>
+                      <span>{datetimeFormatter(receipt.ngayCapNhat + "")}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
+
+            {/* Export food modal */}
+            <div className="add-receipt-modal" style={{ top: isShowAdd ? '50%' : '-100%' }}>
+              <AddExportFood setIsShowAdd={setIsShowAdd} onAdded={fetchExportReceipts} />
+            </div>
           </div>
         </div>
       )}
 
-      {isShowDetail && <ExportFoodDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} />}
+      {isShowDetail && <ExportFoodDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} detailData={exportReceipt} onSoftDeleted={fetchExportReceipts} />}
 
-      {isShowEdit && <EditExportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} />}
-
-      {isShowAdd && <AddExportFood setIsShowAdd={setIsShowAdd} />}
+      {isShowEdit && <EditExportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} data={exportReceipt} onEdited={fetchExportReceipts} />}
     </>
   );
 };

@@ -1,28 +1,14 @@
 .export-food-detail-component {
+  position: relative;
+
   .export-food-detail-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    .delete-edit {
+    .delete-edit-approve {
       display: flex;
-
-      .btn-delete {
-        background-color: transparent;
-        border: 2px solid red;
-        color: red;
-        font-size: 14px;
-        padding: 8px 12px;
-        font-weight: 500;
-        margin-right: 8px;
-        transition: all .3s;
-        cursor: pointer;
-
-        &:hover {
-          background-color: red;
-          color: #fff;
-        }
-      }
+      gap: 12px;
     }
   }
 
@@ -31,5 +17,45 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    .info-note-receipt {
+      display: flex;
+      gap: 20px;
+
+      .info-container {
+        flex: 1;
+
+        .receipt-info {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+      }
+
+      .note-container {
+        width: 30%;
+      }
+    }
+
+    .receipt-products {
+      margin-top: 12px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+      .receipt-products-header {
+        display: inline-block;
+        margin: 24px 0 12px 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .ok-cancel-modal {
+    position: absolute;
+    width: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    transition: all .5s;
   }
 }
