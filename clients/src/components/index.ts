@@ -8,6 +8,7 @@ import AsideBox from "./ui/AsideBox/AsideBox";
 import BackComponent from "./ui/BackComponent/BackComponent";
 import ButtonComponent from "./ui/ButtonComponent/ButtonComponent";
 import CheckboxComponent from "./ui/CheckboxComponent/CheckboxComponent";
+import ErrorMessage from "./ui/ErrorMessage/ErrorMessage";
 import FilterComponent from "./ui/FilterComponent/FilterComponent";
 import FilterDrawerComponent from "./ui/FilterDrawerComponent/FilterDrawerComponent";
 import FlexContainer from "./ui/FlexContainer";
@@ -35,6 +36,6 @@ export {
   // Layout
   AdminHeader, AdminSidebar, AsideBox, BackComponent, ButtonComponent, CheckboxComponent, ClientBanner, ClientFooter, ClientHeader, FilterComponent, FilterDrawerComponent, FlexContainer, ImageSlider, InfoItemComponent, InputComponent, LoadingComponent, OkCancelModal, OrderStatusComponent, Overlay, Pagination, ProductCard, SearchComponent, SelectComponent, UploadDocumentComponent,
   // UI
-  SpaceComponent, TableComponent, TablePagination, TableSearchFilter, TextComponent, UploadImgComponent
+  SpaceComponent, TableComponent, TablePagination, TableSearchFilter, TextComponent, UploadImgComponent, ErrorMessage
 };
 

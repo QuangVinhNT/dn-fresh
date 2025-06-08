@@ -1,31 +1,42 @@
 @use '@/styles' as *;
+
 .add-import-food-component {
-  .add-import-food-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    .cancel-save {
-      display: flex;
-      gap: 8px;
-
-      .btn-cancel {
-        color: $admin-primary-color;
-        border: 1px solid $admin-primary-color;
-
-
-        &:hover {
-          color: red !important;
-          border-color: red !important;
-        }
-      }
-    }
-  }
+  width: 65%;
+  margin: auto;
 
   .add-import-food-body {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    background-color: #fff;
+
+    .save-close {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      .close-btn {
+        .close-icon {
+          transition: all .3s;
+          cursor: pointer;
+
+          &:hover {
+            color: red;
+          }
+        }
+      }
+    }
+
+    .import-receipt-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .provider-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
   }
 }

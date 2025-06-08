@@ -24,7 +24,7 @@ const OkCancelModal = (props: IProps) => {
       <div className="body">{data.message}</div>
       <div className="footer">
         <button onClick={onOk} className="btn-ok">Ok</button>
-        <button onClick={onCancel} className="btn-cancel">Cancel</button>
+        <span onClick={onCancel} className="btn-cancel">Cancel</span>
       </div>
     </div>
   )

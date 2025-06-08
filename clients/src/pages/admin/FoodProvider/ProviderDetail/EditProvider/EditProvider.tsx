@@ -1,4 +1,6 @@
 import { getCities, getCommunes } from "@/api/addressApi";
+import { updateProvider } from "@/api/providerApi";
+import { postUploadFile } from "@/api/uploadApi";
 import { AdminContainerComponent, BackComponent, ButtonComponent, InputComponent, SelectComponent, TextComponent, UploadDocumentComponent } from "@/components";
 import { loadingStore } from "@/store";
 import { SelectBox } from "@/types/ComponentType";
@@ -6,8 +8,6 @@ import { ProviderDetailType, UpdateProviderPayload } from "@/types/Provider";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import './EditProvider.scss';
-import { updateProvider } from "@/api/providerApi";
-import { postUploadFile } from "@/api/uploadApi";
 
 interface IProps {
   setIsShowEdit: React.Dispatch<React.SetStateAction<boolean>>;

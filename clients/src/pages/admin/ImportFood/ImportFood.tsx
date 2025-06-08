@@ -1,8 +1,8 @@
-import { getImportReceipts } from "@/api/importReceiptApi";
+import { getImportReceiptById, getImportReceipts } from "@/api/importReceiptApi";
 import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
-import { loadingStore } from "@/store";
+import { loadingStore, overlayStore } from "@/store";
 import { FilterType } from "@/types";
-import { ImportReceiptList, ImportReceiptStatus } from "@/types/ImportReceipt";
+import { ImportReceiptDetailType, ImportReceiptList, ImportReceiptStatus } from "@/types/ImportReceipt";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useEffect, useRef, useState } from "react";
 import { IoAdd, IoFilter } from "react-icons/io5";
@@ -18,15 +18,17 @@ const ImportFood = () => {
   const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isShowEdit, setIsShowEdit] = useState(false);
-  const [importReceipts, setImportReceipts] = useState<ImportReceiptList[]>([])
+  const [importReceipts, setImportReceipts] = useState<ImportReceiptList[]>([]);
+  const [importReceipt, setImportReceipt] = useState<ImportReceiptDetailType>();
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
-    const [filters, setFilters] = useState<FilterType[]>([]);
-  
-    const keywordRef = useRef<string>('');
+  const [filters, setFilters] = useState<FilterType[]>([]);
+
+  const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
+  const { showOverlay } = overlayStore();
 
   useEffect(() => {
     const statusFilter = filters.find(filter => filter.name === 'status')?.value;
@@ -46,9 +48,19 @@ const ImportFood = () => {
     }
   };
 
+  const handleClickRow = async (importReceiptId: string) => {
+    try {
+      const response = await getImportReceiptById(importReceiptId);
+      setImportReceipt(response);
+      setIsShowDetail(true);
+    } catch (error) {
+      console.log('Error when get receipt:', error);
+    }
+  };
+
   return (
     <>
-      {(!isShowAdd && !isShowDetail && !isShowEdit) && (
+      {(!isShowDetail && !isShowEdit) && (
         <div className="import-food-component">
           <div className="import-food-header">
             <div className="export-file">
@@ -61,7 +73,10 @@ const ImportFood = () => {
               label="Thêm phiếu nhập"
               variant="primary"
               affix={<IoAdd className="icn-add" />}
-              onClick={() => { setIsShowAdd(true); }}
+              onClick={() => { 
+                setIsShowAdd(true); 
+                showOverlay();
+              }}
             />
           </div>
           <div className="table-component">
@@ -110,17 +125,17 @@ const ImportFood = () => {
               </thead>
               <tbody>
                 {importReceipts?.map((importReceipt, idx) => (
-                  <tr key={idx} className="tb-body-row" onClick={() => { 
-                    // handleClickRow(product.id); 
-                    }}>
+                  <tr key={idx} className="tb-body-row" onClick={() => {
+                    handleClickRow(importReceipt.maPhieuNhap);
+                  }}>
                     <td style={{ padding: '10px 0 10px 20px', textAlign: 'justify' }}>
                       <span>{importReceipt.maPhieuNhap}</span>
                     </td>
                     <td>
-                      <span>{datetimeFormatter(importReceipt.ngayNhapHang + "")}</span>
+                      <span>{importReceipt.ngayNhapHang ? datetimeFormatter(importReceipt.ngayNhapHang + "") : <i>Chưa nhập hàng</i>}</span>
                     </td>
                     <td>
-                      <span>{importReceipt.maNhanVien}</span>
+                      <span>{importReceipt.maNhanVien || <i>Chưa nhập hàng</i>}</span>
                     </td>
                     <td>
                       <span>{importReceipt.maQuanTriVien}</span>
@@ -138,16 +153,19 @@ const ImportFood = () => {
                 ))}
               </tbody>
             </table>
-            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total}/>
+            <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
+          </div>
+
+          {/* Import food modal */}
+          <div className="add-receipt-modal" style={{ top: isShowAdd ? '50%' : '-100%' }}>
+            <AddImportFood setIsShowAdd={setIsShowAdd} onAdded={fetchImportReceipts}/>
           </div>
         </div>
       )}
 
-      {isShowDetail && <ImportFoodDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} />}
+      {isShowDetail && <ImportFoodDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} detailData={importReceipt} onSoftDeleted={fetchImportReceipts}/>}
 
-      {isShowAdd && <AddImportFood setIsShowAdd={setIsShowAdd} />}
-
-      {isShowEdit && <EditImportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} />}
+      {isShowEdit && <EditImportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} data={importReceipt} onEdited={fetchImportReceipts}/>}
     </>
   );
 };

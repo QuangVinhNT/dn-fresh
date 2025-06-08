@@ -35,4 +35,19 @@ export class ChiTietThucPhamNhapDAO {
       throw error;
     }
   };
+
+  public getAllByImportReceiptId = async (importReceiptId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT maLoHang, ct.maThucPham, tenThucPham, ngaySanXuat, hanSuDung, donGiaNhap, soLuong, donViTinh
+        FROM chitietthucphamnhap AS ct
+        JOIN khothucpham AS tp ON ct.maThucPham = tp.maThucPham
+        WHERE maPhieuNhap = ?
+        `, [importReceiptId]);
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

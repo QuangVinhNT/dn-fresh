@@ -27,4 +27,14 @@ export class ChiTietThucPhamNhapService {
       throw error;
     }
   };
+
+  public getAllByImportReceiptId = async (importReceiptId: string) => {
+    try {
+      const rows = await this.chiTietThucPhamNhapDAO.getAllByImportReceiptId(importReceiptId) as RowDataPacket[];
+      return rows;
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  };
 }

@@ -10,10 +10,11 @@ interface IProps {
   className?: string;
   onClick?: () => void;
   affix?: ReactNode;
+  isDisabled?: boolean;
 }
 
 const ButtonComponent = (props: IProps) => {
-  const { label, type, variant, styles, className, onClick, affix } = props;
+  const { label, type, variant, styles, className, onClick, affix, isDisabled } = props;
   const localStyle: React.CSSProperties = {
     backgroundColor: 
       variant === 'primary' ? webColors.adminPrimary : (
@@ -37,6 +38,7 @@ const ButtonComponent = (props: IProps) => {
         className={`btn-component ${className}`}
         style={{...localStyle, ...styles}}
         onClick={onClick}
+        disabled={isDisabled}
       >
         {affix && affix}
         {label}

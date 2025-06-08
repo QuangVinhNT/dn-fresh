@@ -20,10 +20,12 @@ interface IProps {
   isTextarea?: boolean;
   defaultValue?: boolean;
   styles?: React.CSSProperties;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
 }
 
 const InputComponent = (props: IProps) => {
-  const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea, defaultValue, styles } = props;
+  const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea, defaultValue, styles, onKeyDown, onBlur } = props;
   return (
     <div className={`input-component ${className}`} style={styles}>
       {title && (
@@ -49,6 +51,8 @@ const InputComponent = (props: IProps) => {
             readOnly={isReadOnly}
             defaultValue={defaultValue ? placeholder : ''}        
             {...(register && register(name))}
+            onKeyDown={onKeyDown}
+            onBlur={onBlur}
           />
         )}
         {suffix && suffix}

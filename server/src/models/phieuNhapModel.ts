@@ -1,6 +1,6 @@
 export class PhieuNhap {
   private maPhieuNhap: string;
-  private ngayNhapHang: Date;
+  private ngayNhapHang: Date | null;
   private ghiChu: string;
   private maNhanVien: string;
   private trangThai: number;
@@ -11,7 +11,7 @@ export class PhieuNhap {
 
   constructor(
     maPhieuNhap: string,
-    ngayNhapHang: Date,
+    ngayNhapHang: Date | null,
     ghiChu: string,
     maNhanVien: string,
     trangThai: number,
@@ -38,10 +38,10 @@ export class PhieuNhap {
     this.maPhieuNhap = value;
   }
 
-  public getNgayNhapHang(): Date {
+  public getNgayNhapHang(): Date | null{
     return this.ngayNhapHang;
   }
-  public setNgayNhapHang(value: Date): void {
+  public setNgayNhapHang(value: Date | null): void {
     this.ngayNhapHang = value;
   }
 

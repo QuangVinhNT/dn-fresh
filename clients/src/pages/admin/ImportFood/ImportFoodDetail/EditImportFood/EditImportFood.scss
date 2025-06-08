@@ -1,5 +1,8 @@
 @use '@/styles' as *;
+
 .edit-import-food-component {
+  position: relative;
+
   .edit-import-food-header {
     display: flex;
     justify-content: space-between;
@@ -24,5 +27,21 @@
 
   .edit-import-food-body {
     margin-top: 20px;
+
+    .import-receipt-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+  }
+
+  .ok-cancel-modal {
+    position: absolute;
+    width: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    transition: all .5s;
   }
 }
