@@ -105,4 +105,49 @@ export class PhieuNhapDAO {
       throw error;
     }
   };
+
+  public async getAllForStaff(page: number, limit: number, importReceiptId: string, status: string) {
+    const offset = (page - 1) * limit;
+    const whereClause = [
+      importReceiptId.length > 0 ? `BINARY LOWER(maPhieuNhap) LIKE LOWER('%${importReceiptId}%')` : '',
+      status.length > 0 ? `phieunhap.trangThai IN (${status})` : ''
+    ].filter(item => item.length > 0).join(' AND ');
+    try {
+      const [rows] = await pool.query(`
+      SELECT maPhieuNhap, ngayNhapHang, maNhanVien, maQuanTriVien, trangThai, ngayTao, ngayCapNhat
+      FROM phieunhap
+      WHERE trangThai NOT IN ('0') ${whereClause.length > 0 ? `AND ${whereClause}` : ''}
+      ORDER BY ngayTao DESC
+      LIMIT ?
+      OFFSET ?      
+    `, [limit, offset]);
+
+      const [total] = await pool.query(`
+      SELECT COUNT(DISTINCT maPhieuNhap) as total
+      FROM phieunhap
+      WHERE trangThai NOT IN ('0') ${whereClause.length > 0 ? `AND ${whereClause}` : ''}
+    `);
+      return {
+        data: rows,
+        total,
+      };
+    } catch (error) {
+      console.error(`DAO error: ${error}`);
+      throw error;
+    }
+  }
+
+  public requestApproveImportReceipt = async (importReceiptId: string, staffId: string, connection: PoolConnection) => {
+    try {
+      const result = connection.query(`
+        UPDATE phieunhap
+        SET trangThai = 2, maNhanVien = ?, ngayCapNhat = NOW(), ngayNhapHang = NOW()
+        WHERE maPhieuNhap = ?
+        `, [staffId, importReceiptId]);
+      return result;
+    } catch (error) {
+      console.error(`DAO error: ${error}`);
+      throw error;
+    }
+  };
 }

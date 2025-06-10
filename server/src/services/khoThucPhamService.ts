@@ -80,16 +80,16 @@ export class KhoThucPhamService {
   public insertProduct = async (product: KhoThucPham, imageUrls: string[]) => {
     const connection = await pool.getConnection();
     try {
-      connection.beginTransaction();          
+      connection.beginTransaction();
       const productId = await generateUUID(10, connection, 'khothucpham', 'maThucPham', 'TP');
       product.setMaThucPham(productId);
       const productResult = await this.khoThucPhamDAO.insertProduct(product, connection);
       const productImageResult = await Promise.all(imageUrls.map(async (imageUrl) => {
         const imageId = await generateUUID(10, connection, 'anhthucpham', 'maAnh', 'IMG');
         return this.anhThucPhamService.insertProductImage(new AnhThucPham(imageId, productId, imageUrl), connection);
-      }))
+      }));
       connection.commit();
-      return {result: { productResult, productImageResult }};
+      return { result: { productResult, productImageResult } };
     } catch (error) {
       connection.rollback();
       console.error('Error service:', error);
@@ -139,5 +139,5 @@ export class KhoThucPhamService {
     } finally {
       connection.release();
     }
-  }
+  };
 }

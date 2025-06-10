@@ -129,4 +129,32 @@ export class DonHangDAO {
       throw error;
     }
   };
+
+  public changeStatus = async (orderId: string, staffId: string, status: number, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        UPDATE donhang
+        SET trangThai = ?, ngayCapNhat = NOW(), maNhanVien = ${staffId ? 'NULL' : '?'}
+        WHERE maDonHang = ?
+      `, [status, staffId, orderId]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
+
+  public cancelOrder = async (orderId: string, staffId: string, note: string, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        UPDATE donhang
+        SET trangThai = 0, ngayCapNhat = NOW(), maNhanVien = ?, ghiChu = ?
+        WHERE maDonHang = ?
+      `, [staffId, note, orderId]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

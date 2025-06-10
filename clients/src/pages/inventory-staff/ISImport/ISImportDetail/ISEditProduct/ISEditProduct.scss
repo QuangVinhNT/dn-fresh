@@ -1,0 +1,77 @@
+@use '@/styles' as *;
+
+.update-import-food-component {
+  width: 65%;
+  margin: auto;
+
+  .update-import-food-body {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #fff;
+
+    .save-close {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+
+      .close-btn {
+        .close-icon {
+          transition: all .3s;
+          cursor: pointer;
+
+          &:hover {
+            color: red;
+          }
+        }
+      }
+    }
+
+    .import-food-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .product-name {
+        position: relative;
+
+        .product-results-search {
+          list-style: none;
+          position: absolute;
+          margin-top: 4px;
+          border: 1px solid;
+          border-color: transparent $border-color $border-color;
+          width: 100%;
+          border-radius: 4px;
+          background-color: #fff;
+          // box-shadow: 4px 4px 10px 10px rgba(0,0,0,0.01);
+
+          li {
+            border-top: 1px solid $border-color;
+            padding: 8px;
+            cursor: pointer;
+            transition: all .3s;
+            background-color: #fff;
+
+            &:hover {
+              background-color: rgba(0, 0, 0, 0.05);
+            }
+          }
+        }
+      }
+
+      .detail-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .other-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+  }
+}

@@ -110,7 +110,7 @@ const ExportFood = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập mã khách hàng..." onSearch={fetchExportReceipts} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập mã phiếu xuất..." onSearch={fetchExportReceipts} keywordRef={keywordRef} />
             </div>
             <table className="table">
               <thead>

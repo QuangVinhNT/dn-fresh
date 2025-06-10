@@ -116,7 +116,7 @@ const ExportFoodDetail = (props: IProps) => {
               />
             </div>
             <div className="receipt-products">
-              <span className="receipt-products-header">Danh sách thực phẩm cung cấp</span>
+              <span className="receipt-products-header">Danh sách thực phẩm xuất</span>
               <table className="table">
                 <thead>
                   <tr className="tb-header-row">

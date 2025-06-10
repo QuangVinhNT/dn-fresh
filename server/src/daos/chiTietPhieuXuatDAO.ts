@@ -1,4 +1,6 @@
+import { PoolConnection } from "mysql2/promise";
 import { pool } from "../configs/database.js";
+import { ChiTietPhieuXuat } from "../models/chiTietPhieuXuatModel.js";
 
 export class ChiTietPhieuXuatDAO {
   public getAllByExportReceiptId = async (exportReceiptId: string) => {
@@ -14,5 +16,45 @@ export class ChiTietPhieuXuatDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
+
+  public insert = async (exportReceiptDetail: ChiTietPhieuXuat, connection: PoolConnection) => {
+    try {
+      const result = await connection.query(`
+        INSERT INTO chitietphieuxuat(maLoHang, maThucPham, maPhieuXuat, soLuong)
+        VALUES (?, ?, ?, ?)
+        `, [exportReceiptDetail.getMaLoHang(), exportReceiptDetail.getMaThucPham(), exportReceiptDetail.getMaPhieuXuat(), exportReceiptDetail.getSoLuong()]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
+
+  public update = async (exportReceiptDetail: ChiTietPhieuXuat, connection: PoolConnection) => {
+    try {
+      const result = await connection.query(`
+        UPDATE chitietphieuxuat
+        SET soLuong = ?
+        WHERE maLoHang = ? AND maThucPham = ? AND maPhieuXuat = ?
+        `, [exportReceiptDetail.getSoLuong(), exportReceiptDetail.getMaLoHang(), exportReceiptDetail.getMaThucPham(), exportReceiptDetail.getMaPhieuXuat()]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
+
+  public delete = async (packageProductId: string, exportReceiptId: string, connection: PoolConnection) => {
+    try {
+      const result = await connection.query(`
+        DELETE FROM chitietphieuxuat
+        WHERE maLoHang = ? AND maPhieuXuat = ?
+        `, [packageProductId, exportReceiptId]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

@@ -22,9 +22,9 @@ import './Home.scss';
 import ProductAds from "./ProductAds/ProductAds";
 
 const Home = () => {
-  const [discountProducts, setDiscountProducts] = useState<ProductList[]>();
-  const [fruits, setFruits] = useState<ProductList[]>();
-  const [vegetables, setVegetables] = useState<ProductList[]>();
+  const [discountProducts, setDiscountProducts] = useState<ProductList[]>([]);
+  const [fruits, setFruits] = useState<ProductList[]>([]);
+  const [vegetables, setVegetables] = useState<ProductList[]>([]);
   const [meats, setMeats] = useState<ProductList[]>();
 
   const { showLoading, hideLoading } = loadingStore();
@@ -84,7 +84,7 @@ const Home = () => {
     }
   };
 
-  // console.log(discountProducts)
+  console.log(discountProducts)
 
   return (
     <div className="home-component">
@@ -109,7 +109,7 @@ const Home = () => {
         </div>
 
         {/* Discount */}
-        {discountProducts && (
+        {discountProducts?.length > 0 && (
           <div className="discount">
             <span className="title">Ưu đãi trong tuần</span>
             {discountProducts.map((product, idx) => (

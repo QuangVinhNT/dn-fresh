@@ -79,4 +79,66 @@ export class DonHangController {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+  public confirmPack = async (req: Request, res: Response) => {
+    try {
+      const orderId = req.params.id as string || '';
+      if (!orderId) {
+        res.status(400).json({ message: 'Order ID is required' });
+        return;
+      }
+      const result = await this.donHangService.confirmPack(orderId);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  public confirmExport = async (req: Request, res: Response) => {
+    try {
+      const { staffId, orderIds } = req.body;
+      if (!staffId || orderIds.length === 0) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const result = await this.donHangService.confirmExport(orderIds, staffId);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  public confirmFinish = async (req: Request, res: Response) => {
+    try {
+      const orderId = req.params.id as string || '';
+      const { staffId } = req.body;
+      if (!staffId || !orderId) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const result = await this.donHangService.confirmFinish(orderId, staffId);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  public cancelOrder = async (req: Request, res: Response) => {
+    try {
+      const orderId = req.params.id as string || '';
+      const { staffId, note } = req.body;
+      if (!staffId || !orderId || !note) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const result = await this.donHangService.cancelOrder(orderId, staffId, note);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
 }

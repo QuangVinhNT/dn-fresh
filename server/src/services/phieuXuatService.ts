@@ -108,4 +108,34 @@ export class PhieuXuatService {
       connection.release();
     }
   };
+
+  public getAllForStaff = async (page: number, limit: number, exportReceiptId: string, status: string) => {
+    try {
+      const rows = await this.phieuXuatDAO.getAllForStaff(page, limit, exportReceiptId, status);
+      const total = rows.total as RowDataPacket[];
+      return {
+        data: rows.data,
+        total: total[0].total
+      };
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  };
+
+  public requestApproveExportReceipt = async (exportReceiptId: string, staffId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.phieuXuatDAO.requestApproveExportReceipt(exportReceiptId, staffId, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
 }

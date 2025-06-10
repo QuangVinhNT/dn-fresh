@@ -1,5 +1,8 @@
 import { RowDataPacket } from "mysql2";
+import { pool } from "../configs/database.js";
 import { ChiTietThucPhamNhapDAO } from "../daos/chiTietThucPhamNhapDAO.js";
+import { ChiTietThucPhamNhap } from "../models/chiTietThucPhamNhapModel.js";
+import generateUUID from "../utils/generateUUID.js";
 
 export class ChiTietThucPhamNhapService {
   private chiTietThucPhamNhapDAO: ChiTietThucPhamNhapDAO;
@@ -37,4 +40,54 @@ export class ChiTietThucPhamNhapService {
       throw error;
     }
   };
+
+  public insert = async (product: ChiTietThucPhamNhap) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const packageProductId = await generateUUID(255, connection, 'chitietthucphamnhap', 'maLoHang', 'LH');
+      product.setMaLoHang(packageProductId);
+      const result = await this.chiTietThucPhamNhapDAO.insert(product, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public update = async (product: ChiTietThucPhamNhap) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.chiTietThucPhamNhapDAO.update(product, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public delete = async (productPackageId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.chiTietThucPhamNhapDAO.delete(productPackageId, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
 }

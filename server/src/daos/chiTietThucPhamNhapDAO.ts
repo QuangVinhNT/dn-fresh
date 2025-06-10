@@ -1,4 +1,6 @@
+import { PoolConnection } from "mysql2/promise";
 import { pool } from "../configs/database.js";
+import { ChiTietThucPhamNhap } from "../models/chiTietThucPhamNhapModel.js";
 
 export class ChiTietThucPhamNhapDAO {
   public getById = async (productId: string) => {
@@ -50,4 +52,44 @@ export class ChiTietThucPhamNhapDAO {
       throw error;
     }
   };
+
+  public insert = async (product: ChiTietThucPhamNhap, connection: PoolConnection) => {
+    try {
+      const result = connection.query(`
+        INSERT INTO chitietthucphamnhap(maLoHang, maThucPham, maPhieuNhap, ngaySanXuat, hanSuDung, donGiaNhap, soLuong)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        `, [product.getMaLoHang(), product.getMaThucPham(), product.getMaPhieuNhap(), product.getNgaySanXuat(), product.getHanSuDung(), product.getDonGiaNhap(), product.getSoLuong()])
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
+
+  public update = async (product: ChiTietThucPhamNhap, connection: PoolConnection) => {
+    try {
+      const result = connection.query(`
+        UPDATE chitietthucphamnhap
+        SET ngaySanXuat = ?, hanSuDung = ?, donGiaNhap = ?, soLuong = ?
+        WHERE maLoHang = ? AND maThucPham = ? AND maPhieuNhap = ?
+        `, [product.getNgaySanXuat(), product.getHanSuDung(), product.getDonGiaNhap(), product.getSoLuong(), product.getMaLoHang(), product.getMaThucPham(), product.getMaPhieuNhap()])
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
+
+  public delete = async (productPackageId: string, connection: PoolConnection) => {
+    try {
+      const result = connection.query(`
+        DELETE FROM chitietthucphamnhap
+        WHERE maLoHang = ?
+        `, [productPackageId]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
 }

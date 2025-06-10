@@ -1,23 +1,20 @@
+import { insertImportReceipt } from "@/api/importReceiptApi";
 import { getProviderById } from "@/api/providerApi";
 import { AdminContainerComponent, ButtonComponent, ErrorMessage, InputComponent } from "@/components";
 import { overlayStore } from "@/store";
+import { InsertImportReceiptPayload } from "@/types/ImportReceipt";
+import { FormValues } from "@/types/Object";
 import { ProviderDetailType } from "@/types/Provider";
 import { dateFormatter } from "@/utils/datetimeFormatter";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import './AddImportFood.scss';
-import { InsertImportReceiptPayload } from "@/types/ImportReceipt";
-import { insertImportReceipt } from "@/api/importReceiptApi";
 
 interface IProps {
   setIsShowAdd: React.Dispatch<React.SetStateAction<boolean>>;
   onAdded: () => void;
 }
-
-type FormValues = {
-  [key: string]: string | string[] | File[] | FileList;
-};
 
 const AddImportFood = (props: IProps) => {
   const { setIsShowAdd, onAdded } = props;

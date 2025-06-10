@@ -127,7 +127,7 @@ export class DonHangService {
     try {
       const order = (await this.donHangDAO.getByIdForAdmin(orderId) as RowDataPacket[])[0];
       const customer = await this.nguoiDungService.getById(order.maKhachHang);
-      const staff = await this.nguoiDungService.getById(order.maNhanVien);      
+      const staff = await this.nguoiDungService.getById(order.maNhanVien);
       const productsRaw = await this.chiTietDonHangService.getById(orderId);
       const products: ThucPhamDonHangDTO[] = await Promise.all(productsRaw.map(async (product): Promise<ThucPhamDonHangDTO> => ({
         maThucPham: product.maThucPham,
@@ -164,10 +164,76 @@ export class DonHangService {
         phuongThucThanhToan: order.phuongThucThanhToan,
         thongTinThucPham: products,
         tongTien: totalPrice
-      }
+      };
     } catch (error) {
       console.error('Error service:', error);
       throw error;
+    }
+  };
+
+  public confirmPack = async (orderId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.donHangDAO.changeStatus(orderId, '', 2, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public confirmExport = async (orderIds: string[], staffId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await Promise.all(orderIds.map(async (orderId) => {
+        return this.donHangDAO.changeStatus(orderId, staffId, 3, connection);
+      }));
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public confirmFinish = async (orderId: string, staffId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.donHangDAO.changeStatus(orderId, staffId, 4, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public cancelOrder = async (orderId: string, staffId: string, note: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.donHangDAO.cancelOrder(orderId, staffId, note, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
     }
   };
 }

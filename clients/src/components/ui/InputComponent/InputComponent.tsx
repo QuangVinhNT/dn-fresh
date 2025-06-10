@@ -22,10 +22,13 @@ interface IProps {
   styles?: React.CSSProperties;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  isSearch?: boolean;
+  searchResult?: ReactNode;
 }
 
 const InputComponent = (props: IProps) => {
-  const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea, defaultValue, styles, onKeyDown, onBlur } = props;
+  const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea, defaultValue, styles, onKeyDown, onBlur, onChange, isSearch, searchResult } = props;
   return (
     <div className={`input-component ${className}`} style={styles}>
       {title && (
@@ -50,13 +53,20 @@ const InputComponent = (props: IProps) => {
             required={isRequired}
             readOnly={isReadOnly}
             defaultValue={defaultValue ? placeholder : ''}        
-            {...(register && register(name))}
+            {...(register && {
+              ...register(name),
+              onChange: (e) => {
+                register(name).onChange(e);
+                onChange?.(e)
+              }
+            })}
             onKeyDown={onKeyDown}
             onBlur={onBlur}
           />
         )}
         {suffix && suffix}
       </div>
+      {isSearch && searchResult}
     </div>
   );
 };

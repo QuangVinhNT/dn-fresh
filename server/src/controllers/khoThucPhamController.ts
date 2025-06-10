@@ -33,7 +33,7 @@ export class KhoThucPhamController {
     try {
       const productId = req.params.id;
       if (productId) {
-        const product = await this.khoThucPhamService.getById(productId)
+        const product = await this.khoThucPhamService.getById(productId);
         if (!product) {
           res.status(404).json({ message: 'Product not found' });
           return;
@@ -51,13 +51,13 @@ export class KhoThucPhamController {
 
   public getAllDiscount = async (req: Request, res: Response) => {
     try {
-        const data = await this.khoThucPhamService.getAllDiscount();
-        res.json(data);
-      } catch (error) {
-        console.error('Controller error:', error);
-        res.status(500).json({ message: 'Server error' });
-      }
-  }
+      const data = await this.khoThucPhamService.getAllDiscount();
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
 
   public getAllForAdmin = async (req: Request, res: Response) => {
     try {
@@ -71,10 +71,11 @@ export class KhoThucPhamController {
       const data = await this.khoThucPhamService.getAllForAdmin(page, limit, productName, status, category);
       res.json(data);
     } catch (error) {
+      console.log(req.query.status)
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public getByIdForAdmin = async (req: Request, res: Response) => {
     try {
@@ -94,7 +95,7 @@ export class KhoThucPhamController {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public insertProduct = async (req: Request, res: Response) => {
     try {
@@ -102,7 +103,7 @@ export class KhoThucPhamController {
       if (!payload) {
         res.status(400).json({ message: 'Invalid product data' });
         return;
-      }      
+      }
       const product = new KhoThucPham('', payload.tenThucPham, payload.donGia, payload.moTa, 2, payload.maDanhMuc, 0, new Date(), new Date(), 0, payload.donViTinh);
       const result = await this.khoThucPhamService.insertProduct(product, payload.hinhAnh);
       res.status(201).json(result);

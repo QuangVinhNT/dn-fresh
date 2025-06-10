@@ -154,7 +154,7 @@ export class KhoThucPhamDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 
   public deleteProduct = async (productId: string, connection: PoolConnection) => {
     try {
@@ -167,5 +167,5 @@ export class KhoThucPhamDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 }

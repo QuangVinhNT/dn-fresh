@@ -108,4 +108,34 @@ export class PhieuNhapService {
       connection.release();
     }
   };
+
+  public getAllForStaff = async (page: number, limit: number, importReceiptId: string, status: string) => {
+    try {
+      const rows = await this.phieuNhapDAO.getAllForStaff(page, limit, importReceiptId, status);
+      const total = rows.total as RowDataPacket[];
+      return {
+        data: rows.data,
+        total: total[0].total
+      };
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  };
+
+  public requestApproveImportReceipt = async (importReceiptId: string, staffId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.phieuNhapDAO.requestApproveImportReceipt(importReceiptId, staffId, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
 }
