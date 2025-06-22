@@ -1,20 +1,29 @@
 @use '@/styles' as *;
+
 .register-component {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   h1 {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
   }
 
-  form {
-    width: 400px;
+  .register-form {
+    width: 600px;
     display: flex;
     flex-direction: column;
-    gap: 16px;    
+    gap: 12px;
+
+    .gender-dob-phonenumber,
+    .city-commune-address,
+    .password-box {
+      display: flex;
+      gap: 12px;
+    }
 
     .btn-register {
       display: flex;
@@ -77,6 +86,66 @@
       &:hover {
         background-color: $text-color;
         color: #fff;
+      }
+    }
+  }
+
+  .confirm-code-component {
+    position: absolute;
+    background-color: #fff;
+    width: fit-content;
+    height: fit-content;
+    z-index: 999;
+    transition: all .5s;
+    padding: 96px 48px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 32px;
+
+      span {
+        color: $primary-color;
+        font-weight: 500;
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+
+      .close-icon {
+        transition: all .3s;
+        cursor: pointer;
+
+        &:hover {
+          color: red;
+        }
+      }
+    }
+
+    .confirm-code-box {
+      width: 400px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      .confirm-code-input {
+        flex: 1;
+      }
+
+      .btn-confirm {
+        height: fit-content;
+        margin-top: 4px;
       }
     }
   }

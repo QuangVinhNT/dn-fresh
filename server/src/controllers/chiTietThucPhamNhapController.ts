@@ -73,4 +73,19 @@ export class ChiTietThucPhamNhapController {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   };
+
+  public getByIdForExport = async (req: Request, res: Response) => {
+    try {
+      const productId = req.params.id;
+      if (!productId) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const result = await this.chiTietThucPhamNhapService.getByIdForExport(productId);
+      res.json(result);
+    } catch (error) {
+      console.error('Error controller:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
 }

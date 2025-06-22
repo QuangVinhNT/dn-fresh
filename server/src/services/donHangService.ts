@@ -91,6 +91,39 @@ export class DonHangService {
     }
   };
 
+  public getAllForDeliveryStaff = async (page: number, limit: number, orderId: string, status: string, communeId: string) => {
+    try {
+      const rows = await this.donHangDAO.getAllForDeliveryStaff(page, limit, orderId, status, communeId);
+      const total = rows.total as RowDataPacket[];
+      return {
+        data: rows.data,
+        total: total[0].total
+      };
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  }
+
+  public getAllOrderForInventoryStaff = async () => {
+    try {
+      const orderIds = await this.donHangDAO.getOrderIdsForInventoryStaff() as RowDataPacket[];
+      const orders = await Promise.all(orderIds.map(async (orderId) => ({
+        maDonHang: orderId.maDonHang,
+        danhSachThucPham: (await this.chiTietDonHangService.getById(orderId.maDonHang) as RowDataPacket[]).map(product => ({
+          maThucPham: product.maThucPham,
+          tenThucPham: product.tenThucPham,
+          soLuong: product.soLuong,
+          donViTinh: product.donViTinh
+        })) 
+      })));
+      return orders;
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  };
+
   public insertOrder = async (order: DonHang, orderDetails: ChiTietDonHang[], address: DiaChi) => {
     const connection = await pool.getConnection();
     try {
@@ -187,13 +220,11 @@ export class DonHangService {
     }
   };
 
-  public confirmExport = async (orderIds: string[], staffId: string) => {
+  public confirmExport = async (orderId: string, staffId: string) => {
     const connection = await pool.getConnection();
     try {
       connection.beginTransaction();
-      const result = await Promise.all(orderIds.map(async (orderId) => {
-        return this.donHangDAO.changeStatus(orderId, staffId, 3, connection);
-      }));
+      const result = this.donHangDAO.changeStatus(orderId, staffId, 3, connection);
       connection.commit();
       return result;
     } catch (error) {

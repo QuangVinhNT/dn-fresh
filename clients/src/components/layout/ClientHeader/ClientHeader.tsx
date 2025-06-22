@@ -1,13 +1,12 @@
+import { getFavouriteProducts } from "@/api/favouriteProductApi";
 import DecoHeader from '@/assets/images/deco-header.png';
 import Logo from '@/assets/svgs/dnfresh-logo-white.svg';
+import { overlayStore, userStore } from "@/store";
+import { cartStore } from "@/store/cartStore";
 import { useEffect, useState } from "react";
 import { IoCartOutline, IoHeartOutline } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import './ClientHeader.scss';
-import { cartStore } from "@/store/cartStore";
-import { overlayStore } from "@/store";
-import { ProductList } from "@/types/Product";
-import { getFavouriteProducts } from "@/api/favouriteProductApi";
 
 const menuItems = [
   {
@@ -38,8 +37,9 @@ const ClientHeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {showCart, cart} = cartStore();
-  const {showOverlay} = overlayStore();
+  const { showCart, cart } = cartStore();
+  const { showOverlay } = overlayStore();
+  const { user, clearUser } = userStore();
 
   useEffect(() => {
     fetchFavouriteProducts();
@@ -47,7 +47,7 @@ const ClientHeader = () => {
 
   const fetchFavouriteProducts = async () => {
     try {
-      const response = await getFavouriteProducts(1, 5, 'ND003');
+      const response = await getFavouriteProducts(1, 5, user?.id + '');
       setTotal(response.total);
     } catch (error) {
       console.error('Error when load product:', error);
@@ -59,7 +59,7 @@ const ClientHeader = () => {
       <div className="client-header-content">
         <div className="client-header-menus">
           {menuItems.map((item, index) => (
-            <Link to={item.link} key={index} style={{color: location.pathname === item.link ? '#ffb416' : '#fff'}}>{item.name}</Link>
+            <Link to={item.link} key={index} style={{ color: location.pathname === item.link ? '#ffb416' : '#fff' }}>{item.name}</Link>
           ))}
         </div>
         <div className="client-header-logo">
@@ -69,27 +69,30 @@ const ClientHeader = () => {
         <div className="client-header-tools">
           <div className="favourite tool" onClick={() => navigate('/favourites')}>
             <span className="quantity">{total}</span>
-            <IoHeartOutline size={24} className="icon"/>
+            <IoHeartOutline size={24} className="icon" />
           </div>
           <div className="cart tool" onClick={() => {
             showCart();
             showOverlay();
           }}>
             <span className="quantity">{cart.length}</span>
-            <IoCartOutline size={24} className="icon"/>
+            <IoCartOutline size={24} className="icon" />
           </div>
           <div className="user">
-            {isSignedIn ? (
+            {user ? (
               <div>
-                <span>Xin chào, <Link to={'/'} className="username">Quang Vinh</Link>!</span>
+                <span>Xin chào, <Link to={'/'} className="username" onClick={() => {
+                  localStorage.removeItem('access_token');
+                  clearUser();
+                }}>{user.fullname}</Link>!</span>
               </div>
-            ): (
+            ) : (
               <div>
                 <Link to={'/login'} className="sign-in-btn">Đăng nhập</Link>
                 <span> | </span>
                 <Link to={'/register'} className="sign-up-btn">Đăng ký</Link>
               </div>
-              )}
+            )}
           </div>
         </div>
       </div>

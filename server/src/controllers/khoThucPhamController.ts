@@ -121,7 +121,7 @@ export class KhoThucPhamController {
         res.status(400).json({ message: 'Invalid product data' });
         return;
       }
-      const product = new KhoThucPham(productId, payload.tenThucPham, payload.donGia, payload.moTa, payload.trangThai, payload.maDanhMuc, 0, new Date(), new Date(), 0, payload.donViTinh);
+      const product = new KhoThucPham(productId, payload.tenThucPham, payload.donGia, payload.moTa, payload.trangThai, payload.maDanhMuc, payload.tiLeKhuyenMai, new Date(), new Date(), 0, payload.donViTinh);
       const result = await this.khoThucPhamService.updateProduct(product, payload.hinhAnh);
       res.json(result);
     } catch (error) {

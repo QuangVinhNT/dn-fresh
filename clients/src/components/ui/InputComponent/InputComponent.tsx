@@ -1,6 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import './InputComponent.scss';
 import { UseFormRegister } from "react-hook-form";
+import { IoEye, IoEyeOff } from "react-icons/io5";
 
 type FormValues = {
   [key: string]: string | string[] | File[] | FileList;
@@ -29,6 +30,7 @@ interface IProps {
 
 const InputComponent = (props: IProps) => {
   const { title, isRequired, placeholder, affix, suffix, type, className, isReadOnly, register, name, isTextarea, defaultValue, styles, onKeyDown, onBlur, onChange, isSearch, searchResult } = props;
+  const [isShowPassword, setIsShowPassword] = useState(false);
   return (
     <div className={`input-component ${className}`} style={styles}>
       {title && (
@@ -48,23 +50,32 @@ const InputComponent = (props: IProps) => {
           </textarea>
         ) : (
           <input
-            type={type ?? 'text'}
+            type={type === 'password' ? (isShowPassword ? 'text' : 'password') : (type ?? 'text')}
             placeholder={placeholder ?? ''}
             required={isRequired}
             readOnly={isReadOnly}
-            defaultValue={defaultValue ? placeholder : ''}        
+            defaultValue={defaultValue ? placeholder : ''}
             {...(register && {
               ...register(name),
               onChange: (e) => {
                 register(name).onChange(e);
-                onChange?.(e)
+                onChange?.(e);
               }
             })}
             onKeyDown={onKeyDown}
             onBlur={onBlur}
           />
         )}
-        {suffix && suffix}
+
+        {type === 'password' ? (
+          <div className="show-hide-password" onClick={() => setIsShowPassword(!isShowPassword)}>
+            {isShowPassword ? <IoEye /> : <IoEyeOff />}
+          </div>
+        ) : (
+          <>
+            {suffix && suffix}
+          </>
+        )}
       </div>
       {isSearch && searchResult}
     </div>

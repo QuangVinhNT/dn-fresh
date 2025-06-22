@@ -83,6 +83,20 @@ export class NguoiDungDAO {
     }
   };
 
+  public getByEmail = async (email: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT *
+        FROM nguoidung
+        WHERE email = ?
+        `, [email]);
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  }
+
   public getCustomerById = async (customerId: string) => {
     try {
       const [rows] = await pool.query(`
@@ -117,8 +131,8 @@ export class NguoiDungDAO {
     try {
       const result = await connection.query(`
         INSERT INTO nguoidung (maNguoiDung, hoTen, gioiTinh, ngaySinh, soDienThoai, maDiaChi, email, matKhau, hinhAnh, ngayTao, ngayCapNhat, trangThai)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), 1)
-        `, [user.getMaNguoiDung(), user.getHoTen(), user.getGioiTinh(), user.getNgaySinh(), user.getSoDienThoai(), user.getMaDiaChi(), user.getEmail(), user.getMatKhau(), user.getHinhAnh()]);
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
+        `, [user.getMaNguoiDung(), user.getHoTen(), user.getGioiTinh(), user.getNgaySinh(), user.getSoDienThoai(), user.getMaDiaChi(), user.getEmail(), user.getMatKhau(), user.getHinhAnh(), user.getTrangThai()]);
       return result;
     } catch (error) {
       console.error('DAO error:', error);

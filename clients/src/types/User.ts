@@ -18,7 +18,8 @@ type User = {
 
 export enum UserStatus {
   'Vô hiệu hóa' = 0,
-  'Hoạt động' = 1
+  'Hoạt động' = 1,
+  'Chưa xác minh' = 2
 }
 
 export enum Role {

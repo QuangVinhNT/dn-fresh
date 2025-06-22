@@ -18,7 +18,7 @@ const insertImportReceipt = async (payload: InsertImportReceiptPayload) => {
 };
 
 const insertProductToImportReceipt = async (importReceiptId: string, payload: InsertProductToImportReceiptPayload) => {
-  const res = await axiosInstance.post(`/v1/phieu-nhap/${importReceiptId}`, payload);
+  const res = await axiosInstance.post(`/v1/phieu-nhap/thuc-pham/${importReceiptId}`, payload);
   return res.data;
 };
 
@@ -43,7 +43,7 @@ const deleteImportReceiptProduct = async (productPackageId: string) => {
 };
 
 const approveImportReceipt = async (importReceiptId: string, adminId: string) => {
-  const res = await axiosInstance.patch(`/v1/phieu-nhap/${importReceiptId}/approve`, adminId);
+  const res = await axiosInstance.patch(`/v1/phieu-nhap/${importReceiptId}/approve`, { adminId });
   return res.data;
 };
 
@@ -52,7 +52,12 @@ const requestApproveImportReceipt = async (importReceiptId: string, staffId: str
   return res.data;
 };
 
+const getByIdForExport = async (productId: string) => {
+  const res = await axiosInstance.get(`/v1/phieu-nhap/thuc-pham/${productId}`);
+  return res.data;
+};
+
 
 export {
-  getImportReceipts, getImportReceiptById, insertImportReceipt, updateImportReceipt, softDeleteImportReceipt, approveImportReceipt, insertProductToImportReceipt, deleteImportReceiptProduct, updateImportReceiptProduct, requestApproveImportReceipt
+  getImportReceipts, getImportReceiptById, insertImportReceipt, updateImportReceipt, softDeleteImportReceipt, approveImportReceipt, insertProductToImportReceipt, deleteImportReceiptProduct, updateImportReceiptProduct, requestApproveImportReceipt, getByIdForExport
 };

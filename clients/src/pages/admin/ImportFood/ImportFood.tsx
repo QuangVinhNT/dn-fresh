@@ -163,7 +163,7 @@ const ImportFood = () => {
         </div>
       )}
 
-      {isShowDetail && <ImportFoodDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} detailData={importReceipt} onSoftDeleted={fetchImportReceipts} />}
+      {isShowDetail && <ImportFoodDetail setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} detailData={importReceipt} onUpdated={fetchImportReceipts} />}
 
       {isShowEdit && <EditImportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} data={importReceipt} onEdited={fetchImportReceipts} />}
     </>

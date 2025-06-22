@@ -1,7 +1,5 @@
 import { getImportReceiptById, getImportReceipts } from "@/api/importReceiptApi";
 import { FilterComponent, SearchComponent, TablePagination } from "@/components";
-import AddImportFood from "@/pages/admin/ImportFood/AddImportFood/AddImportFood";
-import EditImportFood from "@/pages/admin/ImportFood/ImportFoodDetail/EditImportFood/EditImportFood";
 import { loadingStore } from "@/store";
 import { FilterType } from "@/types";
 import { ImportReceiptDetailType, ImportReceiptList, ImportReceiptStatus } from "@/types/ImportReceipt";
@@ -132,17 +130,10 @@ const ISImport = () => {
             </table>
             <TablePagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} total={total} />
           </div>
-
-          {/* Import food modal */}
-          <div className="add-receipt-modal" style={{ top: isShowAdd ? '50%' : '-100%' }}>
-            <AddImportFood setIsShowAdd={setIsShowAdd} onAdded={fetchImportReceipts} />
-          </div>
         </div>
       )}
 
       {isShowDetail && <ISImportDetail setIsShowDetail={setIsShowDetail} detailData={importReceipt} onFinish={fetchImportReceipts}/>}
-
-      {isShowEdit && <EditImportFood setIsShowDetail={setIsShowDetail} setIsShowEdit={setIsShowEdit} data={importReceipt} onEdited={fetchImportReceipts} />}
     </>
   );
 }

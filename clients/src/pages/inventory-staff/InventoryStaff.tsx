@@ -1,6 +1,5 @@
 import { AdminHeader, AdminSidebar, LoadingComponent, Overlay } from "@/components";
-import { loadingStore, overlayStore } from "@/store";
-import { AccountUser } from "@/types/User";
+import { loadingStore, overlayStore, userStore } from "@/store";
 import { ReactNode } from "react";
 import { IoDocumentTextOutline, IoFileTrayFullOutline, IoHomeOutline } from "react-icons/io5";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
@@ -16,12 +15,6 @@ interface MenuItem {
   affix: ReactNode;
   childrens: ChildrenType[];
 }
-
-const user: AccountUser = {
-  hoTen: 'Inventory Staff',
-  hinhAnh: 'https://i.pinimg.com/736x/5b/cf/1b/5bcf1b2636aae39616d08ee72d1b9569.jpg'
-};
-
 const menuItems: MenuItem[] = [
   {
     name: 'Tổng quan',
@@ -34,7 +27,7 @@ const menuItems: MenuItem[] = [
     link: '/inventory-staff/import-receipts',
     affix: <IoDocumentTextOutline size={22} />,
     childrens: [],
-  },  
+  },
   {
     name: 'Phiếu xuất',
     link: '/inventory-staff/export-receipts',
@@ -46,6 +39,7 @@ const menuItems: MenuItem[] = [
 const InventoryStaff = () => {
   const { isShowOverlay } = overlayStore();
   const { isShowLoading } = loadingStore();
+  const { user } = userStore();
   const location = useLocation();
   const getCategory = () => {
     let result = '';
@@ -68,7 +62,7 @@ const InventoryStaff = () => {
       {isShowLoading && <LoadingComponent />}
       <AdminSidebar menuItems={menuItems} />
       <div style={{ backgroundColor: '#f0f1f1', flex: 1, overflowX: 'hidden' }}>
-        <AdminHeader category={getCategory()} user={user} />
+        <AdminHeader category={getCategory()} user={{ hoTen: user?.fullname + '', hinhAnh: user?.image + '' }} />
         <div style={{ margin: '20px' }}>
           <Outlet />
         </div>

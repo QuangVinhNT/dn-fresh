@@ -2,37 +2,37 @@ import { InsertUserPayload, InsertUserRolePayload } from "@/types/User";
 import axiosInstance from "./axiosInstance";
 
 const getCustomers = async (page: number, limit: number, search: string, status?: string) => {
-  const res = await axiosInstance.get(`/v1/admin/nguoi-dung/khach-hang?page=${page}&limit=${limit}&search=${search}&status=${status}`);
+  const res = await axiosInstance.get(`/v1/nguoi-dung/khach-hang?page=${page}&limit=${limit}&search=${search}&status=${status}`);
   return res.data;
 };
 
 const getStaffs = async (page: number, limit: number, staffId: string, status?: string, roleId?: string) => {
-  const res = await axiosInstance.get(`/v1/admin/nguoi-dung/nhan-vien?page=${page}&limit=${limit}&search=${staffId}&status=${status}&roleId=${roleId}`);
+  const res = await axiosInstance.get(`/v1/nguoi-dung/nhan-vien?page=${page}&limit=${limit}&search=${staffId}&status=${status}&roleId=${roleId}`);
   return res.data;
 };
 
 const getCustomerById = async (customerId: string) => {
-  const res = await axiosInstance.get(`v1/admin/nguoi-dung/khach-hang/${customerId}`);
+  const res = await axiosInstance.get(`/v1/nguoi-dung/khach-hang/${customerId}`);
   return res.data;
 };
 
 const getStaffById = async (staffId: string) => {
-  const res = await axiosInstance.get(`v1/admin/nguoi-dung/nhan-vien/${staffId}`);
+  const res = await axiosInstance.get(`/v1/nguoi-dung/nhan-vien/${staffId}`);
   return res.data;
 };
 
 const lockAccount = async (userId: string) => {
-  const res = await axiosInstance.patch(`v1/admin/nguoi-dung/${userId}/lock`);
+  const res = await axiosInstance.patch(`/v1/nguoi-dung/${userId}/lock`);
   return res.data;
 };
 
 const unlockAccount = async (userId: string) => {
-  const res = await axiosInstance.patch(`v1/admin/nguoi-dung/${userId}/unlock`);
+  const res = await axiosInstance.patch(`/v1/nguoi-dung/${userId}/unlock`);
   return res.data;
 };
 
 const insertUser = async (payload: InsertUserPayload) => {
-  const res = await axiosInstance.post(`v1/admin/nguoi-dung`, payload);
+  const res = await axiosInstance.post(`/v1/nguoi-dung`, payload);
   return res.data;
 };
 
@@ -51,5 +51,25 @@ const updateRole = async (userId: string, roleId: string) => {
   return res.data;
 }
 
-export { getCustomerById, getCustomers, getStaffs, lockAccount, unlockAccount, insertUser, insertUserRole, getStaffById, deleteAllStaffRole, updateRole };
+const login = async (payload: {email: string, password: string}) => {
+  const res = await axiosInstance.post(`/v1/nguoi-dung/login`, payload);
+  return res.data;
+}
+
+const getRoleToken = async (payload: {userId: string, roleId: string}) => {
+  const res = await axiosInstance.post(`/v1/nguoi-dung/get-role-token`, payload)
+  return res.data;
+}
+
+const registerUser = async (payload: InsertUserPayload) => {
+  const res = await axiosInstance.post(`/v1/nguoi-dung/register`, payload);
+  return res.data;
+}
+
+const verifyEmail = async (payload: {email: string, code: string, token: string}) => {
+  const res = await axiosInstance.post(`/v1/nguoi-dung/verify-email`, payload);
+  return res.data;
+}
+
+export { getCustomerById, getCustomers, getStaffs, lockAccount, unlockAccount, insertUser, insertUserRole, getStaffById, deleteAllStaffRole, updateRole, login, getRoleToken, registerUser, verifyEmail };
 

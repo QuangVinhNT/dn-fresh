@@ -1,7 +1,6 @@
 import { Router } from "express";
 import danhMucRoutes from "./danhMucRoutes.js";
 import diaChiRoutes from "./diaChiRoutes.js";
-import donHangAdminRoutes from "./donHangAdminRoutes.js";
 import donHangRoutes from "./donHangRoutes.js";
 import khoThucPhamRouter from "./khoThucPhamRoutes.js";
 import nguoiDungRoutes from "./nguoiDungRoutes.js";
@@ -18,12 +17,10 @@ router.use('/v1/kho-thuc-pham', khoThucPhamRouter);
 router.use('/v1/danh-muc', danhMucRoutes);
 router.use('/v1/thuc-pham-yeu-thich', thucPhamYeuThichRoutes);
 router.use('/v1/don-hang', donHangRoutes);
+router.use('/v1/nha-cung-cap', nhaCungCapRoutes);
 router.use('/v1/phieu-nhap', phieuNhapRoutes);
-
-router.use('/v1/admin/nguoi-dung', nguoiDungRoutes);
-router.use('/v1/admin/phieu-xuat', phieuXuatRoutes);
-router.use('/v1/admin/nha-cung-cap', nhaCungCapRoutes);
-router.use('/v1/admin/don-hang', donHangAdminRoutes);
+router.use('/v1/phieu-xuat', phieuXuatRoutes);
+router.use('/v1/nguoi-dung', nguoiDungRoutes);
 
 router.use('/upload', uploadRoutes);
 router.use('/dia-chi', diaChiRoutes);

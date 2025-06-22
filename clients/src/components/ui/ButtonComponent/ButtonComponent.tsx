@@ -39,6 +39,7 @@ const ButtonComponent = (props: IProps) => {
         style={{...localStyle, ...styles}}
         onClick={onClick}
         disabled={isDisabled}
+        type="submit"
       >
         {affix && affix}
         {label}

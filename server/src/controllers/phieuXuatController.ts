@@ -91,12 +91,12 @@ export class PhieuXuatController {
   public approveExportReceipt = async (req: Request, res: Response) => {
     try {
       const exportReceiptId = req.params.id;
-      const { adminId } = req.body;
-      if (!exportReceiptId || !adminId) {
+      const payload = req.body;
+      if (!exportReceiptId || !payload) {
         res.status(404).json({ message: 'Data not found!' });
         return;
       }
-      const result = await this.phieuXuatService.approveExportReceipt(exportReceiptId, adminId);
+      const result = await this.phieuXuatService.approveExportReceipt(exportReceiptId, payload.adminId);
       res.json(result);
     } catch (error) {
       console.error('Error controller:', error);
@@ -122,12 +122,12 @@ export class PhieuXuatController {
   public requestApproveExportReceipt = async (req: Request, res: Response) => {
     try {
       const exportReceiptId = req.params.id;
-      const { staffId } = req.body;
-      if (!exportReceiptId || !staffId) {
+      const payload = req.body;
+      if (!exportReceiptId || !payload) {
         res.status(404).json({ message: 'Data not found!' });
         return;
       }
-      const result = await this.phieuXuatService.requestApproveExportReceipt(exportReceiptId, staffId);
+      const result = await this.phieuXuatService.requestApproveExportReceipt(exportReceiptId, payload.maNhanVien);
       res.json(result);
     } catch (error) {
       console.error('Error controller:', error);

@@ -89,5 +89,15 @@ export class ChiTietThucPhamNhapService {
     } finally {
       connection.release();
     }
-  }
+  };
+
+  public getByIdForExport = async (productId: string) => {
+    try {
+      const rows = await this.chiTietThucPhamNhapDAO.getByIdForExport(productId) as RowDataPacket[];
+      return rows;
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  };
 }

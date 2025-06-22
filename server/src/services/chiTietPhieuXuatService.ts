@@ -52,11 +52,11 @@ export class ChiTietPhieuXuatService {
     }
   };
 
-  public delete = async (packageProductId: string, exportReceiptId: string) => {
+  public delete = async (exportReceiptId: string) => {
     const connection = await pool.getConnection();
     try {
       connection.beginTransaction();
-      const result = await this.chiTietPhieuXuatDAO.delete(packageProductId, exportReceiptId, connection);
+      const result = await this.chiTietPhieuXuatDAO.delete(exportReceiptId, connection);
       connection.commit();
       return result;
     } catch (error) {

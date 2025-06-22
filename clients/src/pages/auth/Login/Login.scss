@@ -1,10 +1,13 @@
 @use '@/styles' as *;
+
 .login-component {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+
   h1 {
     text-align: center;
     margin-bottom: 32px;
@@ -93,6 +96,31 @@
       &:hover {
         background-color: $text-color;
         color: #fff;
+      }
+    }
+  }
+
+  .user-role-component {
+    position: absolute;
+    background-color: #fff;
+    width: fit-content;
+    height: fit-content;
+    z-index: 999;
+    transition: all .5s;
+    padding: 96px 48px;
+    border-radius: 12px;
+
+    .close-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      .close-icon {
+        transition: all .3s;
+        cursor: pointer;
+
+        &:hover {
+          color: red;
+        }
       }
     }
   }

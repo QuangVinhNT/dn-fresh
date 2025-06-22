@@ -1,10 +1,16 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { DiaChiController } from "../controllers/diaChiController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const diaChiRoutes = Router();
 const diaChiController = new DiaChiController();
 
-diaChiRoutes.get('/tinh-thanhpho', diaChiController.getAllCity);
-diaChiRoutes.get('/phuong-xa', diaChiController.getAllCommuneByCityId);
+diaChiRoutes.get('/tinh-thanhpho', authMiddleware, (req: Request, res: Response) => {
+  return diaChiController.getAllCity(req, res);
+});
+
+diaChiRoutes.get('/phuong-xa', authMiddleware, (req: Request, res: Response) => {
+  return diaChiController.getAllCommuneByCityId(req, res);
+});
 
 export default diaChiRoutes;

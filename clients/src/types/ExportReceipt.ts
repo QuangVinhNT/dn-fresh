@@ -35,6 +35,12 @@ type InsertExportReceiptPayload = Pick<ExportReceipt, 'ghiChu' | 'maQuanTriVien'
 
 type UpdateExportReceiptPayload = Pick<ExportReceipt, 'ghiChu' | 'maQuanTriVien'>;
 
+type InsertProductToExportReceiptPayload = {
+  maThucPham: string;
+  maLoHang: string;
+  soLuong: number;
+}
+
 export type {
-  ExportReceiptList, InsertExportReceiptPayload, UpdateExportReceiptPayload, ExportReceiptDetailType
+  ExportReceiptList, InsertExportReceiptPayload, UpdateExportReceiptPayload, ExportReceiptDetailType, InsertProductToExportReceiptPayload
 };

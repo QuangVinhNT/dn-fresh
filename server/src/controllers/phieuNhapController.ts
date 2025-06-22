@@ -91,12 +91,12 @@ export class PhieuNhapController {
   public approveImportReceipt = async (req: Request, res: Response) => {
     try {
       const importReceiptId = req.params.id;
-      const { adminId } = req.body;
-      if (!importReceiptId || !adminId) {
+      const payload = req.body;
+      if (!importReceiptId || !payload) {
         res.status(404).json({ message: 'Data not found!' });
         return;
       }
-      const result = await this.phieuNhapService.approveImportReceipt(importReceiptId, adminId);
+      const result = await this.phieuNhapService.approveImportReceipt(importReceiptId, payload.adminId);
       res.json(result);
     } catch (error) {
       console.error('Error controller:', error);

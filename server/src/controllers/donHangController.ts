@@ -51,6 +51,32 @@ export class DonHangController {
     }
   };
 
+  public getAllForDeliveryStaff = async (req: Request, res: Response) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 5;
+      const orderId = req.query.search as string || '';
+      const rawStatus = req.query.status as string || '';
+      const status = rawStatus === 'undefined' ? '' : rawStatus.split(',').map(s => `'${s}'`).join(',');
+      const communeId = req.query.communeId as string || '';
+      const data = await this.donHangService.getAllForDeliveryStaff(page, limit, orderId, status, communeId);
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  public getAllOrderForInventoryStaff = async (req: Request, res: Response) => {
+    try {
+      const data = await this.donHangService.getAllOrderForInventoryStaff();
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
   public insertOrder = async (req: Request, res: Response) => {
     try {
       const payload = req.body;
@@ -93,38 +119,39 @@ export class DonHangController {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public confirmExport = async (req: Request, res: Response) => {
     try {
-      const { staffId, orderIds } = req.body;
-      if (!staffId || orderIds.length === 0) {
+      const orderId = req.params.id as string || '';
+      const payload = req.body;
+      if (!payload || !orderId) {
         res.status(400).json({ message: 'Data not found!' });
         return;
       }
-      const result = await this.donHangService.confirmExport(orderIds, staffId);
+      const result = await this.donHangService.confirmExport(orderId, payload.staffId);
       res.json(result);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public confirmFinish = async (req: Request, res: Response) => {
     try {
       const orderId = req.params.id as string || '';
-      const { staffId } = req.body;
-      if (!staffId || !orderId) {
+      const payload = req.body;
+      if (!payload || !orderId) {
         res.status(400).json({ message: 'Data not found!' });
         return;
       }
-      const result = await this.donHangService.confirmFinish(orderId, staffId);
+      const result = await this.donHangService.confirmFinish(orderId, payload.staffId);
       res.json(result);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public cancelOrder = async (req: Request, res: Response) => {
     try {
@@ -140,5 +167,5 @@ export class DonHangController {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 }

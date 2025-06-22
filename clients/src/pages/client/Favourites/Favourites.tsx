@@ -1,6 +1,6 @@
 import { getFavouriteProducts } from "@/api/favouriteProductApi";
 import { BackComponent, ClientBanner, ProductCard } from "@/components";
-import { loadingStore } from "@/store";
+import { loadingStore, userStore } from "@/store";
 import { ProductList } from "@/types/Product";
 import { useEffect, useState } from "react";
 import './Favourites.scss';
@@ -12,6 +12,7 @@ const Favourites = () => {
   const [total, setTotal] = useState<number>(0);
   const navigate = useNavigate();
 
+  const {user} = userStore();
   const { showLoading, hideLoading } = loadingStore();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Favourites = () => {
   const fetchFavouriteProducts = async () => {
     showLoading();
     try {
-      const response = await getFavouriteProducts(page, limit, 'ND003');
+      const response = await getFavouriteProducts(page, limit, user?.id + '');
       setProducts(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -48,6 +49,7 @@ const Favourites = () => {
                 id={item.maThucPham}
                 status={item.trangThai}
                 key={idx}
+                unit={item.donViTinh}
                 isFavourite
                 onUpdateFavourite={fetchFavouriteProducts}
               />

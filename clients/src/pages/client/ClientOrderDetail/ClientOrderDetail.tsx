@@ -1,13 +1,13 @@
-import { BackComponent, ClientBanner, OrderStatusComponent } from "@/components";
-import './ClientOrderDetail.scss';
-import PrdImg from '@/assets/images/sp1.png';
-import SeparateNumber from "@/utils/separateNumber";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { loadingStore } from "@/store";
 import { getOrderById } from "@/api/orderApi";
+import PrdImg from '@/assets/images/sp1.png';
+import { BackComponent, ClientBanner, OrderStatusComponent } from "@/components";
+import { loadingStore } from "@/store";
 import { OrderDetail, OrderStatus, PaymentMethod } from "@/types/Order";
-import { dateFormatter, datetimeFormatter, timeFormatter } from "@/utils/datetimeFormatter";
+import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import SeparateNumber from "@/utils/separateNumber";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import './ClientOrderDetail.scss';
 
 const ClientOrderDetail = () => {
   const { id } = useParams();

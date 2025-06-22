@@ -7,9 +7,9 @@ import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import SeparateNumber from "@/utils/separateNumber";
 import { useEffect, useState } from "react";
 import { IoCreate, IoTrashSharp } from "react-icons/io5";
-import ISAddProduct from "./ISAddProduct/ISAddProduct";
+import ISAddImportProduct from "./ISAddImportProduct/ISAddImportProduct";
 import './ISImportDetail.scss';
-import ISEditProduct from "./ISEditProduct/ISEditProduct";
+import ISEditImportProduct from "./ISEditImportProduct/ISEditImportProduct";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -220,7 +220,7 @@ const ISImportDetail = (props: IProps) => {
           </div>
 
           <div className="add-product-modal" style={{ top: isShowAddProduct ? '50%' : '-100%' }}>
-            <ISAddProduct
+            <ISAddImportProduct
               setIsShowAdd={setIsShowAddProduct}
               onAdded={fetchImportProducts}
               importReceiptId={detailData.maPhieuNhap}
@@ -228,7 +228,7 @@ const ISImportDetail = (props: IProps) => {
           </div>
 
           <div className="edit-product-modal" style={{ top: isShowEditProduct ? '50%' : '-100%' }}>
-            <ISEditProduct
+            <ISEditImportProduct
               setIsShowEdit={setIsShowEditProduct}
               detailData={
                 selectedData

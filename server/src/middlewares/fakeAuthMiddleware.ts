@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 declare global {
   namespace Express {
     interface User {
-      id: number;
-      role: 'admin' | 'staff' | 'user' | undefined;
+      id: string;
+      roleId: 'VT001' | 'VT002' | 'VT003' | 'VT004' | undefined;
     }
     interface Request {
       user?: User;
@@ -12,11 +12,11 @@ declare global {
   }
 }
 
-export const fakeAuth = (role?: 'admin' | 'staff' | 'user') => {
+export const fakeAuth = (role?: 'VT001' | 'VT002' | 'VT003' | 'VT004') => {
   return (req: Request, res: Response, next: NextFunction) => {
     req.user = {
-      id: 1,
-      role: role || undefined,
+      id: '1',
+      roleId: role || undefined,
     };
     next();
   };

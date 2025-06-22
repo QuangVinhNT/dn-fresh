@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import AdminSidebarItem from "./AdminSidebarItem/AdminSidebarItem";
 import { IoInformationCircleOutline, IoLogOutOutline } from "react-icons/io5";
+import { userStore } from "@/store";
 
 interface ChildrenType {
   name: string;
@@ -25,6 +26,7 @@ interface Props {
 const AdminSidebar = (props: Props) => {
   const { menuItems } = props;
   const location = useLocation();
+  const { clearUser } = userStore();
   return (
     <div style={{ backgroundColor: webColors.adminBackground, width: '220px', position: 'relative', zIndex: 0, display: 'flex', flexDirection: 'column' }}>
       {/* Logo */}
@@ -43,13 +45,17 @@ const AdminSidebar = (props: Props) => {
         <div className="menu-tools">
           <AdminSidebarItem
             text="Thông tin cá nhân"
-            affix={<IoInformationCircleOutline size={22}/>}
+            affix={<IoInformationCircleOutline size={22} />}
             link={'/'}
           />
           <AdminSidebarItem
             text="Đăng xuất"
-            affix={<IoLogOutOutline size={22}/>}
+            affix={<IoLogOutOutline size={22} />}
             link={'/'}
+            onClick={() => {
+              localStorage.removeItem('access_token');
+              clearUser();
+            }}
           />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { softDeleteImportReceipt } from "@/api/importReceiptApi";
+import { approveImportReceipt, softDeleteImportReceipt } from "@/api/importReceiptApi";
 import { AdminContainerComponent, BackComponent, ButtonComponent, InfoItemComponent, OkCancelModal } from "@/components";
 import { overlayStore } from "@/store";
 import { ImportReceiptDetailType, ImportReceiptStatus } from "@/types/ImportReceipt";
@@ -6,19 +6,21 @@ import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import SeparateNumber from "@/utils/separateNumber";
 import { useState } from "react";
 import './ImportFoodDetail.scss';
+import webColors from "@/constants/webColors";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
   setIsShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
   detailData: ImportReceiptDetailType | undefined;
-  onSoftDeleted: () => void;
+  onUpdated: () => void;
 }
 
 const headers = ['Mã lô hàng', 'Mã thực phẩm', 'Tên thực phẩm', 'Ngày sản xuất', 'Hạn sử dụng', 'Đơn giá nhập', 'Số lượng', 'Đơn vị tính'];
 
 const ImportFoodDetail = (props: IProps) => {
-  const { setIsShowDetail, setIsShowEdit, detailData, onSoftDeleted } = props;
-  const [isShowOkCancel, setIsShowOkCancel] = useState(false);
+  const { setIsShowDetail, setIsShowEdit, detailData, onUpdated } = props;
+  const [isShowConfirmCancel, setIsShowConfirmCancel] = useState(false);
+  const [isShowConfirmApprove, setIsShowConfirmApprove] = useState(false);
   const { showOverlay, hideOverlay } = overlayStore();
 
   return (
@@ -37,7 +39,7 @@ const ImportFoodDetail = (props: IProps) => {
                 label="Hủy phiếu nhập"
                 variant="danger"
                 onClick={() => {
-                  setIsShowOkCancel(true);
+                  setIsShowConfirmCancel(true);
                   showOverlay();
                 }}
               />
@@ -57,6 +59,10 @@ const ImportFoodDetail = (props: IProps) => {
                   type="no-submit"
                   label='Duyệt phiếu nhập'
                   variant="secondary"
+                  onClick={() => {
+                    setIsShowConfirmApprove(true);
+                    showOverlay();
+                  }}
                 />
               )}
             </div>
@@ -170,7 +176,7 @@ const ImportFoodDetail = (props: IProps) => {
               </table>
             </div>
           </div>
-          <div className="ok-cancel-modal" style={{ top: isShowOkCancel ? '50%' : '-100%' }}>
+          <div className="ok-cancel-delete" style={{ top: isShowConfirmCancel ? '50%' : '-100%' }}>
             <OkCancelModal
               data={{
                 message: <p>Bạn chắc chắn muốn <b style={{ color: 'red' }}>hủy</b> phiếu nhập <b>{detailData.maPhieuNhap}</b> chứ?</p>
@@ -179,16 +185,39 @@ const ImportFoodDetail = (props: IProps) => {
                 const softDeleteResult = await softDeleteImportReceipt(detailData.maPhieuNhap, detailData.maQuanTriVien);
                 console.log('Cancel result:', softDeleteResult);
                 setIsShowDetail(false);
-                setIsShowOkCancel(false);
-                onSoftDeleted();
+                setIsShowConfirmCancel(false);
+                onUpdated();
                 hideOverlay();
               }}
               onCancel={() => {
-                setIsShowOkCancel(false);
+                setIsShowConfirmCancel(false);
                 hideOverlay();
               }}
               onClose={() => {
-                setIsShowOkCancel(false);
+                setIsShowConfirmCancel(false);
+                hideOverlay();
+              }}
+            />
+          </div>
+          <div className="ok-cancel-approve" style={{ top: isShowConfirmApprove ? '50%' : '-100%' }}>
+            <OkCancelModal
+              data={{
+                message: <p>Bạn chắc chắn muốn <b style={{ color: webColors.primary }}>duyệt</b> phiếu nhập <b>{detailData.maPhieuNhap}</b> chứ?</p>
+              }}
+              onOk={async () => {
+                const approveResult = await approveImportReceipt(detailData.maPhieuNhap, detailData.maQuanTriVien);
+                console.log('Approve result:', approveResult);
+                setIsShowDetail(false);
+                setIsShowConfirmApprove(false);
+                onUpdated();
+                hideOverlay();
+              }}
+              onCancel={() => {
+                setIsShowConfirmApprove(false);
+                hideOverlay();
+              }}
+              onClose={() => {
+                setIsShowConfirmApprove(false);
                 hideOverlay();
               }}
             />

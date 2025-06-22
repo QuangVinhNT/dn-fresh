@@ -6,7 +6,7 @@ import { ProductList, ProductStatus } from "@/types/Product";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
-import './ISAddProduct.scss';
+import './ISAddImportProduct.scss';
 import { InsertProductToImportReceiptPayload } from "@/types/ImportReceiptDetail";
 import { insertProductToImportReceipt } from "@/api/importReceiptApi";
 
@@ -16,7 +16,7 @@ interface IProps {
   onAdded: () => void;
 }
 
-const ISAddProduct = (props: IProps) => {
+const ISAddImportProduct = (props: IProps) => {
   const { setIsShowAdd, onAdded, importReceiptId } = props;
   const [products, setProducts] = useState<ProductList[]>([]);
   const [product, setProduct] = useState<ProductList>();
@@ -169,4 +169,4 @@ const ISAddProduct = (props: IProps) => {
   );
 };
 
-export default ISAddProduct;
+export default ISAddImportProduct;

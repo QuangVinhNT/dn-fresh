@@ -1,9 +1,9 @@
-import { AdminContainerComponent, BackComponent, ButtonComponent, InfoItemComponent } from "@/components";
-import './StaffDetail.scss';
-import { Gender, Role, StaffDetailType, UserStatus } from "@/types/User";
-import { IoClose } from "react-icons/io5";
+import { AdminContainerComponent, ButtonComponent, InfoItemComponent } from "@/components";
 import { overlayStore } from "@/store";
+import { Gender, Role, StaffDetailType, UserStatus } from "@/types/User";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
+import { IoClose } from "react-icons/io5";
+import './StaffDetail.scss';
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;

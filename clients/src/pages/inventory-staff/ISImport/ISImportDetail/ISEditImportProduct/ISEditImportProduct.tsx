@@ -7,7 +7,7 @@ import { FormValues } from "@/types/Object";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
-import './ISEditProduct.scss';
+import './ISEditImportProduct.scss';
 
 interface IProps {
   setIsShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,7 +15,7 @@ interface IProps {
   onEdit: () => void;
 }
 
-const ISEditProduct = (props: IProps) => {
+const ISEditImportProduct = (props: IProps) => {
   const { setIsShowEdit, onEdit, detailData } = props;
   const [mfg, setMfg] = useState<string>('');
   const [exp, setExp] = useState<string>('');
@@ -145,4 +145,4 @@ const ISEditProduct = (props: IProps) => {
   );
 };
 
-export default ISEditProduct;
+export default ISEditImportProduct;

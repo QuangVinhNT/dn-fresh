@@ -58,13 +58,13 @@ export class ChiTietThucPhamNhapDAO {
       const result = connection.query(`
         INSERT INTO chitietthucphamnhap(maLoHang, maThucPham, maPhieuNhap, ngaySanXuat, hanSuDung, donGiaNhap, soLuong)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-        `, [product.getMaLoHang(), product.getMaThucPham(), product.getMaPhieuNhap(), product.getNgaySanXuat(), product.getHanSuDung(), product.getDonGiaNhap(), product.getSoLuong()])
+        `, [product.getMaLoHang(), product.getMaThucPham(), product.getMaPhieuNhap(), product.getNgaySanXuat(), product.getHanSuDung(), product.getDonGiaNhap(), product.getSoLuong()]);
       return result;
     } catch (error) {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 
   public update = async (product: ChiTietThucPhamNhap, connection: PoolConnection) => {
     try {
@@ -72,13 +72,13 @@ export class ChiTietThucPhamNhapDAO {
         UPDATE chitietthucphamnhap
         SET ngaySanXuat = ?, hanSuDung = ?, donGiaNhap = ?, soLuong = ?
         WHERE maLoHang = ? AND maThucPham = ? AND maPhieuNhap = ?
-        `, [product.getNgaySanXuat(), product.getHanSuDung(), product.getDonGiaNhap(), product.getSoLuong(), product.getMaLoHang(), product.getMaThucPham(), product.getMaPhieuNhap()])
+        `, [product.getNgaySanXuat(), product.getHanSuDung(), product.getDonGiaNhap(), product.getSoLuong(), product.getMaLoHang(), product.getMaThucPham(), product.getMaPhieuNhap()]);
       return result;
     } catch (error) {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 
   public delete = async (productPackageId: string, connection: PoolConnection) => {
     try {
@@ -91,5 +91,20 @@ export class ChiTietThucPhamNhapDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
+
+  public getByIdForExport = async (productId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT maLoHang, maThucPham, soLuong
+        FROM chitietthucphamnhap AS cttp
+        WHERE soLuong > 0 AND DATEDIFF(hanSuDung, NOW()) > 0 AND maThucPham = ?
+        ORDER BY hanSuDung ASC, soLuong ASC
+        `, [productId]);
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

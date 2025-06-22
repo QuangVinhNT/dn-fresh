@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { NguoiDungService } from "../services/nguoiDungService.js";
 import { NguoiDung } from "../models/nguoiDungModel.js";
 import { DiaChi } from "../models/diaChiModel.js";
+import { UnauthorizedError } from "../errors/UnauthorizedError.js";
 
 export class NguoiDungController {
   private nguoiDungService: NguoiDungService;
@@ -70,7 +71,7 @@ export class NguoiDungController {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public lockAccount = async (req: Request, res: Response) => {
     try {
@@ -85,7 +86,7 @@ export class NguoiDungController {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public unlockAccount = async (req: Request, res: Response) => {
     try {
@@ -100,7 +101,7 @@ export class NguoiDungController {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public insertUser = async (req: Request, res: Response) => {
     try {
@@ -117,5 +118,63 @@ export class NguoiDungController {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
+
+  public login = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body;
+      if (!payload) {
+        res.status(400).json({ message: 'Invalid data' });
+        return;
+      }
+      const result = await this.nguoiDungService.login(payload.email, payload.password);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(403).json({ message: 'Email hoặc mật khẩu không đúng!' });
+    }
+  };
+
+  public getRoleToken = (req: Request, res: Response) => {
+    try {
+      const payload = req.body;
+      const token = this.nguoiDungService.createTokenForRole(payload.userId, payload.roleId);
+      res.json(token);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+  public register = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body;
+      if (!payload) {
+        res.status(400).json({ message: 'Invalid data' });
+        return;
+      }
+      const user = new NguoiDung('', payload.hoTen, payload.gioiTinh, new Date(payload.ngaySinh), payload.soDienThoai, '', payload.email, payload.matKhau, '', null, null, 2);
+      const address = new DiaChi('', payload.chiTietDiaChi, payload.maPhuongXa);
+      const result = await this.nguoiDungService.register(user, address);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Không thể gửi mail xác minh hoặc thêm người dùng lỗi!' });
+    }
+  };
+
+  public verifyEmail = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body;
+      if (!payload) {
+        res.status(400).json({ message: 'Invalid data' });
+        return;
+      }
+      const result = await this.nguoiDungService.verifyEmail(payload.email, payload.code, payload.token);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(400).json({ message: 'Mã xác minh không hợp lệ hoặc đã hết hạn' });
+    }
+  };
 }

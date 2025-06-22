@@ -11,12 +11,13 @@ export class ChiTietPhieuXuatController {
 
   public insert = async (req: Request, res: Response) => {
     try {
+      const exportReceiptId = req.params.id;
       const payload = req.body;
-      if (!payload) {
+      if (!payload || !exportReceiptId) {
         res.status(404).json({ message: 'Data not found!' });
         return;
       }
-      const exportReceiptDetail = new ChiTietPhieuXuat(payload.maPhieuXuat, payload.maSanPham, payload.maLoHang, payload.soLuong);
+      const exportReceiptDetail = new ChiTietPhieuXuat(exportReceiptId, payload.maThucPham, payload.maLoHang, payload.soLuong);
       const result = await this.chiTietPhieuXuatService.insert(exportReceiptDetail);
       res.status(201).json(result);
     } catch (error) {
@@ -45,12 +46,11 @@ export class ChiTietPhieuXuatController {
   public delete = async (req: Request, res: Response) => {
     try {
       const exportReceiptId = req.params.id;
-      const { packageProductId } = req.body;
-      if (!packageProductId || !exportReceiptId) {
+      if (!exportReceiptId) {
         res.status(404).json({ message: 'Data not found!' });
         return;
       }
-      const result = await this.chiTietPhieuXuatService.delete(packageProductId, exportReceiptId);
+      const result = await this.chiTietPhieuXuatService.delete(exportReceiptId);
       res.json(result);
     } catch (error) {
       console.error('Error controller:', error);

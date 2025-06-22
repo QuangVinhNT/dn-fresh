@@ -10,6 +10,7 @@ export class ChiTietPhieuXuatDAO {
         FROM chitietphieuxuat AS ct
         JOIN khothucpham AS tp ON ct.maThucPham = tp.maThucPham
         WHERE maPhieuXuat = ?
+        ORDER BY ct.maThucPham
         `, [exportReceiptId]);
       return rows;
     } catch (error) {
@@ -45,12 +46,12 @@ export class ChiTietPhieuXuatDAO {
     }
   };
 
-  public delete = async (packageProductId: string, exportReceiptId: string, connection: PoolConnection) => {
+  public delete = async (exportReceiptId: string, connection: PoolConnection) => {
     try {
       const result = await connection.query(`
         DELETE FROM chitietphieuxuat
-        WHERE maLoHang = ? AND maPhieuXuat = ?
-        `, [packageProductId, exportReceiptId]);
+        WHERE maPhieuXuat = ?
+        `, [exportReceiptId]);
       return result;
     } catch (error) {
       console.error('DAO error:', error);

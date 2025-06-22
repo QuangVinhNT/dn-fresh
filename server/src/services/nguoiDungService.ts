@@ -9,6 +9,10 @@ import { DiaChi } from "../models/diaChiModel.js";
 import { VaiTroNguoiDungService } from "./vaiTroNguoiDungService.js";
 import { VaiTroNguoiDung } from "../models/vaiTroNguoiDungModel.js";
 import bcrypt from 'bcrypt';
+import { generateToken, verifyToken } from "../utils/jwt.js";
+import { sendVerificationEmail } from "../utils/mailer.js";
+import { UnauthorizedError } from "../errors/UnauthorizedError.js";
+import jwt from "jsonwebtoken";
 
 export class NguoiDungService {
   private nguoiDungDAO: NguoiDungDAO;
@@ -154,7 +158,7 @@ export class NguoiDungService {
         addressId = (await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa()))[0].maDiaChi;
       } else {
         addressId = await generateUUID(255, connection, 'diachi', 'maDiaChi', 'DC');
-        address.setMaDiaChi(addressId)
+        address.setMaDiaChi(addressId);
         await this.diaChiService.insertAddress(address, connection);
       }
       user.setMaNguoiDung(userId);
@@ -164,9 +168,96 @@ export class NguoiDungService {
       const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
       user.setMatKhau(hashedPassword);
       const userResult = await this.nguoiDungDAO.insertUser(user, connection);
-      const userRoleResult = await this.vaiTroNguoiDungService.insertUserRole(new VaiTroNguoiDung(user.getMaNguoiDung(), roleId), connection);
+      const userRoleResult = await Promise.all([
+        await this.vaiTroNguoiDungService.insertUserRole(new VaiTroNguoiDung(user.getMaNguoiDung(), roleId), connection),
+        await this.vaiTroNguoiDungService.insertUserRole(new VaiTroNguoiDung(user.getMaNguoiDung(), 'VT004'), connection)
+      ])
       connection.commit();
       return { userResult, userRoleResult };
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public login = async (email: string, password: string) => {
+    try {
+      const user = (await this.nguoiDungDAO.getByEmail(email) as RowDataPacket[])[0];
+      if (!user) throw new UnauthorizedError('Email không tồn tại!');
+      const match = await bcrypt.compare(password, user.matKhau);
+      if (!match) throw new UnauthorizedError('Mật khẩu sai!');
+      const userRole = await this.vaiTroNguoiDungService.getAllRoleByUserId(user.maNguoiDung);
+      return {
+        maNguoiDung: user.maNguoiDung,
+        hoTen: user.hoTen,
+        email: user.email,
+        hinhAnh: user.hinhAnh,
+        danhSachVaiTro: userRole
+      };
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  };
+
+  public createTokenForRole = (userId: string, roleId: string) => {
+    return generateToken({ id: userId, roleId });
+  };
+
+  public register = async (user: NguoiDung, address: DiaChi) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const userId = await generateUUID(10, connection, 'nguoidung', 'maNguoiDung', 'ND');
+      let addressId = '';
+      if ((await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa())).length > 0) {
+        addressId = (await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa()))[0].maDiaChi;
+      } else {
+        addressId = await generateUUID(255, connection, 'diachi', 'maDiaChi', 'DC');
+        address.setMaDiaChi(addressId);
+        await this.diaChiService.insertAddress(address, connection);
+      }
+      user.setMaNguoiDung(userId);
+      user.setMaDiaChi(addressId);
+      const rawPassword = user.getMatKhau();
+      const saltRounds = 12;
+      const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
+      user.setMatKhau(hashedPassword);
+      const userResult = await this.nguoiDungDAO.insertUser(user, connection);
+      const userRoleResult = await this.vaiTroNguoiDungService.insertUserRole(new VaiTroNguoiDung(user.getMaNguoiDung(), 'VT004'), connection);
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const tokenPayload = {
+        email: user.getEmail(),
+        code
+      };
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET!, { expiresIn: '5m' });
+      await sendVerificationEmail(user.getEmail(), code);
+      connection.commit();
+      return { userResult, userRoleResult, message: 'Đăng ký thành công. Vui lòng kiểm tra email để xác minh.', token };
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public verifyEmail = async (email: string, code: string, token: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const decoded = verifyToken(token);
+      if (decoded.email !== email || decoded.code !== code) {
+        throw new Error("Mã xác nhận không đúng hoặc đã hết hạn");
+      }
+      const user = (await this.nguoiDungDAO.getByEmail(email) as RowDataPacket[])[0];
+      const updateStatusResult = await this.nguoiDungDAO.updateAccountStatus(user.maNguoiDung, 1, connection);
+      connection.commit();
+      return { updateStatusResult };
     } catch (error) {
       connection.rollback();
       console.error('Error service:', error);

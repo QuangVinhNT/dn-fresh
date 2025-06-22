@@ -16,12 +16,13 @@ interface Props {
   affix?: ReactNode;
   childrens?: ChildrenType[];
   location?: string;
+  onClick?: () => void;
 }
 const AdminSidebarItem = (props: Props) => {
-  const { text, affix, childrens, link, location } = props;
+  const { text, affix, childrens, link, location, onClick } = props;
   const [isShowChild, setIsShowChild] = useState(false);
   return (
-    <div>
+    <div onClick={onClick}>
       <Link to={link ?? '#'} style={{ textDecoration: 'none' }}>
         <div className="sidebar-item-container" style={{
           color: webColors.white,

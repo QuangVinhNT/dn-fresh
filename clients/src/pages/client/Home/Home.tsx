@@ -84,8 +84,6 @@ const Home = () => {
     }
   };
 
-  console.log(discountProducts)
-
   return (
     <div className="home-component">
       <div className="home-content">

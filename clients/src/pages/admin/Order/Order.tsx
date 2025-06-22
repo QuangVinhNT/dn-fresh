@@ -43,9 +43,9 @@ const Order = () => {
     }
   };
 
-  const handleClickRow = async (productId: string) => {
+  const handleClickRow = async (orderId: string) => {
     try {
-      const response = await getAdminOrderById(productId);
+      const response = await getAdminOrderById(orderId);
       setOrder(response);
       setIsShowDetail(true);
     } catch (error) {
@@ -100,7 +100,7 @@ const Order = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập tên nhà cung cấp..." onSearch={fetchOrders} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập mã đơn hàng..." onSearch={fetchOrders} keywordRef={keywordRef} />
             </div>
             <table className="table">
               <thead>

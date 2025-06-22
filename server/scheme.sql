@@ -104,6 +104,7 @@ CREATE TABLE KHOTHUCPHAM (
     ngayCapNhat DATETIME,
     soLuongTonKho SMALLINT,
     donViTinh VARCHAR(6),
+    soLuongChoXuat SMALLINT,
     FOREIGN KEY (maDanhMuc) REFERENCES DANHMUC(maDanhMuc)
 );
 
@@ -228,6 +229,17 @@ CREATE TABLE LICHLAMVIEC (
     FOREIGN KEY (maNhanVien) REFERENCES NGUOIDUNG(maNguoiDung),
     FOREIGN KEY (maQuanTriVien) REFERENCES NGUOIDUNG(maNguoiDung),
     FOREIGN KEY (maCaLam) REFERENCES CALAMVIEC(maCaLam)
+);
+
+-- Table: GIOHANG
+CREATE TABLE GIOHANG (
+    maNguoiDung VARCHAR(10),
+    maThucPham VARCHAR(10),
+    soLuong SMALLINT,
+    ngayTao DATETIME,
+    PRIMARY KEY (maNguoiDung, maThucPham),
+    FOREIGN KEY (maNguoiDung) REFERENCES NGUOIDUNG(maNguoiDung),
+    FOREIGN KEY (maThucPham) REFERENCES KHOTHUCPHAM(maThucPham)
 );
 
 -- Insert sample data for TINHTHANHPHO
@@ -493,3 +505,50 @@ ALTER TABLE LICHLAMVIEC
     ADD CONSTRAINT FK_LLV_CALAMVIEC
         FOREIGN KEY (maCaLam) REFERENCES CALAMVIEC(maCaLam)
         ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE GIOHANG
+    DROP FOREIGN KEY GIOHANG_ibfk_1,
+    DROP FOREIGN KEY GIOHANG_ibfk_2,
+    ADD CONSTRAINT FK_GH_NGUOIDUNG
+        FOREIGN KEY (maNguoiDung) REFERENCES NGUOIDUNG(maNguoiDung)
+        ON DELETE CASCADE ON UPDATE CASCADE,    
+    ADD CONSTRAINT FK_GH_KHOTHUCPHAM
+        FOREIGN KEY (maThucPham) REFERENCES KHOTHUCPHAM(maThucPham)
+        ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Trigger
+
+DELIMITER //
+CREATE TRIGGER trg_CapNhatSoLuongTonKho_phieunhap
+AFTER UPDATE ON phieunhap
+FOR EACH ROW
+BEGIN
+	IF OLD.trangThai <> 1 AND NEW.trangThai = 1 THEN
+		UPDATE khothucpham AS tp
+        JOIN chitietthucphamnhap AS cttp ON cttp.maThucPham = tp.maThucPham
+        SET tp.soLuongTonKho = tp.soLuongTonKho + cttp.soLuong
+        WHERE cttp.maPhieuNhap = NEW.maPhieuNhap;
+	END IF;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_CapNhatSoLuongTonKho_phieuxuat
+AFTER UPDATE ON phieuxuat
+FOR EACH ROW
+BEGIN
+	IF OLD.trangThai <> 1 AND NEW.trangThai = 1 THEN
+		UPDATE khothucpham AS tp
+        JOIN chitietphieuxuat AS ctpx ON ctpx.maThucPham = tp.maThucPham
+        SET tp.soLuongTonKho = tp.soLuongTonKho - ctpx.soLuong, tp.soLuongChoXuat = tp.soLuongChoXuat - ctpx.soLuong
+        WHERE ctpx.maPhieuXuat = NEW.maPhieuXuat;
+
+        UPDATE chitietthucphamnhap AS cttp
+        JOIN chitietphieuxuat AS ctpx ON ctpx.maLoHang = cttp.maLoHang
+        SET cttp.soLuong = cttp.soLuong - ctpx.soLuong
+        WHERE ctpx.maPhieuXuat = NEW.maPhieuXuat;
+	END IF;
+END;
+//
+DELIMITER ;

@@ -1,0 +1,69 @@
+.add-export-food-component {
+  .add-export-food-body {
+    .info-container {
+      .save-close {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        .close-btn {
+          .close-icon {
+            transition: all .3s;
+            cursor: pointer;
+
+            &:hover {
+              color: red;
+            }
+          }
+        }
+      }
+
+      .ready-orders {
+        .orders-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          span {
+            cursor: pointer;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .orders {
+          .order {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            align-items: center;
+            justify-content: space-between;
+
+            input {
+              width: 16px;
+              height: 16px;
+              cursor: pointer;
+              margin-right: 28px;
+            }
+
+            details {
+              summary {
+                cursor: pointer;
+                font-weight: 500;
+
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
+
+              ul {
+                list-style: none;
+                padding-left: 24px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
