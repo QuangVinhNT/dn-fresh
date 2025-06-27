@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import './ISEditImportProduct.scss';
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,19 +26,24 @@ const ISEditImportProduct = (props: IProps) => {
   const { register, handleSubmit, reset } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const payload: UpdateProductToImportReceiptPayload = {
-      maPhieuNhap: detailData?.maPhieuNhap + '',
-      maThucPham: detailData?.maThucPham + '',
-      ngaySanXuat: new Date(data['mfg'] + ''),
-      hanSuDung: new Date(data['exp'] + ''),
-      donGiaNhap: +data['price'],
-      soLuong: +data['quantity']
-    };
-    const updateResult = await updateImportReceiptProduct(payload, detailData?.maLoHang + '');
-    console.log('Update result:', updateResult);
-    setIsShowEdit(false);
-    hideOverlay();
-    onEdit();
+    try {
+      const payload: UpdateProductToImportReceiptPayload = {
+        maPhieuNhap: detailData?.maPhieuNhap + '',
+        maThucPham: detailData?.maThucPham + '',
+        ngaySanXuat: new Date(data['mfg'] + ''),
+        hanSuDung: new Date(data['exp'] + ''),
+        donGiaNhap: +data['price'],
+        soLuong: +data['quantity']
+      };
+      const updateResult = await updateImportReceiptProduct(payload, detailData?.maLoHang + '');
+      console.log('Update result:', updateResult);
+      setIsShowEdit(false);
+      hideOverlay();
+      onEdit();
+      toast.success('Cập nhật thực phẩm thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
+    }
   };
 
   useEffect(() => {
@@ -138,7 +144,7 @@ const ISEditImportProduct = (props: IProps) => {
                 </div>
               }
             />
-          </form>          
+          </form>
         </div>
       )}
     </>

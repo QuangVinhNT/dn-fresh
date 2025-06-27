@@ -44,7 +44,7 @@ export class KhoThucPhamDAO {
   public getById = async (productId: string) => {
     try {
       const [rows] = await pool.query(`
-      SELECT p.maThucPham, tenThucPham, donGia, soLuongTonKho, donViTinh, p.moTa, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, p.trangThai, p.tiLeKhuyenMai
+      SELECT p.maThucPham, tenThucPham, donGia, soLuongTonKho, donViTinh, p.moTa, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, p.trangThai, p.tiLeKhuyenMai, soLuongChoXuat
       FROM khothucpham as p
       LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
       WHERE p.maThucPham = ?
@@ -132,8 +132,8 @@ export class KhoThucPhamDAO {
   public insertProduct = async (product: KhoThucPham, connection: PoolConnection) => {
     try {
       const [result] = await connection.query(`
-        INSERT INTO khothucpham (maThucPham, tenThucPham, donGia, moTa, trangThai, maDanhMuc, tiLeKhuyenMai, ngayTao, ngayCapNhat, soLuongTonKho, donViTinh)
-        VALUES (?, ?, ?, ?, 2, ?, 0, NOW(), NOW(), 0, ?)
+        INSERT INTO khothucpham (maThucPham, tenThucPham, donGia, moTa, trangThai, maDanhMuc, tiLeKhuyenMai, ngayTao, ngayCapNhat, soLuongTonKho, donViTinh, soLuongChoXuat)
+        VALUES (?, ?, ?, ?, 2, ?, 0, NOW(), NOW(), 0, ?, 0)
       `, [product.getMaThucPham(), product.getTenThucPham(), product.getDonGia(), product.getMoTa(), product.getMaDanhMuc(), product.getDonViTinh()]);
       return result;
     } catch (error) {

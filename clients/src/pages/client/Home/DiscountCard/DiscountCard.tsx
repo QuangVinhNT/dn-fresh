@@ -16,7 +16,7 @@ const DiscountCard = (props: IProps) => {
   const { imgSrc, discount, label, standardPrice, className, id } = props;
   return (
     <Link to={`/foods/${id}`} className={`discount-card-component ${className}`}>
-      {discount && <span className="discount-tag">- {discount * 100}%</span>}
+      {discount && <span className="discount-tag">- {(discount * 100).toFixed(0)}%</span>}
       <div className="prd-img">
         <img src={imgSrc} alt="" />
         <div className="tools">

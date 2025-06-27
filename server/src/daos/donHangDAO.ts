@@ -8,12 +8,9 @@ export class DonHangDAO {
     const offset = (page - 1) * limit;
     try {
       const [rows] = await pool.query(`
-      SELECT dh.maDonHang, dh.ngayTao, dh.trangThai, phuongThucThanhToan, SUM(ctdh.soLuong * tp.donGia) as tongTien
+      SELECT dh.maDonHang, dh.ngayTao, dh.trangThai, phuongThucThanhToan, giaTriDonHang as tongTien
       FROM donhang AS dh
-      LEFT JOIN chitietdonhang AS ctdh ON ctdh.maDonHang = dh.maDonHang
-      LEFT JOIN khothucpham AS tp ON ctdh.maThucPham = tp.maThucPham
       WHERE (dh.maKhachHang = ?) ${orderId.length > 0 ? `AND BINARY LOWER(dh.maDonHang) LIKE LOWER('%${orderId}%')` : ''}
-      GROUP BY maDonHang
       LIMIT ? 
       OFFSET ?
     `, [userId, limit, offset]);
@@ -121,7 +118,7 @@ export class DonHangDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 
   public getOrderIdsForInventoryStaff = async () => {
     try {
@@ -140,9 +137,9 @@ export class DonHangDAO {
   public insertOrder = async (order: DonHang, connection: PoolConnection) => {
     try {
       const [result] = await connection.query(`
-        INSERT INTO donhang (maDonHang, maKhachHang, maDiaChi, maNhanVien, maPhieuXuat, trangThai, ngayTao, ngayCapNhat, ghiChu, phuongThucThanhToan)
-        VALUES (?, ?, ?, NULL, NULL, 1, NOW(), NOW(), ?, ?)
-      `, [order.getMaDonHang(), order.getMaKhachHang(), order.getMaDiaChi(), order.getGhiChu(), order.getPhuongThucThanhToan()]);
+        INSERT INTO donhang (maDonHang, maKhachHang, maDiaChi, maNhanVien, maPhieuXuat, trangThai, ngayTao, ngayCapNhat, ghiChu, phuongThucThanhToan, giaTriDonHang)
+        VALUES (?, ?, ?, NULL, NULL, 1, NOW(), NOW(), ?, ?, ?)
+      `, [order.getMaDonHang(), order.getMaKhachHang(), order.getMaDiaChi(), order.getGhiChu(), order.getPhuongThucThanhToan(), order.getGiaTriDonHang()]);
       return result;
     } catch (error) {
       console.error('DAO error:', error);
@@ -164,13 +161,13 @@ export class DonHangDAO {
     }
   };
 
-  public changeStatus = async (orderId: string, staffId: string, status: number, connection: PoolConnection) => {
+  public changeStatus = async (orderId: string, staffId: string, status: number, connection: PoolConnection, exportReceiptId?: string) => {
     try {
       const [result] = await connection.query(`
         UPDATE donhang
-        SET trangThai = ?, ngayCapNhat = NOW(), maNhanVien = ${staffId ? '?' : 'NULL'}
+        SET trangThai = ?,${exportReceiptId && exportReceiptId.length > 0 ? (` maPhieuXuat = '${exportReceiptId}',`) : ''}${staffId.length > 0 ? (` maNhanVien = '${staffId}',`) : ''} ngayCapNhat = NOW()
         WHERE maDonHang = ?
-      `, [status, staffId, orderId]);
+      `, [status, orderId]);
       return result;
     } catch (error) {
       console.error('DAO error:', error);
@@ -182,10 +179,23 @@ export class DonHangDAO {
     try {
       const [result] = await connection.query(`
         UPDATE donhang
-        SET trangThai = 0, ngayCapNhat = NOW(), maNhanVien = ?, ghiChu = ?
+        SET trangThai = 0, ngayCapNhat = NOW(),${staffId.length > 0 ? (` maNhanVien = '${staffId}',`) : ''} ghiChu = ?
         WHERE maDonHang = ?
-      `, [staffId, note, orderId]);
+      `, [note, orderId]);
       return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
+
+  public unpackOrdersByExportReceipt = async (exportReceiptId: string, connection: PoolConnection) => {
+    try {
+      const [result] = await connection.query(`
+        UPDATE donhang
+        SET maPhieuXuat = NULL, trangThai = 1
+        WHERE maPhieuXuat = ?
+        `, [exportReceiptId]);
     } catch (error) {
       console.error('DAO error:', error);
       throw error;

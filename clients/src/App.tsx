@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './App.css';
-import { Admin, Client, ClientFoodDetail, ClientOrderDetail, ClientOrders, ConfirmCode, Contact, Customer, DeliveryStaff, DSOrder, DSOverview, ExportFood, Favourites, FoodCategory, FoodList, FoodProvider, Foods, ForgotPassword, Home, ImportFood, Introduce, InventoryStaff, ISExport, ISImport, Login, Order, Overview, Payment, Register, Staff, UserRole } from "./pages";
-import ISOverview from "./pages/inventory-staff/ISOverview/ISOverview";
+import { Admin, Client, ClientFoodDetail, ClientOrderDetail, ClientOrders, ConfirmCode, Contact, Customer, DeliveryStaff, DSOrder, DSOverview, ExportFood, Favourites, FoodCategory, FoodList, FoodProvider, Foods, ForgotPassword, Home, ImportFood, Introduce, InventoryStaff, ISExport, ISImport, ISOverview, Login, Order, Overview, Payment, PersonalInfo, Register, Staff, UserRole } from "./pages";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -139,6 +139,10 @@ const router = createBrowserRouter([
   {
     path: '/payment',
     element: <Payment />
+  },
+  {
+    path: '/personal-info',
+    element: <PersonalInfo />
   }
 ]);
 
@@ -147,6 +151,19 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover={false}
+        theme="light"
+        transition={Bounce}
+      />
     </>
   );
 }

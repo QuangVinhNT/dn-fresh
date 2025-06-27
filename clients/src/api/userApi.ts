@@ -1,4 +1,4 @@
-import { InsertUserPayload, InsertUserRolePayload } from "@/types/User";
+import { InsertUserPayload, InsertUserRolePayload, UpdateUserPayload } from "@/types/User";
 import axiosInstance from "./axiosInstance";
 
 const getCustomers = async (page: number, limit: number, search: string, status?: string) => {
@@ -21,6 +21,11 @@ const getStaffById = async (staffId: string) => {
   return res.data;
 };
 
+const getUserById = async (userId: string) => {
+  const res = await axiosInstance.get(`/v1/nguoi-dung/${userId}`);
+  return res.data;
+};
+
 const lockAccount = async (userId: string) => {
   const res = await axiosInstance.patch(`/v1/nguoi-dung/${userId}/lock`);
   return res.data;
@@ -36,6 +41,11 @@ const insertUser = async (payload: InsertUserPayload) => {
   return res.data;
 };
 
+const updateUser = async (userId: string, payload: UpdateUserPayload) => {
+  const res = await axiosInstance.put(`/v1/nguoi-dung/${userId}`, payload);
+  return res.data;
+};
+
 const insertUserRole = async (payload: InsertUserRolePayload) => {
   const res = await axiosInstance.post(`/vai-tro`, payload);
   return res.data;
@@ -47,29 +57,29 @@ const deleteAllStaffRole = async (userId: string) => {
 };
 
 const updateRole = async (userId: string, roleId: string) => {
-  const res = await axiosInstance.put(`/vai-tro/${userId}`, {maVaiTro: roleId})
+  const res = await axiosInstance.put(`/vai-tro/${userId}`, { maVaiTro: roleId });
   return res.data;
-}
+};
 
-const login = async (payload: {email: string, password: string}) => {
+const login = async (payload: { email: string, password: string; }) => {
   const res = await axiosInstance.post(`/v1/nguoi-dung/login`, payload);
   return res.data;
-}
+};
 
-const getRoleToken = async (payload: {userId: string, roleId: string}) => {
-  const res = await axiosInstance.post(`/v1/nguoi-dung/get-role-token`, payload)
+const getRoleToken = async (payload: { userId: string, roleId: string; }) => {
+  const res = await axiosInstance.post(`/v1/nguoi-dung/get-role-token`, payload);
   return res.data;
-}
+};
 
 const registerUser = async (payload: InsertUserPayload) => {
   const res = await axiosInstance.post(`/v1/nguoi-dung/register`, payload);
   return res.data;
-}
+};
 
-const verifyEmail = async (payload: {email: string, code: string, token: string}) => {
+const verifyEmail = async (payload: { email: string, code: string, token: string; }) => {
   const res = await axiosInstance.post(`/v1/nguoi-dung/verify-email`, payload);
   return res.data;
-}
+};
 
-export { getCustomerById, getCustomers, getStaffs, lockAccount, unlockAccount, insertUser, insertUserRole, getStaffById, deleteAllStaffRole, updateRole, login, getRoleToken, registerUser, verifyEmail };
+export { getCustomerById, getCustomers, getStaffs, lockAccount, unlockAccount, insertUser, insertUserRole, getStaffById, deleteAllStaffRole, updateRole, login, getRoleToken, registerUser, verifyEmail, getUserById, updateUser };
 

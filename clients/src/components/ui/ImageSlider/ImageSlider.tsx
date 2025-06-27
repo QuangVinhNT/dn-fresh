@@ -29,6 +29,7 @@ const ImageSlider = (props: IProps) => {
               key={idx}
               width={imgWidth ?? 150}
               height={imgHeight ?? 150}
+              style={{objectFit: 'cover'}}
             />
           ))}
         </div>

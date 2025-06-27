@@ -12,9 +12,7 @@ import ISExportDetail from "./ISExportDetail/ISExportDetail";
 const headers = ['Mã phiếu xuất', 'Ngày xuất hàng', 'Mã nhân viên', 'Mã quản trị viên', 'Trạng thái', 'Ngày tạo', 'Ngày cập nhật'];
 
 const ISExport = () => {
-  const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
-  const [isShowEdit, setIsShowEdit] = useState(false);
   const [exportReceipts, setExportReceipts] = useState<ExportReceiptList[]>([]);
   const [exportReceipt, setExportReceipt] = useState<ExportReceiptDetailType>();
   const [page, setPage] = useState<number>(1);
@@ -56,7 +54,7 @@ const ISExport = () => {
 
   return (
     <>
-      {(!isShowDetail && !isShowEdit) && (
+      {(!isShowDetail) && (
         <div className="export-food-component">
           <div className="table-component">
             <div className="filter">

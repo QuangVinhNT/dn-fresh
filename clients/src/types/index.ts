@@ -9,5 +9,5 @@ export type {
   IObject,
   AdminProductList, AdminProductDetail,
   OrderBy,
-  Filter
+  Filter,  
 }

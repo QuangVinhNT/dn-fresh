@@ -1,12 +1,16 @@
-import { BackComponent, ButtonComponent, OkCancelModal, OrderStatusComponent } from "@/components";
+import { AdminContainerComponent, BackComponent, ButtonComponent, InputComponent, OkCancelModal, OrderStatusComponent } from "@/components";
 import { OrderDetail, OrderStatus, PaymentMethod } from "@/types/Order";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import SeparateNumber from "@/utils/separateNumber";
 import './DSOrderDetail.scss';
 import { useState } from "react";
 import webColors from "@/constants/webColors";
-import { overlayStore } from "@/store";
-import { confirmExportOrder, confirmFinishOrder } from "@/api/orderApi";
+import { overlayStore, userStore } from "@/store";
+import { confirmCancelOrder, confirmExportOrder, confirmFinishOrder } from "@/api/orderApi";
+import { toast } from "react-toastify";
+import { IoClose } from "react-icons/io5";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FormValues } from "@/types/Object";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,8 +21,31 @@ interface IProps {
 const DSOrderDetail = (props: IProps) => {
   const { setIsShowDetail, detailData, onUpdated } = props;
   const [isShowConfirmModal, setIsShowConfirmModal] = useState(false);
-
+  const [isShowNote, setIsShowNote] = useState(false);
+  const { register, reset, handleSubmit } = useForm<FormValues>();
   const { showOverlay, hideOverlay } = overlayStore();
+  const { user } = userStore();
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    try {
+      const payload = {
+        maDonHang: detailData?.maDonHang + '',
+        maNhanVien: user?.id + '',
+        ghiChu: data['note'].toString()
+      };
+      const cancelResult = await confirmCancelOrder(payload.maDonHang, payload.maNhanVien, payload.ghiChu);
+      console.log('Cancel result:', cancelResult);
+      setIsShowNote(false);
+      hideOverlay();
+      reset();
+      onUpdated();
+      toast.success('Hủy đơn hàng thành công!');
+      setIsShowDetail(false);
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
+    }
+  };
+
   return (
     <>
       {detailData && (
@@ -38,16 +65,28 @@ const DSOrderDetail = (props: IProps) => {
               />
             )}
             {detailData.trangThai === 3 && (
-              <ButtonComponent
-                className="btn-confirm"
-                type="no-submit"
-                label="Xác nhận hoàn thành"
-                variant="secondary"
-                onClick={() => {
-                  setIsShowConfirmModal(true);
-                  showOverlay();
-                }}
-              />
+              <div style={{ display: 'flex', gap: '4px' }}>
+                <ButtonComponent
+                  className="btn-confirm"
+                  type="no-submit"
+                  label="Hủy đơn"
+                  variant="danger"
+                  onClick={() => {
+                    setIsShowNote(true);
+                    showOverlay();
+                  }}
+                />
+                <ButtonComponent
+                  className="btn-confirm"
+                  type="no-submit"
+                  label="Xác nhận hoàn thành"
+                  variant="secondary"
+                  onClick={() => {
+                    setIsShowConfirmModal(true);
+                    showOverlay();
+                  }}
+                />
+              </div>
             )}
           </div>
           <div className="order-detail-content">
@@ -88,37 +127,74 @@ const DSOrderDetail = (props: IProps) => {
               </div>
             </div>
           </div>
-
-          <div className="confirm-modal" style={{ top: isShowConfirmModal ? '50%' : '-100%' }}>
-            <OkCancelModal
-              data={{
-                message: <p>Xác nhận <b style={{ color: detailData.trangThai === 2 ? webColors.adminPrimary : webColors.primary }}>{detailData.trangThai === 2 ? 'xuất kho' : 'hoàn thành'}</b> đơn hàng <b>{detailData?.maDonHang}</b> chứ?</p>
-              }}
-              onOk={async () => {
-                if (detailData.trangThai === 2) {
-                  const result = await confirmExportOrder(detailData.maDonHang, 'ND59D5C1F8');
-                  console.log(result);
-                } else {
-                  const result = await confirmFinishOrder(detailData.maDonHang, 'ND59D5C1F8');
-                  console.log(result);
-                }
-                setIsShowDetail(false);
-                setIsShowConfirmModal(false);
-                hideOverlay();
-                onUpdated();
-              }}
-              onCancel={() => {
-                setIsShowConfirmModal(false);
-                hideOverlay();
-              }}
-              onClose={() => {
-                setIsShowConfirmModal(false);
-                hideOverlay();
-              }}
-            />
-          </div>
         </div>
       )}
+      <div className="confirm-modal" style={{ top: isShowConfirmModal ? '50%' : '-100%' }}>
+        <OkCancelModal
+          data={{
+            message: <p>Xác nhận <b style={{ color: detailData?.trangThai === 2 ? webColors.adminPrimary : webColors.primary }}>{detailData?.trangThai === 2 ? 'xuất kho' : 'hoàn thành'}</b> đơn hàng <b>{detailData?.maDonHang}</b> chứ?</p>
+          }}
+          onOk={async () => {
+            try {
+              if (detailData?.trangThai === 2) {
+                const result = await confirmExportOrder(detailData.maDonHang, user?.id + '');
+                console.log(result);
+              } else if (detailData?.trangThai === 3) {
+                const result = await confirmFinishOrder(detailData.maDonHang, user?.id + '');
+                console.log(result);
+              }
+              setIsShowDetail(false);
+              setIsShowConfirmModal(false);
+              hideOverlay();
+              onUpdated();
+              toast.success(`Xác nhận ${detailData?.trangThai === 2 ? 'xuất kho' : 'hoàn thành'} thành công!`);
+            } catch (error) {
+              toast.error(`Lỗi: ${error}`);
+            }
+          }}
+          onCancel={() => {
+            setIsShowConfirmModal(false);
+            hideOverlay();
+          }}
+          onClose={() => {
+            setIsShowConfirmModal(false);
+            hideOverlay();
+          }}
+        />
+      </div>
+      <form className="cancel-note-modal" style={{ top: isShowNote ? '50%' : '-100%', width: '50%' }} onSubmit={handleSubmit(onSubmit)}>
+        <AdminContainerComponent
+          title='Lý do hủy đơn'
+          className="info-container"
+          extraTitle={
+            <div className="save-close">
+              <ButtonComponent
+                label='Lưu'
+                type="submit"
+                className="save-btn"
+                variant="primary"
+              />
+              <div className="close-btn">
+                <IoClose size={28} className="close-icon" onClick={() => {
+                  setIsShowNote(false);
+                  hideOverlay();
+                  reset();
+                }} />
+              </div>
+            </div>
+          }
+          children={
+            <div className="export-receipt-info">
+              <InputComponent
+                name="note"
+                placeholder="Nhập lý do hủy đơn"
+                isTextarea
+                register={register}
+              />
+            </div>
+          }
+        />
+      </form>
     </>
   );
 };

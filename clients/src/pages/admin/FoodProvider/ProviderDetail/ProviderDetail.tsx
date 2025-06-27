@@ -5,6 +5,7 @@ import { dateFormatter, datetimeFormatter } from "@/utils/datetimeFormatter";
 import { overlayStore } from "@/store";
 import { useState } from "react";
 import { deleteProvider } from "@/api/providerApi";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -147,12 +148,17 @@ const ProviderDetail = (props: IProps) => {
                 message: <p>Bạn chắc chắn muốn xóa nhà cung cấp này chứ?</p>
               }}
               onOk={async () => {
-                const deleteResult = await deleteProvider(detailData.maNhaCungCap);
-                console.log(deleteResult);
-                setIsShowDeleteModal(false);
-                onDeleted();
-                hideOverlay();
-                setIsShowDetail(false);
+                try {
+                  const deleteResult = await deleteProvider(detailData.maNhaCungCap);
+                  console.log(deleteResult);
+                  setIsShowDeleteModal(false);
+                  onDeleted();
+                  hideOverlay();
+                  setIsShowDetail(false);
+                  toast.success('Xóa nhà cung cấp thành công!');
+                } catch (error) {
+                  toast.error(`Lỗi: ${error}`);
+                }
               }}
               onCancel={() => {
                 setIsShowDeleteModal(false);

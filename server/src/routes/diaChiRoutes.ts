@@ -13,4 +13,8 @@ diaChiRoutes.get('/phuong-xa', authMiddleware, (req: Request, res: Response) => 
   return diaChiController.getAllCommuneByCityId(req, res);
 });
 
+diaChiRoutes.get('/:id', (req: Request, res: Response) => {
+  return diaChiController.getDetailById(req, res);
+});
+
 export default diaChiRoutes;

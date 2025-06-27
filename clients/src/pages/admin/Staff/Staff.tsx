@@ -15,6 +15,7 @@ import StaffDetail from "./StaffDetail/StaffDetail";
 import AdminIcon from '@/assets/images/admin-icon.png';
 import DeliveryStaffIcon from '@/assets/images/delivery-icon.png';
 import InventoryStaffIcon from '@/assets/images/inventory-icon.png';
+import { toast } from "react-toastify";
 
 const headers = ['Mã người dùng', 'Họ tên', 'Ngày sinh', 'Giới tính', 'Trạng thái', 'Vai trò', 'Ngày tạo'];
 
@@ -85,7 +86,7 @@ const Staff = () => {
       setAccountRoleData({
         id: response.maNguoiDung,
         roleId: response.danhSachVaiTro.filter((roleId: string) => roleId !== 'VT004')?.[0] || ''
-      })
+      });
     } catch (error) {
       console.error('Error when load product:', error);
     } finally {
@@ -233,17 +234,22 @@ const Staff = () => {
                 message: <p>Bạn chắc chắn muốn <b style={{ color: accountStatusData.type === 'lock' ? 'red' : webColors.adminPrimary }}>{accountStatusData.type === 'lock' ? 'khóa' : 'mở khóa'}</b> tài khoản <b>{accountStatusData.id}</b> chứ?</p>
               }}
               onOk={async () => {
-                if (accountStatusData.type === 'lock') {
-                  const lockResult = await lockAccount(accountStatusData.id);
-                  console.log(lockResult);
-                } else {
-                  const unlockResult = await unlockAccount(accountStatusData.id);
-                  console.log(unlockResult);
+                try {
+                  if (accountStatusData.type === 'lock') {
+                    const lockResult = await lockAccount(accountStatusData.id);
+                    console.log(lockResult);
+                  } else {
+                    const unlockResult = await unlockAccount(accountStatusData.id);
+                    console.log(unlockResult);
+                  }
+                  setIsShowDetail(false);
+                  setIsShowLockOkCancel(false);
+                  fetchStaffs();
+                  hideOverlay();
+                  toast.success(`${accountStatusData.type === 'lock' ? 'Khóa' : 'Mở khóa'} tài khoản nhân sự thành công!`);
+                } catch (error) {
+                  toast.error(`Lỗi: ${error}`);
                 }
-                setIsShowDetail(false);
-                setIsShowLockOkCancel(false);
-                fetchStaffs();
-                hideOverlay();
               }}
               onCancel={() => {
                 setIsShowLockOkCancel(false);
@@ -262,12 +268,17 @@ const Staff = () => {
                 message: <p>Bạn chắc chắn muốn hủy tài khoản nhân sự của người dùng <b>{accountStatusData.id}</b> chứ?</p>
               }}
               onOk={async () => {
-                const deleteResult = await deleteAllStaffRole(accountStatusData.id);
-                console.log(deleteResult)
-                setIsShowDetail(false);
-                setIsShowDeleteOkCancel(false);
-                fetchStaffs();
-                hideOverlay();
+                try {
+                  const deleteResult = await deleteAllStaffRole(accountStatusData.id);
+                  console.log(deleteResult);
+                  setIsShowDetail(false);
+                  setIsShowDeleteOkCancel(false);
+                  fetchStaffs();
+                  hideOverlay();
+                  toast.success('Hủy tài khoản nhân sự thành công!');
+                } catch (error) {
+                  toast.error(`Lỗi: ${error}`);
+                }
               }}
               onCancel={() => {
                 setIsShowDeleteOkCancel(false);
@@ -315,16 +326,21 @@ const Staff = () => {
 
           <div className="ok-cancel-roles-modal" style={{ top: isShowRolesOkCancel ? '50%' : '-100%' }}>
             <OkCancelModal
-            data={{
+              data={{
                 message: <p>Bạn chắc chắn muốn đổi vai trò <b style={{ color: webColors.adminPrimary }}>{Role[accountRoleData.roleId as keyof typeof Role]}</b> cho tài khoản <b>{accountRoleData.id}</b> chứ?</p>
               }}
-              onOk={async () => {                
-                const updateResult = await updateRole(accountRoleData.id, accountRoleData.roleId);
-                console.log(updateResult);
-                setIsShowDetail(false);
-                setIsShowRolesOkCancel(false);
-                fetchStaffs();
-                hideOverlay();
+              onOk={async () => {
+                try {
+                  const updateResult = await updateRole(accountRoleData.id, accountRoleData.roleId);
+                  console.log(updateResult);
+                  setIsShowDetail(false);
+                  setIsShowRolesOkCancel(false);
+                  fetchStaffs();
+                  hideOverlay();
+                  toast.success('Cập nhật nhân sự thành công!');
+                } catch (error) {
+                  toast.error(`Lỗi: ${error}`);
+                }
               }}
               onCancel={() => {
                 setIsShowRolesOkCancel(false);

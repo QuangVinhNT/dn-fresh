@@ -8,7 +8,7 @@ export class ThucPhamYeuThichDAO {
     const offset = (page - 1) * limit;
     try {
       const [rows] = await pool.query(`
-      SELECT fp.maThucPham, p.tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, p.donGia, p.tiLeKhuyenMai, p.trangThai
+      SELECT fp.maThucPham, p.tenThucPham, COALESCE(JSON_ARRAYAGG(pi.hinhAnh), JSON_ARRAY()) as hinhAnh, p.donGia, p.tiLeKhuyenMai, p.trangThai, p.donViTinh
       FROM thucphamyeuthich as fp
       LEFT JOIN khothucpham as p ON p.maThucPham = fp.maThucPham
       LEFT JOIN anhthucpham as pi ON pi.maThucPham = fp.maThucPham

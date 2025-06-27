@@ -9,6 +9,7 @@ import { IoClose } from "react-icons/io5";
 import './ISAddImportProduct.scss';
 import { InsertProductToImportReceiptPayload } from "@/types/ImportReceiptDetail";
 import { insertProductToImportReceipt } from "@/api/importReceiptApi";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowAdd: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,21 +27,26 @@ const ISAddImportProduct = (props: IProps) => {
   const { register, reset, handleSubmit, setValue } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const payload: InsertProductToImportReceiptPayload = {
-      maThucPham: product?.maThucPham + '',
-      ngaySanXuat: new Date(data['mfg'] + ''),
-      hanSuDung: new Date(data['exp'] + ''),
-      donGiaNhap: +data['price'],
-      soLuong: +data['quantity']
+    try {
+      const payload: InsertProductToImportReceiptPayload = {
+        maThucPham: product?.maThucPham + '',
+        ngaySanXuat: new Date(data['mfg'] + ''),
+        hanSuDung: new Date(data['exp'] + ''),
+        donGiaNhap: +data['price'],
+        soLuong: +data['quantity']
+      };
+      const insertResult = await insertProductToImportReceipt(importReceiptId, payload);
+      console.log('Insert result:', insertResult);
+      setIsShowAdd(false);
+      hideOverlay();
+      setProduct(undefined);
+      setProducts([]);
+      reset();
+      onAdded();
+      toast.success('Thêm thực phẩm thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
     }
-    const insertResult = await insertProductToImportReceipt(importReceiptId, payload);
-    console.log('Insert result:', insertResult);
-    setIsShowAdd(false);
-    hideOverlay();
-    setProduct(undefined);
-    setProducts([])
-    reset();
-    onAdded();
   };
 
   const fetchProductsByName = async (productName: string) => {

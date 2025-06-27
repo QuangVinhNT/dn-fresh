@@ -19,7 +19,7 @@ export class GioHangService {
       const result = await Promise.all(productCarts.map(async (productCart) => (
         {
           ...productCart,
-          hinhAnh: await this.anhThucPhamDAO.getOneByProductId(productCart.maThucPham)
+          hinhAnh: [(await this.anhThucPhamDAO.getOneByProductId(productCart.maThucPham) as RowDataPacket[])[0].hinhAnh]
         }
       )));
       return result;

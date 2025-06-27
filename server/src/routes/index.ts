@@ -10,6 +10,8 @@ import phieuXuatRoutes from "./phieuXuatRoutes.js";
 import thucPhamYeuThichRoutes from "./thucPhamYeuThichRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
 import vaiTroNguoiDungRoutes from "./vaiTroNguoiDungRoutes.js";
+import gioHangRoutes from "./gioHangRoutes.js";
+import vnPayRoutes from "./vnPayRoutes.js";
 
 const router = Router();
 
@@ -21,9 +23,11 @@ router.use('/v1/nha-cung-cap', nhaCungCapRoutes);
 router.use('/v1/phieu-nhap', phieuNhapRoutes);
 router.use('/v1/phieu-xuat', phieuXuatRoutes);
 router.use('/v1/nguoi-dung', nguoiDungRoutes);
+router.use('/v1/gio-hang', gioHangRoutes);
 
 router.use('/upload', uploadRoutes);
 router.use('/dia-chi', diaChiRoutes);
 router.use('/vai-tro', vaiTroNguoiDungRoutes);
+router.use('/vnpay', vnPayRoutes);
 
 export default router;

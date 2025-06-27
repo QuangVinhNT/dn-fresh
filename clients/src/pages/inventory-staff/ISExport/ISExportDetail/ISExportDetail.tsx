@@ -1,5 +1,5 @@
 import { deleteAllProductFromExportReceipt, getExportReceiptById, requestApproveExportReceipt } from "@/api/exportReceiptApi";
-import { getReadyOrders } from "@/api/orderApi";
+import { getReadyOrders, unpackOrders } from "@/api/orderApi";
 import { AdminContainerComponent, BackComponent, ButtonComponent, InfoItemComponent, OkCancelModal } from "@/components";
 import webColors from "@/constants/webColors";
 import { overlayStore, userStore } from "@/store";
@@ -9,6 +9,7 @@ import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useEffect, useState } from "react";
 import ISAddExportProduct from "./ISAddExportProduct/ISAddExportProduct";
 import './ISExportDetail.scss';
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -63,6 +64,9 @@ const ISExportDetail = (props: IProps) => {
                 onBack={async () => {
                   setIsShowDetail(false);
                   await deleteAllProductFromExportReceipt(detailData.maPhieuXuat);
+                  await unpackOrders(detailData.maPhieuXuat);
+                  fetchReadyExportOrders();
+                  fetchExportProducts();
                 }}
               />
               {detailData.trangThai === 3 && (
@@ -198,12 +202,17 @@ const ISExportDetail = (props: IProps) => {
                 message: <p>Bạn chắc chắn đã <b style={{ color: webColors.primary }}>hoàn thành</b> phiếu nhập này chứ?</p>
               }}
               onOk={async () => {
-                const result = await requestApproveExportReceipt(detailData.maPhieuXuat, user?.id + '');
-                console.log('Result:', result);
-                setIsShowConfirmFinish(false);
-                setIsShowDetail(false);
-                onFinish();
-                hideOverlay();
+                try {
+                  const result = await requestApproveExportReceipt(detailData.maPhieuXuat, user?.id + '');
+                  console.log('Result:', result);
+                  setIsShowConfirmFinish(false);
+                  setIsShowDetail(false);
+                  onFinish();
+                  hideOverlay();
+                  toast.success('Xác nhận hoàn thành phiếu nhập thành công!')
+                } catch (error) {
+                  toast.error(`Lỗi: ${error}`);
+                }
               }}
               onCancel={() => {
                 setIsShowConfirmFinish(false);

@@ -11,6 +11,7 @@ interface ICartState {
   cart: CartItem[];
   showCart: () => void;
   hideCart: () => void;
+  setCart: (cartItems: CartItem[]) => void;
   addToCart: (cartItem: CartItem) => void;
   removeFromCart: (foodId: string) => void;
   clearCart: () => void;
@@ -25,6 +26,7 @@ export const cartStore = create<ICartState>()(
       cart: [],
       showCart: () => set({ isShowCart: true }),
       hideCart: () => set({ isShowCart: false }),
+      setCart: (cartItems: CartItem[]) => set({ cart: cartItems }),
       addToCart: (cartItem: CartItem) => {
         const existingItem = get().cart.find(item => item.maThucPham === cartItem.maThucPham);
         if (existingItem) {

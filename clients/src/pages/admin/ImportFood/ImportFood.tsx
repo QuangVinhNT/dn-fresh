@@ -86,7 +86,7 @@ const ImportFood = () => {
                 <FilterComponent
                   filterItems={[
                     {
-                      name: 'Chưa hoàn thành',
+                      name: 'Đã hủy',
                       value: 0,
                     },
                     {
@@ -98,7 +98,7 @@ const ImportFood = () => {
                       value: 2,
                     },
                     {
-                      name: 'Đã hủy',
+                      name: 'Chưa hoàn thành',
                       value: 3,
                     }
                   ]}

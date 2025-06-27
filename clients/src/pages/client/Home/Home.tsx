@@ -51,7 +51,7 @@ const Home = () => {
   const fetchFruits = async () => {
     showLoading();
     try {
-      const response = await getProducts(1, 4, 'DM004', { columnName: 'p.tenThucPham', direction: 'ASC' }, '');
+      const response = await getProducts(1, 4, 'DM006', { columnName: 'p.tenThucPham', direction: 'ASC' }, '');
       setFruits(response.data);
     } catch (error) {
       console.error('Error when load product:', error);
@@ -142,7 +142,7 @@ const Home = () => {
           {meats && (
             <BaseProduct
               categoryImg={BgCate3}
-              categoryName="Thực phẩm tươi"
+              categoryName="Thịt"
               items={meats}
             />
           )}

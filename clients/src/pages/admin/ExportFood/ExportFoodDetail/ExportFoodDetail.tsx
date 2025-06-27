@@ -6,6 +6,7 @@ import { overlayStore } from "@/store";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { approveExportReceipt, softDeleteExportReceipt } from "@/api/exportReceiptApi";
 import webColors from "@/constants/webColors";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -166,13 +167,18 @@ const ExportFoodDetail = (props: IProps) => {
                 message: <p>Bạn chắc chắn muốn <b style={{ color: 'red' }}>hủy</b> phiếu xuất <b>{detailData.maPhieuXuat}</b> chứ?</p>
               }}
               onOk={async () => {
-                console.log(detailData.maPhieuXuat, detailData.maQuanTriVien);
-                const softDeleteResult = await softDeleteExportReceipt(detailData.maPhieuXuat, detailData.maQuanTriVien);
-                console.log('Cancel result:', softDeleteResult);
-                setIsShowDetail(false);
-                setIsShowOkCancel(false);
-                onSoftDeleted();
-                hideOverlay();
+                try {
+                  console.log(detailData.maPhieuXuat, detailData.maQuanTriVien);
+                  const softDeleteResult = await softDeleteExportReceipt(detailData.maPhieuXuat, detailData.maQuanTriVien);
+                  console.log('Cancel result:', softDeleteResult);
+                  setIsShowDetail(false);
+                  setIsShowOkCancel(false);
+                  onSoftDeleted();
+                  hideOverlay();
+                  toast.success('Hủy phiếu xuất thành công!');
+                } catch (error) {
+                  toast.error(`Lỗi: ${error}`);
+                }
               }}
               onCancel={() => {
                 setIsShowOkCancel(false);
@@ -187,15 +193,20 @@ const ExportFoodDetail = (props: IProps) => {
           <div className="ok-cancel-approve" style={{ top: isShowConfirmApprove ? '50%' : '-100%' }}>
             <OkCancelModal
               data={{
-                message: <p>Bạn chắc chắn muốn <b style={{ color: webColors.primary }}>duyệt</b> phiếu nhập <b>{detailData.maPhieuXuat}</b> chứ?</p>
+                message: <p>Bạn chắc chắn muốn <b style={{ color: webColors.primary }}>duyệt</b> phiếu xuất <b>{detailData.maPhieuXuat}</b> chứ?</p>
               }}
               onOk={async () => {
-                const approveResult = await approveExportReceipt(detailData.maPhieuXuat, detailData.maQuanTriVien);
-                console.log('Approve result:', approveResult);
-                setIsShowDetail(false);
-                setIsShowConfirmApprove(false);
-                onUpdated();
-                hideOverlay();
+                try {
+                  const approveResult = await approveExportReceipt(detailData.maPhieuXuat, detailData.maQuanTriVien);
+                  console.log('Approve result:', approveResult);
+                  setIsShowDetail(false);
+                  setIsShowConfirmApprove(false);
+                  onUpdated();
+                  hideOverlay();
+                  toast.success('Duyệt phiếu xuất thành công!');
+                } catch (error) {
+                  toast.error(`Lỗi: ${error}`);
+                }
               }}
               onCancel={() => {
                 setIsShowConfirmApprove(false);

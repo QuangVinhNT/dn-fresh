@@ -8,6 +8,8 @@ import { ReadyOrder } from "@/types/Order";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import './ISAddExportProduct.scss';
+import { confirmPackOrder, unpackOrders } from "@/api/orderApi";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowAdd: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,57 +35,64 @@ const ISAddExportProduct = (props: IProps) => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const deleteAllResult = await deleteAllProductFromExportReceipt(exportReceiptId);
-    console.log(deleteAllResult);
+    try {
+      const deleteAllResult = await deleteAllProductFromExportReceipt(exportReceiptId);
+      const unpackAllResult = await unpackOrders(exportReceiptId);
+      // console.log('Unpack result:', unpackAllResult);
 
-    const chooseOrders = readyOrders?.filter(readyOrder => (data['orders'] as string[]).includes(readyOrder.maDonHang)) || [];
+      const chooseOrders = readyOrders?.filter(readyOrder => (data['orders'] as string[]).includes(readyOrder.maDonHang)) || [];
 
-    const mergedOrders = new Map();
-    for (const order of chooseOrders) {
-      for (const item of order.danhSachThucPham) {
-        const existing = mergedOrders.get(item.maThucPham);
-        if (existing) {
-          existing.soLuong += item.soLuong;
-        } else {
-          mergedOrders.set(item.maThucPham, { ...item });
-        }
-      }
-    }
-
-    const products = Array.from(mergedOrders.values());
-    const exportProducts: any[] = [];
-    for (const product of products) {
-      const readyProducts = await getByIdForExport(product.maThucPham);
-      let productQuantity = +product.soLuong;
-      if (readyProducts?.length > 0) {
-        for (const readyProduct of readyProducts) {
-          if (productQuantity >= readyProduct.soLuong) {
-            exportProducts.push(readyProduct);
-            productQuantity -= readyProduct.soLuong;
+      const mergedOrders = new Map();
+      for (const order of chooseOrders) {
+        const packResult = await confirmPackOrder(order.maDonHang, exportReceiptId);
+        // console.log('Pack result', packResult);
+        for (const item of order.danhSachThucPham) {
+          const existing = mergedOrders.get(item.maThucPham);
+          if (existing) {
+            existing.soLuong += item.soLuong;
           } else {
-            exportProducts.push({ ...readyProduct, soLuong: productQuantity });
-            productQuantity = 0;
-            break;
+            mergedOrders.set(item.maThucPham, { ...item });
           }
         }
-      } else {
-        console.error('Hết hàng');
       }
-    }
 
-    for (const product of exportProducts) {
-      const payload: InsertProductToExportReceiptPayload = {
-        maLoHang: product.maLoHang,
-        maThucPham: product.maThucPham,
-        soLuong: product.soLuong
-      };
-      const insertResult = await insertProductToExportReceipt(exportReceiptId, payload);
-      console.log(insertResult);
-    }
+      const products = Array.from(mergedOrders.values());
+      const exportProducts: any[] = [];
+      for (const product of products) {
+        const readyProducts = await getByIdForExport(product.maThucPham);
+        let productQuantity = +product.soLuong;
+        if (readyProducts?.length > 0) {
+          for (const readyProduct of readyProducts) {
+            if (productQuantity >= readyProduct.soLuong) {
+              exportProducts.push(readyProduct);
+              productQuantity -= readyProduct.soLuong;
+            } else {
+              exportProducts.push({ ...readyProduct, soLuong: productQuantity });
+              productQuantity = 0;
+              break;
+            }
+          }
+        } else {
+          console.error('Hết hàng');
+        }
+      }
 
-    onAdded();
-    hideOverlay();
-    setIsShowAdd(false);
+      for (const product of exportProducts) {
+        const payload: InsertProductToExportReceiptPayload = {
+          maLoHang: product.maLoHang,
+          maThucPham: product.maThucPham,
+          soLuong: product.soLuong
+        };
+        const insertResult = await insertProductToExportReceipt(exportReceiptId, payload);
+      }
+
+      onAdded();
+      hideOverlay();
+      setIsShowAdd(false);
+      toast.success('Cập nhật thực phẩm trong phiếu xuất thành công!')
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
+    }
   };
 
   const { hideOverlay } = overlayStore();

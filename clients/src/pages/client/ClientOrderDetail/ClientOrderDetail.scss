@@ -4,6 +4,7 @@
   .client-order-detail-content {
     max-width: 1280px;
     margin: 64px auto;
+    position: relative;
 
     .order-status {
       width: 100%;
@@ -11,6 +12,12 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 64px;
+    }
+
+    .cancel-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
     }
 
     .order-info-products {
@@ -106,6 +113,32 @@
             }
           }
         }
+      }
+    }
+  }
+}
+
+.cancel-note-modal {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  transition: all .5s;
+}
+
+.save-close {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  .close-btn {
+    .close-icon {
+      transition: all .3s;
+      cursor: pointer;
+
+      &:hover {
+        color: red;
       }
     }
   }

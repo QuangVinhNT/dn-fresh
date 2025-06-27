@@ -15,6 +15,7 @@ type Product = {
   nhaCungCap: string;
   maLoHang: string;
   hanSuDung: Date;
+  soLuongChoXuat: number;
 }
 
 export enum ProductStatus {
@@ -31,7 +32,7 @@ type AdminProductDetail = Pick<Product, 'maThucPham' | 'tenThucPham' | 'hinhAnh'
 
 type ProductPackage = Pick<Product, 'maLoHang' | 'soLuongTonKho' | 'donViTinh' | 'hanSuDung' | 'nhaCungCap'>
 
-type ProductDetail = Pick<Product, 'maThucPham' | 'tenThucPham' | 'donGia' | 'soLuongTonKho' | 'donViTinh' | 'moTa' | 'hinhAnh' | 'trangThai' | 'tiLeKhuyenMai'>
+type ProductDetail = Pick<Product, 'maThucPham' | 'tenThucPham' | 'donGia' | 'soLuongTonKho' | 'donViTinh' | 'moTa' | 'hinhAnh' | 'trangThai' | 'tiLeKhuyenMai' | 'soLuongChoXuat'>
 
 type InsertProductPayload = Pick<Product, 'tenThucPham' | 'donGia' | 'donViTinh' | 'moTa' | 'maDanhMuc' | 'hinhAnh'>
 

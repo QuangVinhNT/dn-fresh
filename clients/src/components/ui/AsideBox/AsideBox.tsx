@@ -4,21 +4,26 @@ import './AsideBox.scss';
 interface IProps {
   title: string;
   type: 'category' | 'checkbox-filter';
-  cateData?: {maDanhMuc: string, tenDanhMuc: string}[];
+  cateData?: { maDanhMuc: string, tenDanhMuc: string; }[];
   filterData?: { labelType: string, filterData: Filter[]; }[];
   setCategoryId?: React.Dispatch<React.SetStateAction<string>>;
+  choosingId?: string;
+  setPage?: React.Dispatch<React.SetStateAction<number>>;
+  setLimit?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const AsideBox = (props: IProps) => {
-  const { title, type, cateData, filterData, setCategoryId } = props;
+  const { title, type, cateData, filterData, setCategoryId, choosingId, setPage, setLimit } = props;
   return (
     <div className="aside-box-component">
       <span className="title">{title}</span>
       {(type === 'category' && cateData) && (
         <div className="category-content">
           {cateData.map((item, index) => (
-            <span key={index} onClick={() => {
-              setCategoryId && setCategoryId(item.maDanhMuc.toString())
+            <span key={index} style={{ fontWeight: (choosingId === item.maDanhMuc) ? 500 : 400 }} onClick={() => {
+              setCategoryId && setCategoryId(item.maDanhMuc.toString());
+              setPage && setPage(1);
+              setLimit && setLimit(12);
             }}>
               {item.tenDanhMuc.toString()}
             </span>

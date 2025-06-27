@@ -49,13 +49,14 @@
       }
     }
   }
+}
 
-  .ok-cancel-delete, .ok-cancel-approve {
-    position: absolute;
-    width: 100%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 999;
-    transition: all .5s;
-  }
+.ok-cancel-delete,
+.ok-cancel-approve {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  transition: all .5s;
 }

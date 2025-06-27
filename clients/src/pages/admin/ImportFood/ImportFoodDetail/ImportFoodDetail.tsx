@@ -7,6 +7,7 @@ import SeparateNumber from "@/utils/separateNumber";
 import { useState } from "react";
 import './ImportFoodDetail.scss';
 import webColors from "@/constants/webColors";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -176,54 +177,64 @@ const ImportFoodDetail = (props: IProps) => {
               </table>
             </div>
           </div>
-          <div className="ok-cancel-delete" style={{ top: isShowConfirmCancel ? '50%' : '-100%' }}>
-            <OkCancelModal
-              data={{
-                message: <p>Bạn chắc chắn muốn <b style={{ color: 'red' }}>hủy</b> phiếu nhập <b>{detailData.maPhieuNhap}</b> chứ?</p>
-              }}
-              onOk={async () => {
-                const softDeleteResult = await softDeleteImportReceipt(detailData.maPhieuNhap, detailData.maQuanTriVien);
-                console.log('Cancel result:', softDeleteResult);
-                setIsShowDetail(false);
-                setIsShowConfirmCancel(false);
-                onUpdated();
-                hideOverlay();
-              }}
-              onCancel={() => {
-                setIsShowConfirmCancel(false);
-                hideOverlay();
-              }}
-              onClose={() => {
-                setIsShowConfirmCancel(false);
-                hideOverlay();
-              }}
-            />
-          </div>
-          <div className="ok-cancel-approve" style={{ top: isShowConfirmApprove ? '50%' : '-100%' }}>
-            <OkCancelModal
-              data={{
-                message: <p>Bạn chắc chắn muốn <b style={{ color: webColors.primary }}>duyệt</b> phiếu nhập <b>{detailData.maPhieuNhap}</b> chứ?</p>
-              }}
-              onOk={async () => {
-                const approveResult = await approveImportReceipt(detailData.maPhieuNhap, detailData.maQuanTriVien);
-                console.log('Approve result:', approveResult);
-                setIsShowDetail(false);
-                setIsShowConfirmApprove(false);
-                onUpdated();
-                hideOverlay();
-              }}
-              onCancel={() => {
-                setIsShowConfirmApprove(false);
-                hideOverlay();
-              }}
-              onClose={() => {
-                setIsShowConfirmApprove(false);
-                hideOverlay();
-              }}
-            />
-          </div>
         </div>
       )}
+      <div className="ok-cancel-delete" style={{ top: isShowConfirmCancel ? '50%' : '-100%' }}>
+        <OkCancelModal
+          data={{
+            message: <p>Bạn chắc chắn muốn <b style={{ color: 'red' }}>hủy</b> phiếu nhập <b>{detailData?.maPhieuNhap}</b> chứ?</p>
+          }}
+          onOk={async () => {
+            try {
+              const softDeleteResult = await softDeleteImportReceipt(detailData?.maPhieuNhap + '', detailData?.maQuanTriVien + '');
+              console.log('Cancel result:', softDeleteResult);
+              setIsShowDetail(false);
+              setIsShowConfirmCancel(false);
+              onUpdated();
+              hideOverlay();
+              toast.success('Hủy phiếu nhập thành công!');
+            } catch (error) {
+              toast.error(`Lỗi: ${error}`);
+            }
+          }}
+          onCancel={() => {
+            setIsShowConfirmCancel(false);
+            hideOverlay();
+          }}
+          onClose={() => {
+            setIsShowConfirmCancel(false);
+            hideOverlay();
+          }}
+        />
+      </div>
+      <div className="ok-cancel-approve" style={{ top: isShowConfirmApprove ? '50%' : '-100%' }}>
+        <OkCancelModal
+          data={{
+            message: <p>Bạn chắc chắn muốn <b style={{ color: webColors.primary }}>duyệt</b> phiếu nhập <b>{detailData?.maPhieuNhap}</b> chứ?</p>
+          }}
+          onOk={async () => {
+            try {
+              const approveResult = await approveImportReceipt(detailData?.maPhieuNhap + '', detailData?.maQuanTriVien + '');
+              console.log('Approve result:', approveResult);
+              setIsShowDetail(false);
+              setIsShowConfirmApprove(false);
+              onUpdated();
+              hideOverlay();
+              toast.success('Duyệt phiếu nhập thành công!');
+            } catch (error) {
+              toast.error(`Lỗi: ${error}`);
+            }
+          }}
+          onCancel={() => {
+            setIsShowConfirmApprove(false);
+            hideOverlay();
+          }}
+          onClose={() => {
+            setIsShowConfirmApprove(false);
+            hideOverlay();
+          }}
+        />
+      </div>
     </>
   );
 };

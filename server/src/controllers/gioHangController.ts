@@ -61,12 +61,12 @@ export class GioHangController {
   public delete = async (req: Request, res: Response) => {
     try {
       const userId = req.params.id;
-      const payload = req.body;
-      if (!userId || !payload) {
+      const { maThucPham } = req.query;
+      if (!userId) {
         res.status(400).json({ message: 'Data not found!' });
         return;
-      }
-      const gioHang = new GioHang(payload.maThucPham, userId, 0);
+      }      
+      const gioHang = new GioHang(typeof maThucPham === 'undefined' ? '' : maThucPham + '', userId, 0);
       const result = await this.gioHangService.delete(gioHang);
       res.json(result);
     } catch (error) {

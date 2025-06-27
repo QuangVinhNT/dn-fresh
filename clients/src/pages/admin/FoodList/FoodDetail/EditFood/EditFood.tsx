@@ -9,6 +9,7 @@ import { UpdateProductPayload } from "@/types/Product";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import './EditFood.scss';
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,27 +35,32 @@ const EditFood = (props: IProps) => {
   const { register, handleSubmit, reset, watch } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
-    const fileArray = formData['food-img'];
-    let imageUrls = [];
-    if (fileArray.length > 0 && fileArray instanceof FileList) {
-      imageUrls = await handleUpload(fileArray);
+    try {
+      const fileArray = formData['food-img'];
+      let imageUrls = [];
+      if (fileArray.length > 0 && fileArray instanceof FileList) {
+        imageUrls = await handleUpload(fileArray);
+      }
+      const payload: UpdateProductPayload = {
+        tenThucPham: formData['food-name'].toString(),
+        donGia: +formData['food-price'],
+        maDanhMuc: formData['food-type'].toString(),
+        moTa: formData['food-desc'].toString(),
+        donViTinh: formData['food-unit'].toString(),
+        hinhAnh: imageUrls.length > 0 ? imageUrls.map((image: { url: string, type: string; }) => image.url) : [],
+        tiLeKhuyenMai: +formData['food-discount'] / 100,
+        trangThai: +formData['food-status']
+      };
+      console.log('Form data:', formData);
+      const updateResult = await updateProduct(data?.maThucPham + '', payload);
+      console.log('Update result:', updateResult);
+      setIsShowDetail(false);
+      setIsShowEditFood(false);
+      onEdited();
+      toast.success('Cập nhật thực phẩm thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
     }
-    const payload: UpdateProductPayload = {
-      tenThucPham: formData['food-name'].toString(),
-      donGia: +formData['food-price'],
-      maDanhMuc: formData['food-type'].toString(),
-      moTa: formData['food-desc'].toString(),
-      donViTinh: formData['food-unit'].toString(),
-      hinhAnh: imageUrls.length > 0 ? imageUrls.map((image: { url: string, type: string; }) => image.url) : [],
-      tiLeKhuyenMai: +formData['food-discount']/100,
-      trangThai: +formData['food-status']
-    };
-    console.log('Form data:', formData);
-    const updateResult = await updateProduct(data?.maThucPham + '', payload);
-    console.log('Update result:', updateResult);
-    setIsShowDetail(false);
-    setIsShowEditFood(false);
-    onEdited();
   };
 
   const fetchCategories = async () => {
@@ -113,7 +119,7 @@ const EditFood = (props: IProps) => {
           <form className="edit-food-body" onSubmit={handleSubmit(onSubmit)}>
             <div className="food-image">
               <ImageSlider images={data.hinhAnh} />
-              <UploadImgComponent id="edit-food-img-upload" name="food-img" register={register} watch={watch} multiple/>
+              <UploadImgComponent id="edit-food-img-upload" name="food-img" register={register} watch={watch} multiple />
             </div>
             <AdminContainerComponent
               className="food-info-container"

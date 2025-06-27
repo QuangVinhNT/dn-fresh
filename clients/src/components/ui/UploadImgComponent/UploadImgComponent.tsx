@@ -28,12 +28,12 @@ const UploadImgComponent = (props: IProps) => {
             <img
               src={URL.createObjectURL(new Blob([img]))}
             />
-            <IoCloseCircle 
+            {/* <IoCloseCircle 
               className="close-icon" size={32} 
               onClick={() => {
 
             }}
-            />
+            /> */}
           </div>
         ))}
       </div>

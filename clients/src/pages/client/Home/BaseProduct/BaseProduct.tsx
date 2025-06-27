@@ -24,7 +24,7 @@ const BaseProduct = (props: IProps) => {
       {!reverse && <CategoryTitle />}
     
       {items?.map((item, index) => (
-        <ProductCard key={index} id={item.maThucPham} imgSrc={item.hinhAnh[0]} standardPrice={item.donGia} label={item.tenThucPham} discount={item.tiLeKhuyenMai} status={item.trangThai}/>
+        <ProductCard key={index} id={item.maThucPham} imgSrc={item.hinhAnh[0]} standardPrice={item.donGia} label={item.tenThucPham} discount={item.tiLeKhuyenMai} status={item.trangThai} unit={item.donViTinh}/>
       ))}
 
       {reverse && <CategoryTitle />}

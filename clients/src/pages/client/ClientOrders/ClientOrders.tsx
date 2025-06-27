@@ -1,11 +1,12 @@
 import { getOrders } from "@/api/orderApi";
 import { ClientBanner, SearchComponent, TablePagination } from "@/components";
-import { loadingStore } from "@/store";
+import { loadingStore, userStore } from "@/store";
 import { OrderList, OrderStatus, PaymentMethod } from "@/types/Order";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './ClientOrders.scss';
+import SeparateNumber from "@/utils/separateNumber";
 
 
 
@@ -21,6 +22,7 @@ const ClientOrders = () => {
   const navigate = useNavigate();
 
   const { showLoading, hideLoading } = loadingStore();
+  const {user} = userStore();
 
   useEffect(() => {
     fetchProducts();
@@ -29,7 +31,7 @@ const ClientOrders = () => {
   const fetchProducts = async () => {
     showLoading();
     try {
-      const response = await getOrders(page, limit, 'ND003', keywordRef.current);
+      const response = await getOrders(page, limit, user?.id + '', keywordRef.current);
       setOrders(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -80,7 +82,7 @@ const ClientOrders = () => {
                     <span>{PaymentMethod[order.phuongThucThanhToan]}</span>
                   </td>
                   <td>
-                    <span>{order.tongTien}</span>
+                    <span>{`${SeparateNumber(order.tongTien)}₫`}</span>
                   </td>
                 </tr>
               ))}

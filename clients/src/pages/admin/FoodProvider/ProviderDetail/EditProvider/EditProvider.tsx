@@ -8,6 +8,7 @@ import { ProviderDetailType, UpdateProviderPayload } from "@/types/Provider";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import './EditProvider.scss';
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
@@ -45,26 +46,31 @@ const EditProvider = (props: IProps) => {
   }, [watch('city')]);
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
-    const fileArray = formData['license-docs'];
-    if (fileArray instanceof FileList) {
-      let docUrls = []
-      if (fileArray.length > 0) {
-        docUrls = await handleUpload(fileArray);
+    try {
+      const fileArray = formData['license-docs'];
+      if (fileArray instanceof FileList) {
+        let docUrls = [];
+        if (fileArray.length > 0) {
+          docUrls = await handleUpload(fileArray);
+        }
+        const payload: UpdateProviderPayload = {
+          tenNhaCungCap: formData['provider-name'].toString(),
+          ngayThanhLap: formData['founded-date'] === '' ? new Date(data?.ngayThanhLap + '') : new Date(formData['founded-date'] + ''),
+          trangThaiHoatDong: +formData['status'],
+          maPhuongXa: formData['commune'].toString(),
+          chiTietDiaChi: formData['address-detail'].toString(),
+          moTa: formData['description'].toString(),
+          giayToPhapLy: docUrls.length > 0 ? docUrls.map((doc: { url: string, type: string; }) => doc.url) : data?.giayToPhapLy
+        };
+        const updateResult = await updateProvider(data?.maNhaCungCap + '', payload);
+        console.log('Insert result:', updateResult);
+        setIsShowEdit(false);
+        setIsShowDetail(false);
+        onEdited();
       }
-      const payload: UpdateProviderPayload = {
-        tenNhaCungCap: formData['provider-name'].toString(),
-        ngayThanhLap: formData['founded-date'] === '' ? new Date(data?.ngayThanhLap + '') : new Date(formData['founded-date'] + ''),
-        trangThaiHoatDong: +formData['status'],
-        maPhuongXa: formData['commune'].toString(),
-        chiTietDiaChi: formData['address-detail'].toString(),
-        moTa: formData['description'].toString(),
-        giayToPhapLy: docUrls.length > 0 ? docUrls.map((doc: {url: string, type: string}) => doc.url) : data?.giayToPhapLy
-      }
-      const updateResult = await updateProvider(data?.maNhaCungCap + '', payload);
-      console.log('Insert result:', updateResult);
-      setIsShowEdit(false);
-      setIsShowDetail(false);
-      onEdited();
+      toast.success('Cập nhật nhà cung cấp thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
     }
   };
 

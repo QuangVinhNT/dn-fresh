@@ -9,6 +9,7 @@ export class DonHang {
   private ngayCapNhat: Date | null;
   private ghiChu: string;
   private phuongThucThanhToan: number;
+  private giaTriDonHang: number;
 
   constructor(
     maDonHang: string,
@@ -20,7 +21,8 @@ export class DonHang {
     ngayTao: Date | null,
     ngayCapNhat: Date | null,
     ghiChu: string,
-    phuongThucThanhToan: number
+    phuongThucThanhToan: number,
+    giaTriDonHang: number
   ) {
     this.maDonHang = maDonHang;
     this.maKhachHang = maKhachHang;
@@ -32,6 +34,7 @@ export class DonHang {
     this.ngayCapNhat = ngayCapNhat;
     this.ghiChu = ghiChu;
     this.phuongThucThanhToan = phuongThucThanhToan;
+    this.giaTriDonHang = giaTriDonHang;
   }
 
   public getMaDonHang(): string {
@@ -102,5 +105,12 @@ export class DonHang {
   }
   public setPhuongThucThanhToan(value: number): void {
     this.phuongThucThanhToan = value;
+  }
+
+  public getGiaTriDonHang(): number {
+    return this.giaTriDonHang;
+  }
+  public setGiaTriDonHang(value: number): void {
+    this.giaTriDonHang = value;
   }
 }

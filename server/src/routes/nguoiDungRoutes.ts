@@ -26,6 +26,10 @@ nguoiDungRoutes.get('/nhan-vien/:id', authMiddleware, checkRole(['VT001']), (req
   if (role === 'VT001') return nguoiDungController.getStaffById(req, res);
 });
 
+nguoiDungRoutes.get('/:id', (req: Request, res: Response) => {
+  return nguoiDungController.getById(req, res);
+});
+
 nguoiDungRoutes.post('/', authMiddleware, checkRole(['VT001']), (req: Request, res: Response) => {
   const role = req.user?.roleId;
   if (role === 'VT001') return nguoiDungController.insertUser(req, res);
@@ -45,6 +49,10 @@ nguoiDungRoutes.post('/get-role-token', (req: Request, res: Response) => {
 
 nguoiDungRoutes.post('/verify-email', (req: Request, res: Response) => {
   return nguoiDungController.verifyEmail(req, res);
+});
+
+nguoiDungRoutes.put('/:id', authMiddleware, checkRole(['VT001', 'VT002', 'VT003', 'VT004']), (req: Request, res: Response) => {
+  return nguoiDungController.updateUser(req, res);
 });
 
 nguoiDungRoutes.patch('/:id/lock', authMiddleware, checkRole(['VT001']), (req: Request, res: Response) => {

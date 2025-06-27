@@ -95,7 +95,7 @@ export class NguoiDungDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 
   public getCustomerById = async (customerId: string) => {
     try {
@@ -133,6 +133,20 @@ export class NguoiDungDAO {
         INSERT INTO nguoidung (maNguoiDung, hoTen, gioiTinh, ngaySinh, soDienThoai, maDiaChi, email, matKhau, hinhAnh, ngayTao, ngayCapNhat, trangThai)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
         `, [user.getMaNguoiDung(), user.getHoTen(), user.getGioiTinh(), user.getNgaySinh(), user.getSoDienThoai(), user.getMaDiaChi(), user.getEmail(), user.getMatKhau(), user.getHinhAnh(), user.getTrangThai()]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
+
+  public updateUser = async (user: NguoiDung, connection: PoolConnection) => {
+    try {
+      const result = await connection.query(`
+        UPDATE nguoidung
+        SET hoTen = ?,${user.getHinhAnh().length > 0 ? ` hinhAnh = '${user.getHinhAnh()}',` : ''} gioiTinh = ?, ngaySinh = ?, soDienThoai = ?, maDiaChi = ?,${user.getMatKhau().length > 0 ? ` matKhau = '${user.getMatKhau()}',` : ''} ngayCapNhat = NOW()
+        WHERE maNguoiDung = ?
+        `, [user.getHoTen(), user.getGioiTinh(), user.getNgaySinh(), user.getSoDienThoai(), user.getMaDiaChi(), user.getMaNguoiDung()]);
       return result;
     } catch (error) {
       console.error('DAO error:', error);

@@ -103,7 +103,7 @@ export class DonHangService {
       console.error('Error service:', error);
       throw error;
     }
-  }
+  };
 
   public getAllOrderForInventoryStaff = async () => {
     try {
@@ -115,7 +115,7 @@ export class DonHangService {
           tenThucPham: product.tenThucPham,
           soLuong: product.soLuong,
           donViTinh: product.donViTinh
-        })) 
+        }))
       })));
       return orders;
     } catch (error) {
@@ -144,9 +144,7 @@ export class DonHangService {
         return this.chiTietDonHangService.insert(orderDetail, connection);
       }));
       connection.commit();
-      return {
-        result: { orderResult, orderDetailResult }
-      };
+      return { orderResult, orderDetailResult, orderId };
     } catch (error) {
       connection.rollback();
       console.log('Error service:', error);
@@ -204,11 +202,27 @@ export class DonHangService {
     }
   };
 
-  public confirmPack = async (orderId: string) => {
+  public unpackOrdersByExportReceipt = async (exportReceiptId: string) => {
     const connection = await pool.getConnection();
     try {
       connection.beginTransaction();
-      const result = await this.donHangDAO.changeStatus(orderId, '', 2, connection);
+      const result = await this.donHangDAO.unpackOrdersByExportReceipt(exportReceiptId, connection);
+      connection.commit();
+      return result;
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public confirmPack = async (orderId: string, exportReceiptId: string) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const result = await this.donHangDAO.changeStatus(orderId, '', 2, connection, exportReceiptId);
       connection.commit();
       return result;
     } catch (error) {

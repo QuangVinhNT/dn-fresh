@@ -1,12 +1,12 @@
-import { AdminContainerComponent, BackComponent, ButtonComponent, InputComponent } from "@/components";
-import './AddExportFood.scss';
-import { useState } from "react";
-import { overlayStore } from "@/store";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { FormValues } from "@/types/Object";
-import { InsertExportReceiptPayload } from "@/types/ExportReceipt";
 import { insertExportReceipt } from "@/api/exportReceiptApi";
+import { AdminContainerComponent, ButtonComponent, InputComponent } from "@/components";
+import { overlayStore, userStore } from "@/store";
+import { InsertExportReceiptPayload } from "@/types/ExportReceipt";
+import { FormValues } from "@/types/Object";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
+import { toast } from "react-toastify";
+import './AddExportFood.scss';
 
 interface IProps {
   setIsShowAdd: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,22 +15,28 @@ interface IProps {
 
 const AddExportFood = (props: IProps) => {
   const { setIsShowAdd, onAdded } = props;
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const { user } = userStore();
 
   const { hideOverlay } = overlayStore();
 
-  const { register, reset, handleSubmit, watch } = useForm<FormValues>();
+  const { register, reset, handleSubmit } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const payload: InsertExportReceiptPayload = {
-      maQuanTriVien: 'ND001',
-      ghiChu: data['note'].toString()
-    };
-    const insertResult = await insertExportReceipt(payload);
-    console.log('Insert result:', insertResult);
-    setIsShowAdd(false);
-    hideOverlay();
-    onAdded();
+    try {
+      const payload: InsertExportReceiptPayload = {
+        maQuanTriVien: user?.id + '',
+        ghiChu: data['note'].toString()
+      };
+      const insertResult = await insertExportReceipt(payload);
+      console.log('Insert result:', insertResult);
+      setIsShowAdd(false);
+      hideOverlay();
+      reset();
+      onAdded();
+      toast.success('Tạo phiếu xuất thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
+    }
   };
 
   return (

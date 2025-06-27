@@ -1,14 +1,15 @@
+import { getCategoriesForSelectBox } from "@/api/categoryApi";
+import { insertProduct } from "@/api/productApi";
 import { postUploadFile } from "@/api/uploadApi";
 import { AdminContainerComponent, BackComponent, ButtonComponent, InputComponent, SelectComponent, UploadImgComponent } from "@/components";
 import webColors from "@/constants/webColors";
 import { loadingStore } from "@/store";
 import { SelectBox } from "@/types/ComponentType";
+import { InsertProductPayload } from "@/types/Product";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import './AddFood.scss';
-import { getCategoriesForSelectBox } from "@/api/categoryApi";
-import { insertProduct } from "@/api/productApi";
-import { InsertProductPayload } from "@/types/Product";
 
 type FormValues = {
   [key: string]: string | string[] | File[] | FileList;
@@ -32,21 +33,26 @@ const AddFood = (props: IProps) => {
   const { register, watch, handleSubmit } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const fileArray = data['food-img'];
-    if (fileArray instanceof FileList) {
-      const imageUrls = await handleUpload(fileArray);
-      const payload: InsertProductPayload = {
-        tenThucPham: data['food-name'].toString(),
-        donGia: +data['food-price'],
-        maDanhMuc: data['food-type'].toString(),
-        moTa: data['food-desc'].toString(),
-        donViTinh: data['food-unit'].toString(),
-        hinhAnh: imageUrls.map((image: { url: string, type: string; }) => image.url),
-      };
-      const insertResult = await insertProduct(payload);
-      console.log('Insert result:', insertResult);
-      setIsShowAddFood(false);
-      onAdded();
+    try {
+      const fileArray = data['food-img'];
+      if (fileArray instanceof FileList) {
+        const imageUrls = await handleUpload(fileArray);
+        const payload: InsertProductPayload = {
+          tenThucPham: data['food-name'].toString(),
+          donGia: +data['food-price'],
+          maDanhMuc: data['food-type'].toString(),
+          moTa: data['food-desc'].toString(),
+          donViTinh: data['food-unit'].toString(),
+          hinhAnh: imageUrls.map((image: { url: string, type: string; }) => image.url),
+        };
+        const insertResult = await insertProduct(payload);
+        console.log('Insert result:', insertResult);
+        toast.success(`Thêm thực phẩm thành công!`);
+        setIsShowAddFood(false);
+        onAdded();
+      }
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
     }
   };
 

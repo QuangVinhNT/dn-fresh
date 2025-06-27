@@ -12,14 +12,45 @@ interface IProps {
 const TablePagination = (props: IProps) => {
   const { page, limit, total, setPage, setLimit } = props;
   const totalPage = Math.ceil(total / limit);
+  const getPaginationRange = (current: number, total: number) => {
+    const delta = 1;
+    const range: (number | string)[] = [];
+
+    const left = Math.max(2, current - delta);
+    const right = Math.min(total - 1, current + delta);
+
+    if (left > 2) {
+      range.push(1, '...');
+    } else {
+      for (let i = 1; i < left; i++) {
+        range.push(i);
+      }
+    }
+
+    for (let i = left; i <= right; i++) {
+      range.push(i);
+    }
+
+    if (right < total - 1) {
+      range.push('...', total);
+    } else {
+      for (let i = right + 1; i <= total; i++) {
+        range.push(i);
+      }
+    }
+
+    return range;
+  };
+
+  const paginationRange = totalPage === 1 ? [1] : getPaginationRange(page, totalPage);
   return (
     <div className="table-pagination-component">
       <div className="data-number-container">
         <p>Hiển thị</p>
         <select name="" id="" onChange={(e) => {
-          setLimit(parseInt(e.target.value))
-          setPage(1)
-          }}>
+          setLimit(parseInt(e.target.value));
+          setPage(1);
+        }}>
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
@@ -32,14 +63,28 @@ const TablePagination = (props: IProps) => {
         <IoChevronBackOutline
           onClick={() => setPage(page - 1 < 1 ? 1 : page - 1)}
         />
-        {Array.from({ length: totalPage }, (_, idx) => (
+        {/* {Array.from({ length: totalPage }, (_, idx) => (
           <span
             key={idx}
             onClick={() => setPage(idx + 1)}
             className={`${page === idx + 1 && 'active'}`}>
             {idx + 1}
           </span>
-        ))}
+        ))} */}
+        {paginationRange.map((item, idx) =>
+          item === '...' ? (
+            <span key={idx} className="dots">
+              ...
+            </span>
+          ) : (
+            <span
+              key={idx}
+              onClick={() => setPage(item as number)}
+              className={`${page === item ? 'active' : ''}`}>
+              {item}
+            </span>
+          )
+        )}
         <IoChevronForwardOutline
           onClick={() => setPage(page + 1 > totalPage ? totalPage : page + 1)}
         />

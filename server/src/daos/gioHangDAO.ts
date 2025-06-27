@@ -6,7 +6,7 @@ export class GioHangDAO {
   public getAll = async (userId: string) => {
     try {
       const [rows] = await pool.query(`
-      SELECT gh.maThucPham, p.tenThucPham, p.donGia, p.tiLeKhuyenMai, p.trangThai
+      SELECT gh.maThucPham, p.tenThucPham, p.donGia, p.tiLeKhuyenMai, p.trangThai, gh.soLuong, p.donViTinh
       FROM giohang as gh
       LEFT JOIN khothucpham as p ON p.maThucPham = gh.maThucPham
       WHERE gh.maNguoiDung = ?
@@ -51,8 +51,8 @@ export class GioHangDAO {
     try {
       const [result] = await connection.query(`
         DELETE FROM giohang
-        WHERE (maNguoiDung = ?) AND (maThucPham = ?)
-        `, [gioHang.getMaNguoiDung(), gioHang.getMaThucPham()]);
+        WHERE (maNguoiDung = ?) ${gioHang.getMaThucPham().length > 0 ? `AND (maThucPham = '${gioHang.getMaThucPham()}')` : ''}
+        `, [gioHang.getMaNguoiDung()]);
       return result;
     } catch (error) {
       console.error('DAO error:', error);

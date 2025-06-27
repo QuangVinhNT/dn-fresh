@@ -65,7 +65,7 @@ export class DonHangController {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public getAllOrderForInventoryStaff = async (req: Request, res: Response) => {
     try {
@@ -84,7 +84,7 @@ export class DonHangController {
         res.status(400).json({ message: 'Invalid order data' });
         return;
       }
-      const order = new DonHang('', payload.maKhachHang, '', '', '', 1, null, null, payload.ghiChu, payload.phuongThucThanhToan);
+      const order = new DonHang('', payload.maKhachHang, '', '', '', 1, null, null, payload.ghiChu, payload.phuongThucThanhToan, payload.giaTriDonHang);
       const orderDetails = payload.chiTietDonHang.map((item: { maThucPham: string; soLuong: number; }) => new ChiTietDonHang('', item.maThucPham, item.soLuong));
       const address = new DiaChi('', payload.chiTietDiaChi.trim(), payload.maPhuongXa);
       const result = await this.donHangService.insertOrder(order, orderDetails, address);
@@ -106,14 +106,30 @@ export class DonHangController {
     }
   };
 
+  public unpackOrdersByExportReceipt = async (req: Request, res: Response) => {
+    try {
+      const exportReceiptId = req.params.id as string || '';
+      if (!exportReceiptId) {
+        res.status(400).json({ message: 'Export receipt ID is required' });
+        return;
+      }
+      const result = await this.donHangService.unpackOrdersByExportReceipt(exportReceiptId);
+      res.json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
   public confirmPack = async (req: Request, res: Response) => {
     try {
       const orderId = req.params.id as string || '';
-      if (!orderId) {
+      const payload = req.body;
+      if (!orderId || !payload) {
         res.status(400).json({ message: 'Order ID is required' });
         return;
       }
-      const result = await this.donHangService.confirmPack(orderId);
+      const result = await this.donHangService.confirmPack(orderId, payload.maPhieuXuat);
       res.json(result);
     } catch (error) {
       console.error('Controller error:', error);
@@ -157,7 +173,7 @@ export class DonHangController {
     try {
       const orderId = req.params.id as string || '';
       const { staffId, note } = req.body;
-      if (!staffId || !orderId || !note) {
+      if (!orderId || !note) {
         res.status(400).json({ message: 'Data not found!' });
         return;
       }

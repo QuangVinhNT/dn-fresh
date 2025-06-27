@@ -5,13 +5,15 @@ import DeliveryStaffIcon from '@/assets/images/delivery-icon.png';
 import InventoryStaffIcon from '@/assets/images/inventory-icon.png';
 import GoogleIcon from '@/assets/svgs/google-icon.svg';
 import { ButtonComponent, CheckboxComponent, ErrorMessage, InputComponent, Overlay } from "@/components";
-import { overlayStore, userStore } from "@/store";
+import { cartStore, favouriteFoodsStore, overlayStore, userStore } from "@/store";
 import { FormValues } from "@/types/Object";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import './Login.scss';
+import { getCart } from "@/api/cartApi";
+import { getFavouriteProducts } from "@/api/favouriteProductApi";
 
 const roles = [
   {
@@ -48,7 +50,9 @@ const Login = () => {
 
   const { register, handleSubmit } = useForm<FormValues>();
   const { showOverlay, hideOverlay, isShowOverlay } = overlayStore();
-  const { setUser, user } = userStore();
+  const { setUser, user, setRoleUser } = userStore();
+  const { setCart } = cartStore();
+  const { setFavouriteFoods } = favouriteFoodsStore();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const payload = {
@@ -69,14 +73,20 @@ const Login = () => {
         const link = roles.find(role => role.value === rolesResult[0])?.link + '';
         const token = await getRoleToken({ userId: loginResult.maNguoiDung, roleId: rolesResult[0] });
         localStorage.setItem('access_token', token);
+        setRoleUser(rolesResult[0]);
         navigate(link);
       } else {
         setUserRoles(roles.filter(role => rolesResult.includes(role.value)));
         setErrorMessage('');
         setIsShowRoles(true);
         showOverlay();
-        console.log(rolesResult);
       }
+
+      const cartItems = await getCart(loginResult.maNguoiDung + '');
+      setCart(cartItems);
+      const favouriteFoods = await getFavouriteProducts(1, 5, loginResult.maNguoiDung + '');
+      setFavouriteFoods(favouriteFoods.data);
+      // console.log(favouriteFoods);
 
     } catch (error) {
       console.error('Lỗi đăng nhập:', error);
@@ -114,11 +124,11 @@ const Login = () => {
               id="remember"
               labels={[{ name: 'Ghi nhớ đăng nhập', id: 'remember' }]}
             /> */}
-            <div className="forgot" style={{marginLeft: 'auto'}}>
+            <div className="forgot" style={{ marginLeft: 'auto' }}>
               <Link to={'/forgot-password'}>Quên mật khẩu?</Link>
             </div>
           </div>
-          {errorMessage.length > 0 && <ErrorMessage message={errorMessage} />}
+          {errorMessage.length > 0 && !isShowRoles && <ErrorMessage message={errorMessage} />}
           <ButtonComponent
             label='Đăng nhập'
             type="submit"
@@ -150,6 +160,7 @@ const Login = () => {
                   const token = await getRoleToken({ userId: user?.id + '', roleId: item.value });
                   localStorage.setItem('access_token', token);
                   navigate(item.link);
+                  setRoleUser(item.value);
                   hideOverlay();
                 }}
               >

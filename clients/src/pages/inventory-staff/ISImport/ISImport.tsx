@@ -12,9 +12,7 @@ import ISImportDetail from "./ISImportDetail/ISImportDetail";
 const headers = ['Mã phiếu nhập', 'Ngày nhập hàng', 'Mã nhân viên', 'Mã quản trị viên', 'Trạng thái', 'Ngày tạo', 'Ngày cập nhật'];
 
 const ISImport = () => {
-  const [isShowAdd, setIsShowAdd] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
-  const [isShowEdit, setIsShowEdit] = useState(false);
   const [importReceipts, setImportReceipts] = useState<ImportReceiptList[]>([]);
   const [importReceipt, setImportReceipt] = useState<ImportReceiptDetailType>();
   const [page, setPage] = useState<number>(1);
@@ -56,8 +54,8 @@ const ISImport = () => {
 
   return (
     <>
-      {(!isShowDetail && !isShowEdit) && (
-        <div className="import-food-component">          
+      {(!isShowDetail) && (
+        <div className="import-food-component">
           <div className="table-component">
             <div className="filter">
               <h3><IoFilter /> Bộ lọc</h3>
@@ -133,9 +131,9 @@ const ISImport = () => {
         </div>
       )}
 
-      {isShowDetail && <ISImportDetail setIsShowDetail={setIsShowDetail} detailData={importReceipt} onFinish={fetchImportReceipts}/>}
+      {isShowDetail && <ISImportDetail setIsShowDetail={setIsShowDetail} detailData={importReceipt} onFinish={fetchImportReceipts} />}
     </>
   );
-}
+};
 
-export default ISImport
+export default ISImport;

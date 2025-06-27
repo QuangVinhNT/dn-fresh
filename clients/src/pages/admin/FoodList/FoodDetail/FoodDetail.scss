@@ -36,25 +36,9 @@
       }
     }
 
-    .hide-edit {
+    .delete-edit {
       display: flex;
-
-      .btn-hide {
-        background-color: transparent;
-        border: 2px solid red;
-        color: red;
-        font-size: 14px;
-        padding: 8px 12px;
-        font-weight: 500;
-        margin-right: 8px;
-        transition: all .3s;
-        cursor: pointer;
-
-        &:hover {
-          background-color: red;
-          color: #fff;
-        }
-      }
+      gap: 4px;
     }
 
     .food-info-body {
@@ -102,4 +86,13 @@
 
     .package-detail-body {}
   }
+}
+
+.ok-cancel-delete-modal {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  transition: all .5s;
 }

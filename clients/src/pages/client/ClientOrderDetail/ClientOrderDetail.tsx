@@ -1,21 +1,28 @@
-import { getOrderById } from "@/api/orderApi";
+import { confirmCancelOrder, getOrderById } from "@/api/orderApi";
 import PrdImg from '@/assets/images/sp1.png';
-import { BackComponent, ClientBanner, OrderStatusComponent } from "@/components";
-import { loadingStore } from "@/store";
+import { AdminContainerComponent, BackComponent, ButtonComponent, ClientBanner, InputComponent, OrderStatusComponent } from "@/components";
+import { loadingStore, overlayStore } from "@/store";
 import { OrderDetail, OrderStatus, PaymentMethod } from "@/types/Order";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import SeparateNumber from "@/utils/separateNumber";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import './ClientOrderDetail.scss';
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FormValues } from "@/types/Object";
+import { toast } from "react-toastify";
+import { IoClose } from "react-icons/io5";
 
 const ClientOrderDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState<OrderDetail>();
+  const [isShowNote, setIsShowNote] = useState(false);
 
   const { showLoading, hideLoading } = loadingStore();
+  const { showOverlay, hideOverlay } = overlayStore();
 
+  const { register, reset, handleSubmit } = useForm<FormValues>();
   useEffect(() => {
     fetchOrder();
   }, []);
@@ -25,10 +32,30 @@ const ClientOrderDetail = () => {
     try {
       const response = await getOrderById(id as string);
       setOrder(response);
+      console.log(response);
     } catch (error) {
       console.error('Error when load order:', error);
     } finally {
       hideLoading();
+    }
+  };
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    try {
+      const payload = {
+        maDonHang: order?.maDonHang + '',
+        ghiChu: data['note'].toString()
+      };
+      const cancelResult = await confirmCancelOrder(payload.maDonHang, '', payload.ghiChu);
+      console.log('Cancel result:', cancelResult);
+      console.log(payload);
+      setIsShowNote(false);
+      hideOverlay();
+      reset();
+      toast.success('Hủy đơn hàng thành công!');
+      navigate('/orders');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
     }
   };
 
@@ -42,6 +69,20 @@ const ClientOrderDetail = () => {
             <div className="order-status">
               <OrderStatusComponent status={OrderStatus[order.trangThai]} time={datetimeFormatter(order.ngayCapNhat + '')} statusItems={['Đặt hàng', 'Đóng gói', 'Xuất kho', 'Hoàn thành']} />
             </div>
+            {order.trangThai === 1 && (
+              (new Date().getTime() - new Date(order.ngayTao + '').getTime()) / (1000 * 60) <= 15
+            ) && (
+                <ButtonComponent
+                  label='Hủy đơn'
+                  type="no-submit"
+                  variant="danger"
+                  className="cancel-btn"
+                  onClick={() => {
+                    setIsShowNote(true);
+                    showOverlay();
+                  }}
+                />
+              )}
             <div className="order-info-products">
               <div className="order-info">
                 <h3>Thông tin đơn hàng</h3>
@@ -78,6 +119,39 @@ const ClientOrderDetail = () => {
           </div>
         </div>
       )}
+      <form className="cancel-note-modal" style={{ top: isShowNote ? '50%' : '-100%', width: '50%' }} onSubmit={handleSubmit(onSubmit)}>
+        <AdminContainerComponent
+          title='Lý do hủy đơn'
+          className="info-container"
+          extraTitle={
+            <div className="save-close">
+              <ButtonComponent
+                label='Lưu'
+                type="submit"
+                className="save-btn"
+                variant="primary"
+              />
+              <div className="close-btn">
+                <IoClose size={28} className="close-icon" onClick={() => {
+                  setIsShowNote(false);
+                  hideOverlay();
+                  reset();
+                }} />
+              </div>
+            </div>
+          }
+          children={
+            <div className="export-receipt-info">
+              <InputComponent
+                name="note"
+                placeholder="Nhập lý do hủy đơn"
+                isTextarea
+                register={register}
+              />
+            </div>
+          }
+        />
+      </form>
     </>
   );
 };

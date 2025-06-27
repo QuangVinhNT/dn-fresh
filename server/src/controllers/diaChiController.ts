@@ -9,23 +9,38 @@ export class DiaChiController {
   }
 
   public getAllCity = async (req: Request, res: Response) => {
-    try {      
+    try {
       const data = await this.diaChiService.getAllCity();
       res.json(data);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
 
   public getAllCommuneByCityId = async (req: Request, res: Response) => {
-    try {      
-      const cityId = req.query.cityId as string || ''
+    try {
+      const cityId = req.query.cityId as string || '';
       const data = await this.diaChiService.getAllCommuneByCityId(cityId);
       res.json(data);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
+
+  public getDetailById = async (req: Request, res: Response) => {
+    try {
+      const addressId = req.params.id as string || '';
+      if (!addressId) {
+        res.status(400).json({ message: 'Address not found!' });
+        return;
+      }
+      const data = await this.diaChiService.getDetailById(addressId);
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
 }

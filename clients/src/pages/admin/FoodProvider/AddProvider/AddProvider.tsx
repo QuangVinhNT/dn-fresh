@@ -9,6 +9,7 @@ import { getCities, getCommunes } from "@/api/addressApi";
 import { postUploadFile } from "@/api/uploadApi";
 import { InsertProviderPayload } from "@/types/Provider";
 import { insertProvider } from "@/api/providerApi";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowAdd: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,22 +39,27 @@ const AddProvider = (props: IProps) => {
   }, [watch('city')]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const fileArray = data['license-docs'];
-    if (fileArray instanceof FileList) {
-      const docUrls = await handleUpload(fileArray);
-      const payload: InsertProviderPayload = {
-        tenNhaCungCap: data['provider-name'].toString(),
-        ngayThanhLap: new Date(data['founded-date'] + ''),
-        trangThaiHoatDong: +data['status'],
-        maPhuongXa: data['commune'].toString(),
-        chiTietDiaChi: data['address-detail'].toString(),
-        moTa: data['description'].toString(),
-        giayToPhapLy: docUrls.map((doc: {url: string, type: string}) => doc.url)
+    try {
+      const fileArray = data['license-docs'];
+      if (fileArray instanceof FileList) {
+        const docUrls = await handleUpload(fileArray);
+        const payload: InsertProviderPayload = {
+          tenNhaCungCap: data['provider-name'].toString(),
+          ngayThanhLap: new Date(data['founded-date'] + ''),
+          trangThaiHoatDong: +data['status'],
+          maPhuongXa: data['commune'].toString(),
+          chiTietDiaChi: data['address-detail'].toString(),
+          moTa: data['description'].toString(),
+          giayToPhapLy: docUrls.map((doc: { url: string, type: string; }) => doc.url)
+        };
+        const insertResult = await insertProvider(payload);
+        console.log('Insert result:', insertResult);
+        setIsShowAdd(false);
+        onAdded();
+        toast.success('Tạo nhà cung cấp thành công!');
       }
-      const insertResult = await insertProvider(payload);
-      console.log('Insert result:', insertResult);
-      setIsShowAdd(false);
-      onAdded();
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
     }
   };
 

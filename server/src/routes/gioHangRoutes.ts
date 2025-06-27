@@ -9,19 +9,21 @@ const gioHangController = new GioHangController();
 gioHangRoutes.get('/:id', authMiddleware, checkRole(['VT004']), (req: Request, res: Response) => {
   const role = req.user?.roleId;
   if (role === 'VT004') return gioHangController.getAll(req, res);
-})
+});
 
 gioHangRoutes.post('/:id', authMiddleware, checkRole(['VT004']), (req: Request, res: Response) => {
   const role = req.user?.roleId;
   if (role === 'VT004') return gioHangController.insert(req, res);
-})
+});
 
 gioHangRoutes.put('/:id', authMiddleware, checkRole(['VT004']), (req: Request, res: Response) => {
   const role = req.user?.roleId;
   if (role === 'VT004') return gioHangController.update(req, res);
-})
+});
 
 gioHangRoutes.delete('/:id', authMiddleware, checkRole(['VT004']), (req: Request, res: Response) => {
   const role = req.user?.roleId;
   if (role === 'VT004') return gioHangController.delete(req, res);
-})
+});
+
+export default gioHangRoutes;

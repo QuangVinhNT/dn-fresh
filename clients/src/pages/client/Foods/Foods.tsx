@@ -3,7 +3,7 @@ import { getProducts } from "@/api/productApi";
 import { AsideBox, ClientBanner, Pagination, ProductCard, SearchComponent } from "@/components";
 import { loadingStore } from "@/store";
 import { OrderBy } from "@/types";
-import { CategoryFilter, CategorySelectBox } from "@/types/Category";
+import { CategoryFilter } from "@/types/Category";
 import { ProductList } from "@/types/Product";
 import { useEffect, useRef, useState } from "react";
 import './Foods.scss';
@@ -44,7 +44,7 @@ const Foods = () => {
     showLoading();
     try {
       const response = await getCategoriesForFilter();
-      setCategories(response);
+      setCategories([{maDanhMuc: '', tenDanhMuc: 'Tất cả thực phẩm'}, ...response]);
     } catch (error) {
       console.error('Error when load product:', error);
     } finally {
@@ -57,7 +57,7 @@ const Foods = () => {
       <ClientBanner label="Thực phẩm" />
       <div className="foods-content">
         <div className="aside-components">
-          <AsideBox title="Danh mục thực phẩm" type="category" cateData={categories} setCategoryId={setCategoryId} />
+          <AsideBox title="Danh mục thực phẩm" type="category" cateData={categories} setCategoryId={setCategoryId} choosingId={categoryId} setLimit={setLimit} setPage={setPage}/>
         </div>
         <div className="sort-search-foods">
           <div className="sort-search">

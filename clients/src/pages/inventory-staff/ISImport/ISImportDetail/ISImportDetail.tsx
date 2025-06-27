@@ -1,7 +1,7 @@
 import { deleteImportReceiptProduct, getImportReceiptById, requestApproveImportReceipt } from "@/api/importReceiptApi";
 import { AdminContainerComponent, BackComponent, ButtonComponent, InfoItemComponent, OkCancelModal } from "@/components";
 import webColors from "@/constants/webColors";
-import { overlayStore } from "@/store";
+import { overlayStore, userStore } from "@/store";
 import { ImportReceiptDetailType, ImportReceiptStatus } from "@/types/ImportReceipt";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import SeparateNumber from "@/utils/separateNumber";
@@ -10,6 +10,7 @@ import { IoCreate, IoTrashSharp } from "react-icons/io5";
 import ISAddImportProduct from "./ISAddImportProduct/ISAddImportProduct";
 import './ISImportDetail.scss';
 import ISEditImportProduct from "./ISEditImportProduct/ISEditImportProduct";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,6 +29,7 @@ const ISImportDetail = (props: IProps) => {
   const [isShowEditProduct, setIsShowEditProduct] = useState(false);
   const [importProducts, setImportProducts] = useState<ImportReceiptDetailType['danhSachThucPham']>([]);
   const { showOverlay, hideOverlay } = overlayStore();
+  const { user } = userStore();
 
   useEffect(() => {
     fetchImportProducts();
@@ -48,8 +50,11 @@ const ISImportDetail = (props: IProps) => {
     try {
       const response = await deleteImportReceiptProduct(productPackageId);
       console.log('Delete result:', response);
+      fetchImportProducts();
+      toast.success('Xóa thực phẩm thành công!');
     } catch (error) {
       console.log('Error when delete product:', error);
+      toast.error(`Lỗi: ${error}`);
     }
   };
 
@@ -218,84 +223,84 @@ const ISImportDetail = (props: IProps) => {
               </table>
             </div>
           </div>
-
-          <div className="add-product-modal" style={{ top: isShowAddProduct ? '50%' : '-100%' }}>
-            <ISAddImportProduct
-              setIsShowAdd={setIsShowAddProduct}
-              onAdded={fetchImportProducts}
-              importReceiptId={detailData.maPhieuNhap}
-            />
-          </div>
-
-          <div className="edit-product-modal" style={{ top: isShowEditProduct ? '50%' : '-100%' }}>
-            <ISEditImportProduct
-              setIsShowEdit={setIsShowEditProduct}
-              detailData={
-                selectedData
-                  ? {
-                    maLoHang: selectedData.maLoHang ?? '',
-                    maThucPham: selectedData.maThucPham ?? '',
-                    tenThucPham: selectedData.tenThucPham ?? '',
-                    ngaySanXuat: selectedData.ngaySanXuat ?? '',
-                    hanSuDung: selectedData.hanSuDung ?? '',
-                    donGiaNhap: selectedData.donGiaNhap ?? 0,
-                    soLuong: selectedData.soLuong ?? 0,
-                    donViTinh: selectedData.donViTinh ?? '',
-                    maPhieuNhap: detailData.maPhieuNhap
-                  }
-                  : undefined
-              }
-              onEdit={fetchImportProducts}
-            />
-          </div>
-
-          <div className="ok-cancel-delete" style={{ top: isShowConfirmDelete ? '50%' : '-100%' }}>
-            <OkCancelModal
-              data={{
-                message: <p>Bạn chắc chắn muốn <b style={{ color: 'red' }}>xóa</b> thực phẩm <b>{selectedData?.tenThucPham}</b> khỏi phiếu nhập chứ?</p>
-              }}
-              onOk={async () => {
-                handleDeleteProduct(selectedData?.maLoHang + '');
-                setIsShowConfirmDelete(false);
-                fetchImportProducts();
-                hideOverlay();
-              }}
-              onCancel={() => {
-                setIsShowConfirmDelete(false);
-                hideOverlay();
-              }}
-              onClose={() => {
-                setIsShowConfirmDelete(false);
-                hideOverlay();
-              }}
-            />
-          </div>
-
-          <div className="ok-cancel-finish" style={{ top: isShowConfirmFinish ? '50%' : '-100%' }}>
-            <OkCancelModal
-              data={{
-                message: <p>Bạn chắc chắn đã <b style={{ color: webColors.primary }}>hoàn thành</b> phiếu nhập này chứ?</p>
-              }}
-              onOk={async () => {
-                const result = await requestApproveImportReceipt(detailData.maPhieuNhap, 'ND002');
-                console.log('Result:', result);
-                setIsShowConfirmFinish(false);
-                setIsShowDetail(false);
-                onFinish();
-                hideOverlay();
-              }}
-              onCancel={() => {
-                setIsShowConfirmFinish(false);
-                hideOverlay();
-              }}
-              onClose={() => {
-                setIsShowConfirmFinish(false);
-                hideOverlay();
-              }}
-            />
-          </div>
         </div>
       )}
+      <div className="add-product-modal" style={{ top: isShowAddProduct ? '50%' : '-100%' }}>
+        <ISAddImportProduct
+          setIsShowAdd={setIsShowAddProduct}
+          onAdded={fetchImportProducts}
+          importReceiptId={detailData?.maPhieuNhap + ''}
+        />
+      </div>
+      <div className="edit-product-modal" style={{ top: isShowEditProduct ? '50%' : '-100%' }}>
+        <ISEditImportProduct
+          setIsShowEdit={setIsShowEditProduct}
+          detailData={
+            selectedData
+              ? {
+                maLoHang: selectedData.maLoHang ?? '',
+                maThucPham: selectedData.maThucPham ?? '',
+                tenThucPham: selectedData.tenThucPham ?? '',
+                ngaySanXuat: selectedData.ngaySanXuat ?? '',
+                hanSuDung: selectedData.hanSuDung ?? '',
+                donGiaNhap: selectedData.donGiaNhap ?? 0,
+                soLuong: selectedData.soLuong ?? 0,
+                donViTinh: selectedData.donViTinh ?? '',
+                maPhieuNhap: detailData?.maPhieuNhap + ''
+              }
+              : undefined
+          }
+          onEdit={fetchImportProducts}
+        />
+      </div>
+      <div className="ok-cancel-delete" style={{ top: isShowConfirmDelete ? '50%' : '-100%' }}>
+        <OkCancelModal
+          data={{
+            message: <p>Bạn chắc chắn muốn <b style={{ color: 'red' }}>xóa</b> thực phẩm <b>{selectedData?.tenThucPham}</b> khỏi phiếu nhập chứ?</p>
+          }}
+          onOk={async () => {
+            handleDeleteProduct(selectedData?.maLoHang + '');
+            setIsShowConfirmDelete(false);
+            hideOverlay();
+          }}
+          onCancel={() => {
+            setIsShowConfirmDelete(false);
+            hideOverlay();
+          }}
+          onClose={() => {
+            setIsShowConfirmDelete(false);
+            hideOverlay();
+          }}
+        />
+      </div>
+      <div className="ok-cancel-finish" style={{ top: isShowConfirmFinish ? '50%' : '-100%' }}>
+        <OkCancelModal
+          data={{
+            message: <p>Bạn chắc chắn đã <b style={{ color: webColors.primary }}>hoàn thành</b> phiếu nhập này chứ?</p>
+          }}
+          onOk={async () => {
+            try {
+              const result = await requestApproveImportReceipt(detailData?.maPhieuNhap + '', user?.id + '');
+              console.log('Result:', result);
+              setIsShowConfirmFinish(false);
+              setIsShowDetail(false);
+              onFinish();
+              hideOverlay();
+              toast.success('Xác nhận hoàn thành thành công!');
+            } catch (error) {
+              toast.error(`Lỗi: ${error}`);
+            }
+          }}
+          onCancel={() => {
+            setIsShowConfirmFinish(false);
+            hideOverlay();
+          }}
+          onClose={() => {
+            setIsShowConfirmFinish(false);
+            hideOverlay();
+          }}
+        />
+      </div>
     </>
   );
 };

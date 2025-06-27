@@ -171,9 +171,40 @@ export class NguoiDungService {
       const userRoleResult = await Promise.all([
         await this.vaiTroNguoiDungService.insertUserRole(new VaiTroNguoiDung(user.getMaNguoiDung(), roleId), connection),
         await this.vaiTroNguoiDungService.insertUserRole(new VaiTroNguoiDung(user.getMaNguoiDung(), 'VT004'), connection)
-      ])
+      ]);
       connection.commit();
       return { userResult, userRoleResult };
+    } catch (error) {
+      connection.rollback();
+      console.error('Error service:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  };
+
+  public updateUser = async (user: NguoiDung, address: DiaChi) => {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      let addressId = '';
+      if ((await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa())).length > 0) {
+        addressId = (await this.diaChiService.getIdByTheRestField(address.getChiTietDiaChi(), address.getMaPhuongXa()))[0].maDiaChi;
+      } else {
+        addressId = await generateUUID(255, connection, 'diachi', 'maDiaChi', 'DC');
+        address.setMaDiaChi(addressId);
+        await this.diaChiService.insertAddress(address, connection);
+      }
+      user.setMaDiaChi(addressId);
+      if (user.getMatKhau().length > 0) {
+        const rawPassword = user.getMatKhau();
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
+        user.setMatKhau(hashedPassword);
+      }
+      const result = await this.nguoiDungDAO.updateUser(user, connection);
+      connection.commit();
+      return result;
     } catch (error) {
       connection.rollback();
       console.error('Error service:', error);

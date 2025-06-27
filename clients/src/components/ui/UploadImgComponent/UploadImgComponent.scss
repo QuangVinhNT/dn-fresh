@@ -24,16 +24,16 @@
       position: relative;
       overflow: hidden;
 
-      &:hover {
-        img {
-          filter: blur(3px) grayscale(80%);
-        }
+      // &:hover {
+      //   img {
+      //     filter: blur(3px) grayscale(80%);
+      //   }
 
-        .close-icon {
-          top: 50%;
-          transform: translate(-50%, -50%);
-        }
-      }
+      //   .close-icon {
+      //     top: 50%;
+      //     transform: translate(-50%, -50%);
+      //   }
+      // }
 
       img {
         width: 120px;

@@ -30,17 +30,19 @@ import DSOverview from "./delivery-staff/DSOverview/DSOverview";
 import InventoryStaff from "./inventory-staff/InventoryStaff";
 import ISExport from "./inventory-staff/ISExport/ISExport";
 import ISImport from "./inventory-staff/ISImport/ISImport";
+import ISOverview from "./inventory-staff/ISOverview/ISOverview";
+import PersonalInfo from "./PersonalInfo";
 
 export {
   // Admin
   Admin, Overview, Order, FoodList, FoodCategory, ImportFood, ExportFood, Customer, Staff, FoodProvider,
 
   // Inventory Staff
-  InventoryStaff, ISImport, ISExport,
-  
+  InventoryStaff, ISImport, ISExport,ISOverview,
+
   // Delivery Staff
   DeliveryStaff, DSOverview, DSOrder,
-  
+
   // Client
   Client, Home, Introduce, Foods, Contact, ClientOrders, ClientFoodDetail, Favourites, Payment, ClientOrderDetail,
 
@@ -48,5 +50,5 @@ export {
   Login, Register, ConfirmCode, ForgotPassword, UserRole,
 
   // Other
-  CartDrawer
+  CartDrawer, PersonalInfo
 };

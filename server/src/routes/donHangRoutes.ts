@@ -29,6 +29,11 @@ donHangRoutes.post('/', authMiddleware, checkRole(['VT004']), (req: Request, res
   if (role === 'VT004') return donHangController.insertOrder(req, res);
 });
 
+donHangRoutes.patch('/:id/unpack', authMiddleware, checkRole(['VT002']), (req: Request, res: Response) => {
+  const role = req.user?.roleId;
+  if (role === 'VT002') return donHangController.unpackOrdersByExportReceipt(req, res);
+});
+
 donHangRoutes.patch('/:id/pack', authMiddleware, checkRole(['VT002']), (req: Request, res: Response) => {
   const role = req.user?.roleId;
   if (role === 'VT002') return donHangController.confirmPack(req, res);
@@ -46,7 +51,7 @@ donHangRoutes.patch('/:id/finish', authMiddleware, checkRole(['VT003']), (req: R
 
 donHangRoutes.patch('/:id/cancel', authMiddleware, checkRole(['VT003', 'VT004']), (req: Request, res: Response) => {
   const role = req.user?.roleId;
-  if (role === 'VT003') return donHangController.cancelOrder(req, res);
+  if (role === 'VT003' || role === 'VT004') return donHangController.cancelOrder(req, res);
 });
 
 export default donHangRoutes;

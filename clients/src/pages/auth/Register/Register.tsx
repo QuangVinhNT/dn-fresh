@@ -12,6 +12,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import './Register.scss';
+import { toast } from "react-toastify";
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [cities, setCities] = useState<SelectBox[]>([]);
@@ -30,7 +31,7 @@ const Register = () => {
   }, []);
 
   useEffect(() => {
-    const cityId = typeof watch('city') === 'undefined' ? 'DN' : watch('city') as string;
+    const cityId = typeof watch('city') === 'undefined' ? '34' : watch('city') as string;
     fetchCommunes(cityId);
   }, [watch('city')]);
 
@@ -97,7 +98,7 @@ const Register = () => {
         setIsShowConfirmCode(true);
         hideLoading();
       } catch (error) {
-        setErrorMessage('Đăng ký thất bại');
+        toast.error('Đăng ký thất bại!');
       }
     }
   };
@@ -112,9 +113,10 @@ const Register = () => {
       const confirmResult = await verifyEmail(payload);
       console.log(confirmResult);
       hideOverlay();
+      toast.success('Đăng ký thành công!');
       navigate('/login');
     } catch (error) {
-      setErrorMessage('Mã xác minh không đúng');
+      toast.error('Mã xác minh không đúng!');
     }
   };
   return (

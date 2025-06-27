@@ -19,7 +19,8 @@ export class PhieuXuatDAO {
       LIMIT ?
       OFFSET ?       
       `, [limit, offset]);
-      const total = await pool.query(`
+
+      const [total] = await pool.query(`
       SELECT COUNT(DISTINCT maPhieuXuat) as total
       FROM phieuxuat
       ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
@@ -75,7 +76,7 @@ export class PhieuXuatDAO {
       console.error(`DAO error: ${error}`);
       throw error;
     }
-  }
+  };
 
   public softDelete = async (exportReceiptId: string, adminId: string, connection: PoolConnection) => {
     try {
@@ -95,7 +96,7 @@ export class PhieuXuatDAO {
     try {
       const result = await connection.query(`
         UPDATE phieuxuat
-        SET trangThai = 1, ngayCapNhat = NOW(), maQuanTriVien = ?
+        SET trangThai = 1, ngayCapNhat = NOW(), maQuanTriVien = ?, ngayXuatHang = NOW()
         WHERE maPhieuXuat = ?
         `, [adminId, exportReceiptId]);
       return result;
@@ -120,7 +121,7 @@ export class PhieuXuatDAO {
       LIMIT ?
       OFFSET ?       
       `, [limit, offset]);
-      const total = await pool.query(`
+      const [total] = await pool.query(`
       SELECT COUNT(DISTINCT maPhieuXuat) as total
       FROM phieuxuat
       WHERE trangThai NOT IN ('0') ${whereClause.length > 0 ? `AND ${whereClause}` : ''}

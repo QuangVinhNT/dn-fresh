@@ -125,10 +125,12 @@ export class DanhMucDAO {
   public getAllByProviderId = async (providerId: string) => {
     try {
       const [rows] = await pool.query(`
-        SELECT tenDanhMuc
+        SELECT DISTINCT(tenDanhMuc)
         FROM danhmuc AS dm
-        JOIN danhmucnhacungcap AS dmncc ON dm.maDanhMuc = dmncc.maDanhMuc
-        WHERE maNhaCungCap = ?;
+        JOIN khothucpham AS tp ON tp.maDanhMuc = dm.maDanhMuc
+        JOIN chitietthucphamnhap AS cttp ON cttp.maThucPham = tp.maThucPham
+        JOIN phieunhap AS pn ON pn.maPhieuNhap = cttp.maPhieuNhap
+        WHERE pn.maNhaCungCap = ?;
         `, [providerId]);
       return rows;
     } catch (error) {

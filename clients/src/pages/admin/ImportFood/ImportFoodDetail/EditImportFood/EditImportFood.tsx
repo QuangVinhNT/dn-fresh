@@ -10,6 +10,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import './EditImportFood.scss';
 import { overlayStore } from "@/store";
 import webColors from "@/constants/webColors";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,20 +29,25 @@ const EditImportFood = (props: IProps) => {
   const { showOverlay, hideOverlay } = overlayStore();
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
-    const payload: UpdateImportReceiptPayload = {
-      maNhaCungCap: formData['provider-id'].toString(),
-      maQuanTriVien: 'ND001',
-      ghiChu: formData['note'].toString()
-    };
-    const updateResult = await updateImportReceipt(payload, data?.maPhieuNhap + '');
-    console.log('Update result:', updateResult);
-    setIsShowEdit(false);
-    setIsShowDetail(false);
-    setErrorMessage('');
-    setProvider(undefined);
-    reset();
-    onEdited();
-    hideOverlay();
+    try {
+      const payload: UpdateImportReceiptPayload = {
+        maNhaCungCap: formData['provider-id'].toString(),
+        maQuanTriVien: 'ND001',
+        ghiChu: formData['note'].toString()
+      };
+      const updateResult = await updateImportReceipt(payload, data?.maPhieuNhap + '');
+      console.log('Update result:', updateResult);
+      setIsShowEdit(false);
+      setIsShowDetail(false);
+      setErrorMessage('');
+      setProvider(undefined);
+      reset();
+      onEdited();
+      hideOverlay();
+      toast.success('Cập nhật phiếu nhập thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
+    }
   };
 
   const fetchProviderById = async (providerId: string) => {

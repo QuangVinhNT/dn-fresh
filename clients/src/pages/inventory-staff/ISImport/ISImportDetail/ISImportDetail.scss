@@ -71,15 +71,17 @@
     }
   }
 
-  .add-product-modal,
-  .ok-cancel-delete,
-  .edit-product-modal,
-  .ok-cancel-finish {
-    position: absolute;
-    width: 100%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 999;
-    transition: all .5s;
-  }
+
+}
+
+.add-product-modal,
+.ok-cancel-delete,
+.edit-product-modal,
+.ok-cancel-finish {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  transition: all .5s;
 }

@@ -1,7 +1,7 @@
-import { getCities, getCommunes } from "@/api/addressApi";
+import { getCities, getCommunes, getDetailById } from "@/api/addressApi";
 import { insertOrder } from "@/api/orderApi";
 import { ButtonComponent, InputComponent, SelectComponent } from "@/components";
-import { loadingStore } from "@/store";
+import { loadingStore, overlayStore, userStore } from "@/store";
 import { cartStore } from "@/store/cartStore";
 import { SelectBox } from "@/types/ComponentType";
 import { InsertOrderPayload } from "@/types/Order";
@@ -11,28 +11,32 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import './Payment.scss';
-
-type FormValues = {
-  [key: string]: string | string[] | File[] | FileList;
-};
+import { deleteCart } from "@/api/cartApi";
+import { getUserById } from "@/api/userApi";
+import { paymentVnPay } from "@/api/vnPayApi";
+import { FormValues } from "@/types/Object";
+import { toast } from "react-toastify";
 
 const Payment = () => {
   const [cities, setCities] = useState<SelectBox[]>([]);
   const [communes, setCommunes] = useState<SelectBox[]>([]);
+  const [userInfo, setUserInfo] = useState<any>();
   const navigate = useNavigate();
 
-  const { cart, clearCart } = cartStore();
+  const { cart, clearCart, hideCart } = cartStore();
   const { showLoading, hideLoading } = loadingStore();
+  const { hideOverlay } = overlayStore();
+  const { user } = userStore();
 
   const { register, watch, handleSubmit } = useForm<FormValues>();
 
   useEffect(() => {
+    fetchUser();
     fetchCities();
-    fetchCommunes();
   }, []);
 
   useEffect(() => {
-    const cityId = typeof watch('city') === 'undefined' ? 'DN' : watch('city') as string;
+    const cityId = watch('city') + '';
     fetchCommunes(cityId);
   }, [watch('city')]);
 
@@ -53,7 +57,7 @@ const Payment = () => {
     }
   };
 
-  const fetchCommunes = async (cityId: string = 'DN') => {
+  const fetchCommunes = async (cityId: string) => {
     showLoading();
     try {
       const response = await getCommunes(cityId);
@@ -70,81 +74,125 @@ const Payment = () => {
     }
   };
 
+  const fetchUser = async () => {
+    showLoading();
+    try {
+      const resUser = await getUserById(user?.id + '');
+      const resAddress = await getDetailById(resUser.maDiaChi);
+      setUserInfo({ ...resUser, ...resAddress });
+      fetchCommunes(resAddress.maTinhThanhPho);
+    } catch (error) {
+      console.error('Error when load user:', error);
+    } finally {
+      hideLoading();
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const payload: InsertOrderPayload = {
-      maKhachHang: 'ND003',
-      ghiChu: data['note'].toString(),
-      phuongThucThanhToan: +data['payment'],
-      chiTietDiaChi: data['address-detail'].toString(),
-      maPhuongXa: data['commune'].toString(),
-      chiTietDonHang: cart
-    };
-    const insertResult = await insertOrder(payload);
-    console.log('Insert result:', insertResult)
-    clearCart();
-    navigate('/')
+    showLoading();
+    try {
+      const payload: InsertOrderPayload = {
+        maKhachHang: user?.id + '',
+        ghiChu: data['note'].toString(),
+        phuongThucThanhToan: +data['payment'],
+        chiTietDiaChi: data['address-detail'].toString(),
+        maPhuongXa: data['commune'].toString(),
+        chiTietDonHang: cart,
+        giaTriDonHang: cart.reduce((prev, cur) => {
+          const price = cur.tiLeKhuyenMai === 0 ? cur.donGia : cur.donGia - Math.round((cur.donGia * cur.tiLeKhuyenMai) / 100) * 100;
+          return prev + price * cur.soLuong;
+        }, 0)
+      };
+      if (payload.phuongThucThanhToan === 2) {
+        const insertResult = await insertOrder(payload);
+        console.log('Insert result:', insertResult);
+        clearCart();
+        const deleteResult = await deleteCart(user?.id + '');
+        console.log('Delete result:', deleteResult);
+        navigate('/');
+      }
+      if (payload.phuongThucThanhToan === 1) {
+        // console.log(payload);
+        const result = await paymentVnPay(payload);
+        if (result.paymentUrl) {
+          window.location.href = result.paymentUrl;
+          console.log(result.paymentUrl);
+        }
+      }
+      toast.success('Đặt hàng thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
+    } finally {
+      hideLoading();
+      hideCart();
+      hideOverlay();
+    }
   };
 
   return (
     <form className="payment-component" onSubmit={handleSubmit(onSubmit)}>
       <div className="payment-content">
         <div className="receiving-info-payment">
-          <div className="receiving-info">
-            <h3>Thông tin nhận hàng</h3>
-            <InputComponent
-              title="Email"
-              name="email"
-              placeholder="abc@gmail.com"
-              isReadOnly
-              defaultValue
-            />
-            <InputComponent
-              title="Họ tên"
-              name="fullname"
-              placeholder="Nguyễn Văn A"
-              isReadOnly
-              defaultValue
-            />
-            <InputComponent
-              title="Số điện thoại"
-              name="phone-number"
-              placeholder="0901987765"
-              isReadOnly
-              defaultValue
-            />
-            <SelectComponent
-              title="Tỉnh/thành phố"
-              name="city"
-              items={cities}
-              register={register}
-              defaultValue
-              isRequired
-            />
-            <SelectComponent
-              title="Phường/xã"
-              name="commune"
-              items={communes}
-              register={register}
-              defaultValue
-              isRequired
-            />
-            <InputComponent
-              title="Địa chỉ"
-              name="address-detail"
-              placeholder="Thôn Mỹ Sơn"
-              register={register}
-              defaultValue
-              isRequired
-            />
-            <InputComponent
-              title="Ghi chú"
-              name="note"
-              placeholder="Ghi chú"
-              isTextarea
-              isRequired={false}
-              register={register}
-            />
-          </div>
+          {userInfo && (
+            <div className="receiving-info">
+              <h3>Thông tin nhận hàng</h3>
+              <InputComponent
+                title="Email"
+                name="email"
+                placeholder={userInfo.email}
+                isReadOnly
+                defaultValue
+              />
+              <InputComponent
+                title="Họ tên"
+                name="fullname"
+                placeholder={userInfo.hoTen}
+                isReadOnly
+                defaultValue
+              />
+              <InputComponent
+                title="Số điện thoại"
+                name="phone-number"
+                placeholder={userInfo.soDienThoai}
+                isReadOnly
+                defaultValue
+              />
+              <SelectComponent
+                title="Tỉnh/thành phố"
+                name="city"
+                items={cities}
+                register={register}
+                placeholder={userInfo.maTinhThanhPho}
+                defaultValue
+                isRequired
+              />
+              <SelectComponent
+                title="Phường/xã"
+                name="commune"
+                items={communes}
+                register={register}
+                placeholder={userInfo.maPhuongXa}
+                defaultValue
+                isRequired
+              />
+              <InputComponent
+                title="Địa chỉ"
+                name="address-detail"
+                placeholder={userInfo.chiTietDiaChi}
+                register={register}
+                defaultValue
+                isRequired
+              />
+              <InputComponent
+                title="Ghi chú"
+                name="note"
+                placeholder="Ghi chú"
+                isTextarea
+                isRequired={false}
+                register={register}
+              />
+            </div>
+          )}
           <div className="payment">
             <h3>Thanh toán</h3>
             <div className="cod-payment">

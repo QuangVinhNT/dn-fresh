@@ -6,7 +6,7 @@ export class ChiTietDonHangDAO {
   public getById = async (orderId: string) => {
     try {
       const [rows] = await pool.query(`
-        SELECT ctdh.maThucPham, tenThucPham, ctdh.soLuong, donGia, tiLeKhuyenMai, donViTinh, dm.tenDanhMuc, SUM(ctdh.soLuong * donGia - ctdh.soLuong * donGia * tiLeKhuyenMai) as giaTien
+        SELECT ctdh.maThucPham, tenThucPham, ctdh.soLuong, donGia, tiLeKhuyenMai, donViTinh, dm.tenDanhMuc, SUM(ctdh.soLuong * donGia - ctdh.soLuong * ROUND((donGia * tiLeKhuyenMai) / 100) * 100) as giaTien
         FROM chitietdonhang AS ctdh
         JOIN khothucpham AS tp ON ctdh.maThucPham = tp.maThucPham
         JOIN danhmuc AS dm ON dm.maDanhMuc = tp.maDanhMuc

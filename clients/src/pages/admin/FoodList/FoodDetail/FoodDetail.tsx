@@ -5,6 +5,7 @@ import { AdminProductDetail, ProductPackage, ProductStatus } from "@/types/Produ
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useState } from "react";
 import './FoodDetail.scss';
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,15 +20,7 @@ const headers = ['Mã lô hàng', 'Số lượng tồn kho', 'Đơn vị tính',
 
 const FoodDetail = (props: IProps) => {
   const { setIsShowDetail, detailData, setIsShowEditFood, packageData, onDelete } = props;
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const deleteFood = async () => {
-    const deleteResult = await deleteProduct(detailData?.maThucPham ?? '');
-    console.log('Delete result:', deleteResult);
-    onDelete?.();
-    setShowDeleteModal(false);
-    hideOverlay();
-    setIsShowDetail(false);
-  };
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
   const { hideOverlay, showOverlay } = overlayStore();
   return (
     <>
@@ -47,14 +40,15 @@ const FoodDetail = (props: IProps) => {
               </div>
             }
             extraTitle={
-              <div className="hide-edit">
+              <div className="delete-edit">
                 <ButtonComponent
-                  className="btn-hide"
+                  className="btn-delete"
                   label="Xóa thực phẩm"
                   onClick={() => {
-                    setShowDeleteModal(true);
+                    setIsShowDeleteModal(true);
                     showOverlay();
                   }}
+                  variant="danger"
                   type="no-submit"
                 />
                 <ButtonComponent
@@ -164,22 +158,34 @@ const FoodDetail = (props: IProps) => {
         </div>
       )}
       {/* Delete modal */}
-      {/* {showDeleteModal && (
+      <div className="ok-cancel-delete-modal" style={{ top: isShowDeleteModal ? '50%' : '-100%' }}>
         <OkCancelModal
-          message={
-            <p>Bạn chắc chắn muốn xóa sản phẩm {' '}
-              <span style={{ fontWeight: 700 }}>{detailData?.tenThucPham}</span> ?
-            </p>
-          }
-          onOk={() => {
-            deleteFood();
+          data={{
+            message: <p>Bạn chắc chắn muốn <b style={{color: 'red'}}>xóa</b> thực phẩm này chứ?</p>
+          }}
+          onOk={async () => {
+            try {
+              const deleteResult = await deleteProduct(detailData?.maThucPham ?? '');
+              console.log('Delete result:', deleteResult);
+              onDelete?.();
+              setIsShowDeleteModal(false);
+              hideOverlay();
+              setIsShowDetail(false);
+              toast.success(`Xóa thực phẩm thành công!`);
+            } catch (error) {
+              toast.error(`Lỗi: ${error}`);
+            }
           }}
           onCancel={() => {
+            setIsShowDeleteModal(false);
             hideOverlay();
-            setShowDeleteModal(false);
+          }}
+          onClose={() => {
+            setIsShowDeleteModal(false);
+            hideOverlay();
           }}
         />
-      )} */}
+      </div>
     </>
   );
 };

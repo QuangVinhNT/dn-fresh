@@ -4,7 +4,7 @@ import FoodService2 from '@/assets/images/service_2.png';
 import FoodService3 from '@/assets/images/service_3.png';
 import FoodService4 from '@/assets/images/service_4.png';
 import { BackComponent, ClientBanner } from "@/components";
-import { loadingStore } from "@/store";
+import { loadingStore, userStore } from "@/store";
 import { ProductDetail } from "@/types/Product";
 import SeparateNumber from "@/utils/separateNumber";
 import { useEffect, useState } from "react";
@@ -13,6 +13,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import './ClientFoodDetail.scss';
 import FoodImage from "./FoodImage/FoodImage";
 import { cartStore } from "@/store/cartStore";
+import { insertItemToCart } from "@/api/cartApi";
+import { toast } from "react-toastify";
 
 const foodCommits = [
   {
@@ -41,6 +43,7 @@ const ClientFoodDetail = () => {
 
   const { showLoading, hideLoading } = loadingStore();
   const { addToCart } = cartStore();
+  const { user } = userStore();
 
   useEffect(() => {
     fetchProduct();
@@ -51,6 +54,7 @@ const ClientFoodDetail = () => {
     try {
       const response = await getProductById(id as string);
       setProduct(response);
+      console.log(response);
     } catch (error) {
       console.error('Error when load product:', error);
     } finally {
@@ -75,7 +79,7 @@ const ClientFoodDetail = () => {
                 <div className="food-price">
                   <span className="discount-price">
                     {+product.tiLeKhuyenMai !== 0 ?
-                      SeparateNumber(product.donGia - product.donGia * +product.tiLeKhuyenMai) : SeparateNumber(product.donGia)
+                      SeparateNumber(product.donGia - Math.round((product.donGia * product.tiLeKhuyenMai) / 100) * 100) : SeparateNumber(product.donGia)
                     }₫
                   </span>
                   {+product.tiLeKhuyenMai !== 0 && (
@@ -85,7 +89,7 @@ const ClientFoodDetail = () => {
                   )}
                 </div>
                 {+product.tiLeKhuyenMai !== 0 && (
-                  <span className="money-save">Tiết kiệm: <b>{SeparateNumber(product.donGia - product.donGia * +product.tiLeKhuyenMai)}₫</b> so với giá thị trường</span>
+                  <span className="money-save">Tiết kiệm: <b>{SeparateNumber(Math.round((product.donGia * product.tiLeKhuyenMai) / 100) * 100)}₫</b> so với giá thị trường</span>
                 )}
 
                 {/* Food description */}
@@ -113,7 +117,18 @@ const ClientFoodDetail = () => {
                 <button
                   className={`btn-add-to-cart ${product.trangThai !== 1 && 'disabled disabled-color disabled-bg-color'}`}
                   disabled={product.trangThai !== 1}
-                  onClick={() => { addToCart({ ...product, soLuong: foodQuantity }); }}
+                  onClick={async () => {
+                    try {
+                      addToCart({ ...product, soLuong: foodQuantity });
+                      const insertResult = await insertItemToCart(user?.id + '', {
+                        maThucPham: product.maThucPham,
+                        soLuong: foodQuantity
+                      });
+                      toast.success(`Thêm ${product.tenThucPham} vào giỏ hàng thành công!`);
+                    } catch (error) {
+                      toast.error(`Lỗi: ${error}`);
+                    }
+                  }}
                 >
                   {product.trangThai === 1 ? 'Thêm vào giỏ hàng' : 'Tạm hết hàng'}
                 </button>
@@ -129,14 +144,14 @@ const ClientFoodDetail = () => {
             </div>
 
             {/* Food history */}
-            <div className="food-view-history">
+            {/* <div className="food-view-history">
               <h1>Sản phẩm đã xem</h1>
               <div className="food-view-history-items">
-                {/* {foodData.map((item, idx) => (
+                {foodData.map((item, idx) => (
                   <ProductCard key={idx} imgSrc={item.imgSrc} label={item.label} standardPrice={item.standardPrice} discount={item.discount} id={''} />
-                ))} */}
+                ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

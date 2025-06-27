@@ -46,7 +46,7 @@ const AdminSidebar = (props: Props) => {
           <AdminSidebarItem
             text="Thông tin cá nhân"
             affix={<IoInformationCircleOutline size={22} />}
-            link={'/'}
+            link={'/personal-info'}
           />
           <AdminSidebarItem
             text="Đăng xuất"

@@ -11,6 +11,7 @@ import AddFood from "./AddFood/AddFood";
 import EditFood from "./FoodDetail/EditFood/EditFood";
 import FoodDetail from "./FoodDetail/FoodDetail";
 import './FoodList.scss';
+import { getCategoriesForFilter } from "@/api/categoryApi";
 
 const headers = ['Sản phẩm', 'Ảnh', 'Loại', 'Tồn kho', 'Đơn vị tính', 'Ngày khởi tạo', 'Trạng thái'];
 
@@ -21,6 +22,7 @@ const FoodList = () => {
   const [isShowEditFood, setIsShowEditFood] = useState(false);
   const [isShowAddFood, setIsShowAddFood] = useState(false);
   const [products, setProducts] = useState<AdminProductList[]>([]);
+  const [categories, setCategories] = useState<{ name: string, value: string; }[]>([]);
   const [product, setProduct] = useState<AdminProductDetail>();
   const [productPackages, setProductPackages] = useState<ProductPackage[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -31,6 +33,10 @@ const FoodList = () => {
   const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const statusFilter = filters.find(filter => filter.name === 'status')?.value;
@@ -46,6 +52,22 @@ const FoodList = () => {
       setTotal(response.total);
     } catch (error) {
       console.error('Error when load product:', error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const fetchCategories = async () => {
+    showLoading();
+    try {
+      const response = await getCategoriesForFilter();
+      const formatCategories = response.map(category => ({
+        name: category.tenDanhMuc,
+        value: category.maDanhMuc
+      }));
+      setCategories(formatCategories);
+    } catch (error) {
+      console.error('Error when load categories:', error);
     } finally {
       hideLoading();
     }
@@ -105,24 +127,7 @@ const FoodList = () => {
                   setFilters={setFilters}
                 />
                 <FilterComponent
-                  filterItems={[
-                    {
-                      name: 'Rau củ',
-                      value: 'DM001',
-                    },
-                    {
-                      name: 'Thịt',
-                      value: 'DM002',
-                    },
-                    {
-                      name: 'Thủy - hải sản',
-                      value: 'DM003',
-                    },
-                    {
-                      name: 'Trái cây',
-                      value: 'DM004',
-                    }
-                  ]}
+                  filterItems={categories}
                   filterType={{
                     name: 'Loại thực phẩm',
                     value: 'category'
@@ -178,7 +183,7 @@ const FoodList = () => {
       )}
 
       {/* Food Detail */}
-      {isShowDetail && <FoodDetail setIsShowDetail={setIsShowDetail} detailData={product} setIsShowEditFood={setIsShowEditFood} packageData={productPackages} onDelete={fetchProducts}/>}
+      {isShowDetail && <FoodDetail setIsShowDetail={setIsShowDetail} detailData={product} setIsShowEditFood={setIsShowEditFood} packageData={productPackages} onDelete={fetchProducts} />}
 
 
       {/* Edit food component */}

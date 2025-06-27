@@ -32,7 +32,7 @@ const DSOrder = () => {
   const fetchOrders = async (status?: string) => {
     showLoading();
     try {
-      const response = await getStaffOrders(page, limit, keywordRef.current, 'PX003', status);
+      const response = await getStaffOrders(page, limit, keywordRef.current, 'DN_015', status);
       setOrders(response.data);
       setTotal(response.total);
     } catch (error) {

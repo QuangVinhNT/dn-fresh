@@ -13,7 +13,7 @@ export class ThucPhamYeuThichController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
-      const userId = req.query.userid as string || '';
+      const userId = req.params.id as string || '';
       const data = await this.thucPhamYeuThichService.getAll(page, limit, userId);
       res.json(data);
     } catch (error) {
@@ -24,8 +24,13 @@ export class ThucPhamYeuThichController {
 
   public insert = async (req: Request, res: Response) => {
     try {
-      const { productId, userId } = req.body;
-      const thucPhamYeuThich = new ThucPhamYeuThich(userId, productId)
+      const userId = req.params.id as string || '';
+      const payload = req.body;
+      if (!payload || !userId) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const thucPhamYeuThich = new ThucPhamYeuThich(userId, payload.productId);
       const result = await this.thucPhamYeuThichService.insert(thucPhamYeuThich);
       res.status(201).json({
         success: true,
@@ -40,10 +45,13 @@ export class ThucPhamYeuThichController {
 
   public delete = async (req: Request, res: Response) => {
     try {
-      const { productId, userId } = req.query;
-      // console.log('ProductId:', productId)
-      // console.log('UserId:', userId)
-      const thucPhamYeuThich = new ThucPhamYeuThich(userId as string, productId as string)
+      const userId = req.params.id as string || '';
+      const { productId } = req.query;
+      if (!userId || !productId) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const thucPhamYeuThich = new ThucPhamYeuThich(userId, productId as string);
       const result = await this.thucPhamYeuThichService.delete(thucPhamYeuThich);
       res.status(200).json({
         success: true,

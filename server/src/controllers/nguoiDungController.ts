@@ -73,6 +73,21 @@ export class NguoiDungController {
     }
   };
 
+  public getById = async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.id as string || '';
+      if (!userId) {
+        res.status(400).json({ message: 'User not found!' });
+        return;
+      }
+      const data = await this.nguoiDungService.getById(userId);
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
   public lockAccount = async (req: Request, res: Response) => {
     try {
       const userId = req.params.id as string || '';
@@ -114,6 +129,24 @@ export class NguoiDungController {
       const address = new DiaChi('', payload.chiTietDiaChi, payload.maPhuongXa);
       const result = await this.nguoiDungService.insertUser(user, address, payload.maVaiTro);
       res.status(201).json(result);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+  public updateUser = async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.id;
+      const payload = req.body;
+      if (!payload || !userId) {
+        res.status(400).json({ message: 'Invalid order data' });
+        return;
+      }
+      const user = new NguoiDung(userId, payload.hoTen, payload.gioiTinh, new Date(payload.ngaySinh), payload.soDienThoai, '', payload.email, payload.matKhau || '', payload.hinhAnh || '', null, null, 1);
+      const address = new DiaChi('', payload.chiTietDiaChi, payload.maPhuongXa);
+      const result = await this.nguoiDungService.updateUser(user, address);
+      res.json(result);
     } catch (error) {
       console.error('Controller error:', error);
       res.status(500).json({ message: 'Server error' });

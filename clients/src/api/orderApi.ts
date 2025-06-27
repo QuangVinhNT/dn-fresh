@@ -36,6 +36,16 @@ const getStaffOrders = async (page: number, limit: number, orderId: string, comm
   return res.data;
 };
 
+const unpackOrders = async (exportReceiptId: string) => {
+  const res = await axiosInstance.patch(`/v1/don-hang/${exportReceiptId}/unpack`);
+  return res.data;
+};
+
+const confirmPackOrder = async (orderId: string, exportReceiptId: string) => {
+  const res = await axiosInstance.patch(`/v1/don-hang/${orderId}/pack`, { maPhieuXuat: exportReceiptId });
+  return res.data;
+};
+
 const confirmExportOrder = async (orderId: string, staffId: string) => {
   const res = await axiosInstance.patch(`/v1/don-hang/${orderId}/export`, { staffId });
   return res.data;
@@ -46,6 +56,11 @@ const confirmFinishOrder = async (orderId: string, staffId: string) => {
   return res.data;
 };
 
+const confirmCancelOrder = async (orderId: string, staffId: string, note: string) => {
+  const res = await axiosInstance.patch(`/v1/don-hang/${orderId}/cancel`, { staffId, note });
+  return res.data;
+};
+
 export {
-  getAdminOrders, getOrders, getOrderById, insertOrder, getAdminOrderById, getReadyOrders, getStaffOrders, confirmExportOrder, confirmFinishOrder
+  getAdminOrders, getOrders, getOrderById, insertOrder, getAdminOrderById, getReadyOrders, getStaffOrders, confirmExportOrder, confirmFinishOrder, unpackOrders, confirmPackOrder, confirmCancelOrder
 };

@@ -14,7 +14,7 @@ type User = {
   ngayCapNhat: Date;
   trangThai: number;
   maVaiTro: string;
-}
+};
 
 export enum UserStatus {
   'Vô hiệu hóa' = 0,
@@ -34,27 +34,29 @@ export enum Gender {
   'Nam' = 1
 }
 
-type AccountUser = Pick<User, 'hoTen' | 'hinhAnh'>
+type AccountUser = Pick<User, 'hoTen' | 'hinhAnh'>;
 
-type CustomerList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'email' | 'trangThai' | 'ngayTao'>
+type CustomerList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'email' | 'trangThai' | 'ngayTao'>;
 
-type StaffList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'maVaiTro' | 'trangThai' | 'ngayTao'>
+type StaffList = Pick<User, 'maNguoiDung' | 'hoTen' | 'ngaySinh' | 'gioiTinh' | 'maVaiTro' | 'trangThai' | 'ngayTao'>;
 
-type InsertUserPayload = Pick <User, 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'matKhau' | 'hinhAnh' | 'maVaiTro' > & Pick<DiaChi, 'chiTietDiaChi' | 'maPhuongXa'>
+type InsertUserPayload = Pick<User, 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'matKhau' | 'hinhAnh' | 'maVaiTro'> & Pick<DiaChi, 'chiTietDiaChi' | 'maPhuongXa'>;
+
+type UpdateUserPayload = Pick<User, 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'matKhau' | 'hinhAnh'> & Pick<DiaChi, 'chiTietDiaChi' | 'maPhuongXa'>;
 
 type CustomerDetailType = Pick<User, 'maNguoiDung' | 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'hinhAnh' | 'ngayTao' | 'ngayCapNhat' | 'trangThai'> & {
   diaChi: string,
   soLuongDonHang: number,
-  danhSachVaiTro: string[]
-}
+  danhSachVaiTro: string[];
+};
 
 type StaffDetailType = Pick<User, 'maNguoiDung' | 'hoTen' | 'gioiTinh' | 'ngaySinh' | 'soDienThoai' | 'email' | 'hinhAnh' | 'ngayTao' | 'ngayCapNhat' | 'trangThai'> & {
   diaChi: string,
-  danhSachVaiTro: string[]
-}
+  danhSachVaiTro: string[];
+};
 
-type InsertUserRolePayload = Pick<User, 'maNguoiDung' | 'maVaiTro'>
+type InsertUserRolePayload = Pick<User, 'maNguoiDung' | 'maVaiTro'>;
 
 export type {
-  AccountUser, CustomerList, StaffList, User, InsertUserPayload, CustomerDetailType, InsertUserRolePayload, StaffDetailType
-}
+  AccountUser, CustomerList, StaffList, User, InsertUserPayload, CustomerDetailType, InsertUserRolePayload, StaffDetailType, UpdateUserPayload
+};

@@ -8,6 +8,7 @@ import { loadingStore } from "@/store";
 import { postUploadFile } from "@/api/uploadApi";
 import { InsertUserPayload } from "@/types/User";
 import { insertUser } from "@/api/userApi";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowAdd: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,7 +34,7 @@ const AddStaff = (props: IProps) => {
   }, []);
 
   useEffect(() => {
-    const cityId = typeof watch('city') === 'undefined' ? 'DN' : watch('city') as string;
+    const cityId = typeof watch('city') === 'undefined' ? '34' : watch('city') as string;
     fetchCommunes(cityId);
   }, [watch('city')]);
 
@@ -92,25 +93,30 @@ const AddStaff = (props: IProps) => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const fileArray = data['customer-avatar'];
-    if (fileArray instanceof FileList) {
-      const imageUrls = await handleUpload(fileArray);
-      const payload: InsertUserPayload = {
-        hoTen: data['fullname'].toString(),
-        gioiTinh: +data['gender'],
-        ngaySinh: new Date(data['dob'] + ''),
-        soDienThoai: data['phone-number'].toString(),
-        email: data['email'].toString(),
-        hinhAnh: imageUrls[0].url,
-        chiTietDiaChi: data['address-detail'].toString(),
-        maPhuongXa: data['commune'].toString(),
-        matKhau: '',
-        maVaiTro: data['role-code'].toString()
-      };
-      const insertResult = await insertUser(payload);
-      console.log('Insert result:', insertResult);
-      setIsShowAdd(false);
-      onAdded();
+    try {
+      const fileArray = data['customer-avatar'];
+      if (fileArray instanceof FileList) {
+        const imageUrls = await handleUpload(fileArray);
+        const payload: InsertUserPayload = {
+          hoTen: data['fullname'].toString(),
+          gioiTinh: +data['gender'],
+          ngaySinh: new Date(data['dob'] + ''),
+          soDienThoai: data['phone-number'].toString(),
+          email: data['email'].toString(),
+          hinhAnh: imageUrls ? imageUrls[0].url : '',
+          chiTietDiaChi: data['address-detail'].toString(),
+          maPhuongXa: data['commune'].toString(),
+          matKhau: '',
+          maVaiTro: data['role-code'].toString()
+        };
+        const insertResult = await insertUser(payload);
+        console.log('Insert result:', insertResult);
+        setIsShowAdd(false);
+        onAdded();
+        toast.success('Tạo nhân sự thành công!');
+      }
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
     }
   };
 

@@ -18,6 +18,7 @@ type Order = {
   tongTien: number;
   chiTietDiaChi: string;
   maPhuongXa: string;
+  giaTriDonHang: number;
   chiTietDonHang: (ProductList & { soLuong: number; })[];
 };
 
@@ -51,7 +52,7 @@ type OrderDetail = Pick<Order, 'maDonHang' | 'nguoiNhan' | 'diaChiNhan' | 'ngayT
   thongTinThucPham: OrderProduct[];
 };
 
-type InsertOrderPayload = Pick<Order, 'maKhachHang' | 'ghiChu' | 'phuongThucThanhToan' | 'chiTietDiaChi' | 'maPhuongXa' | 'chiTietDonHang'>;
+type InsertOrderPayload = Pick<Order, 'maKhachHang' | 'ghiChu' | 'phuongThucThanhToan' | 'chiTietDiaChi' | 'maPhuongXa' | 'chiTietDonHang' | 'giaTriDonHang'>;
 
 type AdminOrderList = Pick<Order, 'maDonHang' | 'ngayTao' | 'nguoiNhan' | 'trangThai' | 'maPhieuXuat' | 'tenNhanVien'>;
 

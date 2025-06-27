@@ -5,6 +5,9 @@ import './ProductCard.scss';
 import { cartStore } from "@/store/cartStore";
 import { ProductStatus } from "@/types/Product";
 import { deleteFavouriteProduct, insertFavouriteProduct } from "@/api/favouriteProductApi";
+import { insertItemToCart } from "@/api/cartApi";
+import { favouriteFoodsStore, userStore } from "@/store";
+import { toast } from "react-toastify";
 
 interface IProps {
   id: string;
@@ -21,14 +24,16 @@ interface IProps {
 const ProductCard = (props: IProps) => {
   const { imgSrc, discount, label, standardPrice, id, status, isFavourite, onUpdateFavourite, unit } = props;
   const { addToCart } = cartStore();
+  const { addToFavouriteFoods, removeFromFavouriteFoods, favouriteFoods } = favouriteFoodsStore();
+  const { user } = userStore();
   return (
     <Link to={`/foods/${id}`} className="product-card-component">
-      {discount !== 0 && <span className="discount-tag">- {discount * 100}%</span>}
+      {+discount !== 0 && <span className="discount-tag">- {(discount * 100).toFixed(0)}%</span>}
       <div className="prd-img">
         <img src={imgSrc} alt="" />
         <div className="tools">
           <div>
-            {isFavourite ? (
+            {favouriteFoods.find(food => food.maThucPham === id) ? (
               <IoHeart
                 className="fav-icon icon"
                 size={36}
@@ -36,7 +41,13 @@ const ProductCard = (props: IProps) => {
                 onClick={async (e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  const deleteResult = await deleteFavouriteProduct(id, 'ND003');
+                  try {
+                    const deleteResult = await deleteFavouriteProduct(id, user?.id + '');
+                    removeFromFavouriteFoods(id);
+                    toast.success(`Xóa ${label} khỏi yêu thích thành công!`);
+                  } catch (error) {
+                    toast.error(`Lỗi: ${error}`);
+                  }
                   onUpdateFavourite && onUpdateFavourite();
                 }}
               />
@@ -48,7 +59,21 @@ const ProductCard = (props: IProps) => {
                 onClick={async (e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  const insertResult = await insertFavouriteProduct({ productId: id, userId: 'ND003' });
+                  try {
+                    const insertResult = await insertFavouriteProduct(id, user?.id + '');
+                    addToFavouriteFoods({
+                      maThucPham: id,
+                      tenThucPham: label,
+                      donGia: standardPrice,
+                      donViTinh: unit,
+                      hinhAnh: [imgSrc],
+                      tiLeKhuyenMai: discount,
+                      trangThai: status
+                    });
+                    toast.success(`Thêm ${label} vào yêu thích thành công!`);
+                  } catch (error) {
+                    toast.error(`Lỗi: ${error}`);
+                  }
                   onUpdateFavourite && onUpdateFavourite();
                 }}
               />
@@ -59,10 +84,19 @@ const ProductCard = (props: IProps) => {
               className={`cart-icon icon ${status !== 1 && 'disabled'}`}
               size={36}
               color="#fff"
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                status === 1 && addToCart({ maThucPham: id, tiLeKhuyenMai: discount, hinhAnh: [imgSrc], tenThucPham: label, donGia: standardPrice, trangThai: status, soLuong: 1, donViTinh: unit });
+                try {
+                  status === 1 && addToCart({ maThucPham: id, tiLeKhuyenMai: discount, hinhAnh: [imgSrc], tenThucPham: label, donGia: standardPrice, trangThai: status, soLuong: 1, donViTinh: unit });
+                  const insertResult = await insertItemToCart(user?.id + '', {
+                    maThucPham: id,
+                    soLuong: 1
+                  });
+                  toast.success(`Thêm ${label} vào giỏ hàng thành công!`);
+                } catch (error) {
+                  toast.error(`Lỗi: ${error}`);
+                }
               }} />
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { getFavouriteProducts } from "@/api/favouriteProductApi";
 import DecoHeader from '@/assets/images/deco-header.png';
 import Logo from '@/assets/svgs/dnfresh-logo-white.svg';
-import { overlayStore, userStore } from "@/store";
+import { favouriteFoodsStore, overlayStore, userStore } from "@/store";
 import { cartStore } from "@/store/cartStore";
 import { useEffect, useState } from "react";
 import { IoCartOutline, IoHeartOutline } from "react-icons/io5";
@@ -32,14 +32,14 @@ const menuItems = [
 ];
 
 const ClientHeader = () => {
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const [total, setTotal] = useState<number>(0);
   const location = useLocation();
   const navigate = useNavigate();
 
   const { showCart, cart } = cartStore();
+  const { favouriteFoods } = favouriteFoodsStore();
   const { showOverlay } = overlayStore();
-  const { user, clearUser } = userStore();
+  const { user } = userStore();
 
   useEffect(() => {
     fetchFavouriteProducts();
@@ -68,7 +68,7 @@ const ClientHeader = () => {
         </div>
         <div className="client-header-tools">
           <div className="favourite tool" onClick={() => navigate('/favourites')}>
-            <span className="quantity">{total}</span>
+            <span className="quantity">{favouriteFoods.length}</span>
             <IoHeartOutline size={24} className="icon" />
           </div>
           <div className="cart tool" onClick={() => {
@@ -81,10 +81,7 @@ const ClientHeader = () => {
           <div className="user">
             {user ? (
               <div>
-                <span>Xin chào, <Link to={'/'} className="username" onClick={() => {
-                  localStorage.removeItem('access_token');
-                  clearUser();
-                }}>{user.fullname}</Link>!</span>
+                <span>Xin chào, <Link to={'/personal-info'} className="username">{user.fullname}</Link>!</span>
               </div>
             ) : (
               <div>

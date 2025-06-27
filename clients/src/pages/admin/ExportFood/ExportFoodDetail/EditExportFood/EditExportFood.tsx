@@ -8,6 +8,7 @@ import { overlayStore } from "@/store";
 import { updateExportReceipt } from "@/api/exportReceiptApi";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import webColors from "@/constants/webColors";
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,17 +25,22 @@ const EditExportFood = (props: IProps) => {
   const { showOverlay, hideOverlay } = overlayStore();
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
-    const payload: UpdateExportReceiptPayload = {
-      maQuanTriVien: 'ND001',
-      ghiChu: formData['note'].toString()
-    };
-    const updateResult = await updateExportReceipt(payload, data?.maPhieuXuat + '');
-    console.log('Update result:', updateResult);
-    setIsShowEdit(false);
-    setIsShowDetail(false);
-    reset();
-    onEdited();
-    hideOverlay();
+    try {
+      const payload: UpdateExportReceiptPayload = {
+        maQuanTriVien: 'ND001',
+        ghiChu: formData['note'].toString()
+      };
+      const updateResult = await updateExportReceipt(payload, data?.maPhieuXuat + '');
+      console.log('Update result:', updateResult);
+      setIsShowEdit(false);
+      setIsShowDetail(false);
+      reset();
+      onEdited();
+      hideOverlay();
+      toast.success('Cập nhật phiếu xuất thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
+    }
   };
 
   return (

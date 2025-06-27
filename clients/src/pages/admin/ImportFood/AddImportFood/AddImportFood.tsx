@@ -10,6 +10,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import './AddImportFood.scss';
+import { toast } from "react-toastify";
 
 interface IProps {
   setIsShowAdd: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,19 +27,24 @@ const AddImportFood = (props: IProps) => {
   const { register, reset, handleSubmit, watch } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const payload: InsertImportReceiptPayload = {
-      maNhaCungCap: data['provider-id'].toString(),
-      maQuanTriVien: 'ND001',
-      ghiChu: data['import-receipt-note'].toString()
-    };
-    const insertResult = await insertImportReceipt(payload);
-    console.log('Insert result:', insertResult);
-    setIsShowAdd(false);
-    hideOverlay();
-    setErrorMessage('');
-    setProvider(undefined);
-    reset();
-    onAdded();
+    try {
+      const payload: InsertImportReceiptPayload = {
+        maNhaCungCap: data['provider-id'].toString(),
+        maQuanTriVien: 'ND001',
+        ghiChu: data['import-receipt-note'].toString()
+      };
+      const insertResult = await insertImportReceipt(payload);
+      console.log('Insert result:', insertResult);
+      setIsShowAdd(false);
+      hideOverlay();
+      setErrorMessage('');
+      setProvider(undefined);
+      reset();
+      onAdded();
+      toast.success('Thêm phiếu nhập thành công!');
+    } catch (error) {
+      toast.error(`Lỗi: ${error}`);
+    }
   };
 
   const fetchProviderById = async (providerId: string) => {
