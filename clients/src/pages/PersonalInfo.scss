@@ -56,16 +56,31 @@
       }
     }
 
-    .logout-btn {
-      justify-self: end;
-      border: 1px solid $border-color;
-      margin-top: 12px;
-      transition: all .3s;
+    .form-footer {
+      display: flex;
 
-      &:hover {
-        color: red;
-        border-color: red;
+      .transfer-btn {
+        border: 1px solid $border-color;
+        margin-top: 12px;
+        transition: all .3s;
+
+        &:hover {
+          color: $admin-primary-color;
+          border-color: $admin-primary-color;
+        }
       }
+
+      .logout-btn {
+        border: 1px solid $border-color;
+        margin-top: 12px;
+        transition: all .3s;
+
+        &:hover {
+          color: red;
+          border-color: red;
+        }
+      }
+
     }
   }
 }

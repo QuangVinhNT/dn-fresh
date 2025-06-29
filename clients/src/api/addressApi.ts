@@ -16,6 +16,11 @@ const getDetailById = async (addressId: string) => {
   return res.data;
 };
 
+const getCommuneIdByUserId = async (userId: string) => {
+  const res = await axiosInstance.get(`/dia-chi/khu-vuc-lam-viec/${userId}`);
+  return res.data;
+};
+
 export {
-  getCities, getCommunes, getDetailById
+  getCities, getCommunes, getDetailById, getCommuneIdByUserId
 };

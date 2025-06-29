@@ -10,6 +10,21 @@ export class VaiTroNguoiDungController {
     this.vaiTroNguoiDungService = new VaiTroNguoiDungService();
   }
 
+  public getAllRoleByUserId = async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.id as string || '';
+      if (!userId) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const data = await this.vaiTroNguoiDungService.getAllRoleByUserId(userId);
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
   public insertUserRole = async (req: Request, res: Response) => {
     const connection = await pool.getConnection();
     try {

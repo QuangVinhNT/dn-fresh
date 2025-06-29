@@ -43,4 +43,19 @@ export class DiaChiController {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+  public getWorkCommuneIdByUserId = async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.id as string || '';
+      if (!userId) {
+        res.status(400).json({ message: 'Address not found!' });
+        return;
+      }
+      const data = await this.diaChiService.getWorkCommuneIdByUserId(userId);
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
 }

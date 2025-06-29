@@ -1,10 +1,12 @@
+import { getCart } from "@/api/cartApi";
+import { getFavouriteProducts } from "@/api/favouriteProductApi";
 import { getRoleToken, login } from "@/api/userApi";
 import AdminIcon from '@/assets/images/admin-icon.png';
 import CustomerIcon from '@/assets/images/customer-icon.png';
 import DeliveryStaffIcon from '@/assets/images/delivery-icon.png';
 import InventoryStaffIcon from '@/assets/images/inventory-icon.png';
 import GoogleIcon from '@/assets/svgs/google-icon.svg';
-import { ButtonComponent, CheckboxComponent, ErrorMessage, InputComponent, Overlay } from "@/components";
+import { ButtonComponent, ErrorMessage, InputComponent, Overlay } from "@/components";
 import { cartStore, favouriteFoodsStore, overlayStore, userStore } from "@/store";
 import { FormValues } from "@/types/Object";
 import { useState } from "react";
@@ -12,8 +14,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import './Login.scss';
-import { getCart } from "@/api/cartApi";
-import { getFavouriteProducts } from "@/api/favouriteProductApi";
 
 const roles = [
   {
@@ -86,7 +86,6 @@ const Login = () => {
       setCart(cartItems);
       const favouriteFoods = await getFavouriteProducts(1, 5, loginResult.maNguoiDung + '');
       setFavouriteFoods(favouriteFoods.data);
-      // console.log(favouriteFoods);
 
     } catch (error) {
       console.error('Lỗi đăng nhập:', error);

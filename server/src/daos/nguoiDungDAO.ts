@@ -153,4 +153,18 @@ export class NguoiDungDAO {
       throw error;
     }
   };
+
+  public updatePassword = async (userId: string, password: string, connection: PoolConnection) => {
+    try {
+      const result = await connection.query(`
+        UPDATE nguoidung
+        SET matKhau = ?
+        WHERE maNguoiDung = ?
+        `, [password, userId]);
+      return result;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

@@ -12,6 +12,7 @@ import uploadRoutes from "./uploadRoutes.js";
 import vaiTroNguoiDungRoutes from "./vaiTroNguoiDungRoutes.js";
 import gioHangRoutes from "./gioHangRoutes.js";
 import vnPayRoutes from "./vnPayRoutes.js";
+import thongKeRoutes from "./thongKeRoutes.js";
 
 const router = Router();
 
@@ -29,5 +30,6 @@ router.use('/upload', uploadRoutes);
 router.use('/dia-chi', diaChiRoutes);
 router.use('/vai-tro', vaiTroNguoiDungRoutes);
 router.use('/vnpay', vnPayRoutes);
+router.use('/thong-ke', thongKeRoutes);
 
 export default router;

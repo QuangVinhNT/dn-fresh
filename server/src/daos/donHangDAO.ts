@@ -11,6 +11,7 @@ export class DonHangDAO {
       SELECT dh.maDonHang, dh.ngayTao, dh.trangThai, phuongThucThanhToan, giaTriDonHang as tongTien
       FROM donhang AS dh
       WHERE (dh.maKhachHang = ?) ${orderId.length > 0 ? `AND BINARY LOWER(dh.maDonHang) LIKE LOWER('%${orderId}%')` : ''}
+      ORDER BY dh.ngayTao DESC
       LIMIT ? 
       OFFSET ?
     `, [userId, limit, offset]);

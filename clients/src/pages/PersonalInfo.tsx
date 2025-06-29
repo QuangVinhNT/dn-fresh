@@ -1,23 +1,24 @@
 import { getCities, getCommunes, getDetailById } from "@/api/addressApi";
-import { getUserById, login, updateUser } from "@/api/userApi";
+import { postUploadFile } from "@/api/uploadApi";
+import { getRoleToken, getUserById, getUserRolesByUserId, login, updateUser } from "@/api/userApi";
 import { BackComponent, ButtonComponent, InputComponent, LoadingComponent, SelectComponent, UploadImgComponent } from "@/components";
 import { cartStore, favouriteFoodsStore, loadingStore, userStore } from "@/store";
 import { SelectBox } from "@/types/ComponentType";
 import { FormValues } from "@/types/Object";
+import isValidPassword from "@/utils/isValidPassword";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { IoLogOutOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import './PersonalInfo.scss';
-import { IoLogOutOutline } from "react-icons/io5";
-import { postUploadFile } from "@/api/uploadApi";
-import isValidPassword from "@/utils/isValidPassword";
 const PersonalInfo = () => {
   const [cities, setCities] = useState<SelectBox[]>([]);
   const [communes, setCommunes] = useState<SelectBox[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [userInfo, setUserInfo] = useState<any>();
+  const [link, setLink] = useState<string>('');
   const navigate = useNavigate();
-  const { user, clearUser, setUser } = userStore();
+  const { user, clearUser, setUser, setRoleUser } = userStore();
   const { clearCart } = cartStore();
   const { clearFavouriteFoods } = favouriteFoodsStore();
   const { showLoading, hideLoading, isShowLoading } = loadingStore();
@@ -27,6 +28,7 @@ const PersonalInfo = () => {
   useEffect(() => {
     fetchUser();
     fetchCities();
+    fetchUserRoles();
   }, []);
 
   useEffect(() => {
@@ -83,6 +85,32 @@ const PersonalInfo = () => {
       hideLoading();
     }
   };
+
+  const fetchUserRoles = async () => {
+    showLoading();
+    try {
+      const response = await getUserRolesByUserId(user?.id + '');
+      if (response.length > 1) {
+        const otherRole = response.filter((role: string) => role !== user?.roleId)[0];
+        const link = otherRole === 'VT001' ? '/admin' : (
+          user?.roleId === 'VT002' ? '/inventory-staff' : (
+            user?.roleId === 'VT003' ? '/delivery-staff' : '/'
+          )
+        );
+        setLink(link);
+        setRoleUser(otherRole);
+        localStorage.removeItem('access_token');
+        const token = await getRoleToken({ userId: user?.id + '', roleId: otherRole });
+        localStorage.setItem('access_token', token);
+      }
+    } catch (error) {
+      console.error('Error when load user:', error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  console.log(link);
 
   const handleUpload = async (files: FileList) => {
     showLoading();
@@ -326,19 +354,37 @@ const PersonalInfo = () => {
               </div>
             </form>
 
-            <ButtonComponent
-              label='Đăng xuất'
-              type="no-submit"
-              className="logout-btn"
-              affix={<IoLogOutOutline size={22} />}
-              onClick={() => {
-                localStorage.removeItem('access_token');
-                clearUser();
-                clearCart();
-                clearFavouriteFoods();
-                navigate('/');
-              }}
-            />
+            <div className="form-footer" style={{ justifyContent: 'space-between' }}>
+              {link && (
+                <ButtonComponent
+                  label={`Chuyển tài khoản ${link === '/' ? 'Khách hàng' : (
+                    link === '/admin' ? 'Quản trị viên' : (
+                      link === '/inventory-staff' ? 'Nhân viên kho' : 'Nhân viên giao hàng'
+                    )
+                  )
+                    }`}
+                  className="transfer-btn"
+                  type="no-submit"
+                  onClick={() => {
+                    navigate(link);
+                  }}
+                />
+              )}
+
+              <ButtonComponent
+                label='Đăng xuất'
+                type="no-submit"
+                className="logout-btn"
+                affix={<IoLogOutOutline size={22} />}
+                onClick={() => {
+                  localStorage.removeItem('access_token');
+                  clearUser();
+                  clearCart();
+                  clearFavouriteFoods();
+                  navigate('/');
+                }}
+              />
+            </div>
           </div>
         </div>
       )}

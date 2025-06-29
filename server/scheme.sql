@@ -269,7 +269,7 @@ CREATE TABLE LICHLAMVIEC (
     khuVuc VARCHAR(255),
     ngayTao DATETIME,
     ngayCapNhat DATETIME,
-    PRIMARY KEY (maNhanVien, maCaLam),
+    PRIMARY KEY (maNhanVien, maCaLam, ngayLamViec),
     FOREIGN KEY (maNhanVien) REFERENCES NGUOIDUNG(maNguoiDung)
         ON DELETE CASCADE
         ON UPDATE CASCADE,

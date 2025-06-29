@@ -63,6 +63,7 @@ const ISAddExportProduct = (props: IProps) => {
         let productQuantity = +product.soLuong;
         if (readyProducts?.length > 0) {
           for (const readyProduct of readyProducts) {
+            if (productQuantity === 0) break;
             if (productQuantity >= readyProduct.soLuong) {
               exportProducts.push(readyProduct);
               productQuantity -= readyProduct.soLuong;
@@ -89,7 +90,7 @@ const ISAddExportProduct = (props: IProps) => {
       onAdded();
       hideOverlay();
       setIsShowAdd(false);
-      toast.success('Cập nhật thực phẩm trong phiếu xuất thành công!')
+      toast.success('Cập nhật thực phẩm trong phiếu xuất thành công!');
     } catch (error) {
       toast.error(`Lỗi: ${error}`);
     }

@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import { NguoiDungService } from "../services/nguoiDungService.js";
-import { NguoiDung } from "../models/nguoiDungModel.js";
 import { DiaChi } from "../models/diaChiModel.js";
-import { UnauthorizedError } from "../errors/UnauthorizedError.js";
+import { NguoiDung } from "../models/nguoiDungModel.js";
+import { NguoiDungService } from "../services/nguoiDungService.js";
 
 export class NguoiDungController {
   private nguoiDungService: NguoiDungService;
@@ -175,7 +174,7 @@ export class NguoiDungController {
       res.json(token);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(500).json({ message: 'Server error' });
+      res.status(400).json({ message: 'Server error' });
     }
   };
 
@@ -192,7 +191,7 @@ export class NguoiDungController {
       res.json(result);
     } catch (error) {
       console.error('Controller error:', error);
-      res.status(500).json({ message: 'Không thể gửi mail xác minh hoặc thêm người dùng lỗi!' });
+      res.status(400).json({ message: 'Không thể gửi mail xác minh hoặc thêm người dùng lỗi!' });
     }
   };
 
@@ -208,6 +207,36 @@ export class NguoiDungController {
     } catch (error) {
       console.error('Controller error:', error);
       res.status(400).json({ message: 'Mã xác minh không hợp lệ hoặc đã hết hạn' });
+    }
+  };
+
+  public forgotPassword = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body;
+      if (!payload) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const token = await this.nguoiDungService.forgotPassword(payload.email);
+      res.json(token);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(400).json({ message: 'Không thể gửi mail xác minh!' });
+    }
+  };
+
+  public verifyCodeAndResetPassword = async (req: Request, res: Response) => {
+    try {
+      const payload = req.body;
+      if (!payload) {
+        res.status(400).json({ message: 'Data not found!' });
+        return;
+      }
+      const data = await this.nguoiDungService.verifyCodeAndResetPassword(payload.token, payload.email, payload.code, payload.newPassword);
+      res.json(data);
+    } catch (error) {
+      console.error('Controller error:', error);
+      res.status(400).json({ message: 'Không thể gửi mail xác minh!' });
     }
   };
 }

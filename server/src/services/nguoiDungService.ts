@@ -281,11 +281,12 @@ export class NguoiDungService {
     const connection = await pool.getConnection();
     try {
       connection.beginTransaction();
+      const user = (await this.nguoiDungDAO.getByEmail(email) as RowDataPacket[])[0];
+      if (!user) throw new UnauthorizedError('Email không tồn tại!');
       const decoded = verifyToken(token);
       if (decoded.email !== email || decoded.code !== code) {
         throw new Error("Mã xác nhận không đúng hoặc đã hết hạn");
       }
-      const user = (await this.nguoiDungDAO.getByEmail(email) as RowDataPacket[])[0];
       const updateStatusResult = await this.nguoiDungDAO.updateAccountStatus(user.maNguoiDung, 1, connection);
       connection.commit();
       return { updateStatusResult };
@@ -297,4 +298,55 @@ export class NguoiDungService {
       connection.release();
     }
   };
+
+  public async forgotPassword(email: string) {
+    try {
+      const user = (await this.nguoiDungDAO.getByEmail(email) as RowDataPacket[])[0];
+      if (!user) throw new UnauthorizedError('Email không tồn tại!');
+
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const token = jwt.sign({ email, code }, process.env.JWT_SECRET!, { expiresIn: '5m' });
+      await sendVerificationEmail(email, code);
+      return token;
+    } catch (error) {
+      console.error('Error service:', error);
+      throw error;
+    }
+  }
+
+  public async verifyCodeAndResetPassword(
+    token: string,
+    email: string,
+    code: string,
+    newPassword: string
+  ) {
+    const connection = await pool.getConnection();
+    try {
+      connection.beginTransaction();
+      const decoded = verifyToken(token);
+
+      if (decoded.email !== email) {
+        throw new UnauthorizedError('Email không khớp với token');
+      }
+      if (decoded.code !== code) {
+        throw new UnauthorizedError('Mã xác nhận không đúng');
+      }
+
+      const user = (await this.nguoiDungDAO.getByEmail(email) as RowDataPacket[])[0];
+      if (!user) {
+        throw new UnauthorizedError('Email không tồn tại');
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await this.nguoiDungDAO.updatePassword(user.maNguoiDung, hashedPassword, connection);
+      connection.commit();
+      return { message: "Đổi mật khẩu thành công" };
+    } catch (error) {
+      connection.rollback();
+      console.error('Error reset password:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
 }

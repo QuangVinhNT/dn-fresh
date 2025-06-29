@@ -1,5 +1,81 @@
+@use '@/styles' as *;
 .overview-component {
-  span {
-    color: red;
+  .statistic-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    .statistic-item {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid $border-color;
+      padding: 16px;
+      border-radius: 8px;
+      background-color: #fff;
+      position: relative;
+      aspect-ratio: 1/1;
+
+      .title {
+        font-weight: 500;
+        font-size: 14px;
+        position: absolute;
+        top: 16px;
+        left: 16px;
+      }
+
+      .value {
+        font-weight: bold;
+        display: flex;
+        margin: auto;
+        text-align: center;
+      }
+
+      .unit {
+        position: absolute;
+        top: calc(50% + 30px);
+        left: 0;
+        display: block;
+        text-align: center;
+        width: 100%;
+        transform: translateY(-50%);
+      }
+    }
   }
+
+  .chart-row {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(6, 1fr);
+    height: 500px;
+    margin-top: 16px;
+  }
+}
+
+.col {
+  background-color: #fff;
+  border-radius: 8px;
+  position: relative;
+
+  .chart-title {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: 500;
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.col-2 {
+  grid-column: span 2;
+}
+
+.col-4 {
+  grid-column: span 4;
+}
+
+.col-6 {
+  grid-column: span 6;
 }

@@ -30,7 +30,7 @@ export class DiaChiService {
       const rows = await this.diaChiDAO.getDetailById(addressId) as RowDataPacket[];
       if (rows.length === 0) {
         throw new Error(`No address found with ID: ${addressId}`);
-      } 
+      }
       return rows[0];
     } catch (error) {
       console.error(`Service error: ${error}`);
@@ -72,6 +72,16 @@ export class DiaChiService {
     try {
       const result = await this.diaChiDAO.getAllCommuneByCityId(cityId);
       return result;
+    } catch (error) {
+      console.error(`Service error: ${error}`);
+      throw error;
+    }
+  };
+
+  public getWorkCommuneIdByUserId = async (userId: string) => {
+    try {
+      const result = await this.diaChiDAO.getWorkCommuneIdByUserId(userId) as RowDataPacket[];
+      return result[0];
     } catch (error) {
       console.error(`Service error: ${error}`);
       throw error;

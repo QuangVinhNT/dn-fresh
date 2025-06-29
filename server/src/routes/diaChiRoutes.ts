@@ -5,6 +5,10 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 const diaChiRoutes = Router();
 const diaChiController = new DiaChiController();
 
+diaChiRoutes.get('/khu-vuc-lam-viec/:id', authMiddleware, (req: Request, res: Response) => {
+  return diaChiController.getWorkCommuneIdByUserId(req, res);
+});
+
 diaChiRoutes.get('/tinh-thanhpho', authMiddleware, (req: Request, res: Response) => {
   return diaChiController.getAllCity(req, res);
 });

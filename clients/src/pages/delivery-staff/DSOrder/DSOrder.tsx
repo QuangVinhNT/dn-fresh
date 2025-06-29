@@ -1,6 +1,6 @@
 import { getOrderById, getStaffOrders } from "@/api/orderApi";
 import { ButtonComponent, FilterComponent, SearchComponent, TablePagination } from "@/components";
-import { loadingStore } from "@/store";
+import { loadingStore, userStore } from "@/store";
 import { FilterType } from "@/types";
 import { OrderDetail, OrderStatus, StaffOrderList } from "@/types/Order";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +8,7 @@ import './DSOrder.scss';
 import { IoFilter } from "react-icons/io5";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import DSOrderDetail from "./DSOrderDetail/DSOrderDetail";
+import { getCommuneIdByUserId } from "@/api/addressApi";
 
 const headers = ['Mã đơn hàng', 'Ngày tạo đơn', 'Khách hàng', 'Trạng thái', 'Mã phiếu xuất'];
 
@@ -23,6 +24,7 @@ const DSOrder = () => {
   const keywordRef = useRef<string>('');
 
   const { showLoading, hideLoading } = loadingStore();
+  const { user } = userStore();
 
   useEffect(() => {
     const statusFilter = filters.find(filter => filter.name === 'status')?.value;
@@ -32,7 +34,8 @@ const DSOrder = () => {
   const fetchOrders = async (status?: string) => {
     showLoading();
     try {
-      const response = await getStaffOrders(page, limit, keywordRef.current, 'DN_015', status);
+      const workLocation = await getCommuneIdByUserId(user?.id + '');
+      const response = await getStaffOrders(page, limit, keywordRef.current, workLocation.khuVuc, status);
       setOrders(response.data);
       setTotal(response.total);
     } catch (error) {
@@ -136,7 +139,7 @@ const DSOrder = () => {
       )}
 
       {/* Order detail */}
-      {isShowDetail && <DSOrderDetail setIsShowDetail={setIsShowDetail} detailData={order} onUpdated={fetchOrders}/>}
+      {isShowDetail && <DSOrderDetail setIsShowDetail={setIsShowDetail} detailData={order} onUpdated={fetchOrders} />}
     </>
   );
 };

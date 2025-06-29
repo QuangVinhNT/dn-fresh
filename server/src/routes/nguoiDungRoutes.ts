@@ -26,6 +26,14 @@ nguoiDungRoutes.get('/nhan-vien/:id', authMiddleware, checkRole(['VT001']), (req
   if (role === 'VT001') return nguoiDungController.getStaffById(req, res);
 });
 
+nguoiDungRoutes.post('/forgot-password', (req: Request, res: Response) => {
+  return nguoiDungController.forgotPassword(req, res);
+});
+
+nguoiDungRoutes.post('/forgot-password/reset', (req: Request, res: Response) => {
+  return nguoiDungController.verifyCodeAndResetPassword(req, res);
+});
+
 nguoiDungRoutes.get('/:id', (req: Request, res: Response) => {
   return nguoiDungController.getById(req, res);
 });

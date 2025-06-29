@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import './App.css';
-import { Admin, Client, ClientFoodDetail, ClientOrderDetail, ClientOrders, ConfirmCode, Contact, Customer, DeliveryStaff, DSOrder, DSOverview, ExportFood, Favourites, FoodCategory, FoodList, FoodProvider, Foods, ForgotPassword, Home, ImportFood, Introduce, InventoryStaff, ISExport, ISImport, ISOverview, Login, Order, Overview, Payment, PersonalInfo, Register, Staff, UserRole } from "./pages";
 import { Bounce, ToastContainer } from "react-toastify";
+import './App.css';
+import { Admin, Client, ClientFoodDetail, ClientOrderDetail, ClientOrders, ConfirmCode, Contact, Customer, DeliveryStaff, DSOrder, ExportFood, Favourites, FoodCategory, FoodList, FoodProvider, Foods, ForgotPassword, Home, ImportFood, Introduce, InventoryStaff, ISExport, ISImport, Login, Order, Overview, Payment, PersonalInfo, Register, Staff, UserRole } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -90,10 +90,6 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <ISOverview />
-      },
-      {
-        path: '/inventory-staff/import-receipts',
         element: <ISImport />
       },
       {
@@ -108,12 +104,8 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DSOverview />
-      },
-      {
-        path: '/delivery-staff/orders',
         element: <DSOrder />
-      }
+      },
     ]
   },
   {

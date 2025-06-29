@@ -1,7 +1,7 @@
 import { AdminHeader, AdminSidebar, LoadingComponent, Overlay } from "@/components";
 import { loadingStore, overlayStore, userStore } from "@/store";
 import { ReactNode } from "react";
-import { IoDocumentTextOutline, IoFileTrayFullOutline, IoHomeOutline } from "react-icons/io5";
+import { IoDocumentTextOutline, IoFileTrayFullOutline } from "react-icons/io5";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 
 interface ChildrenType {
@@ -17,14 +17,8 @@ interface MenuItem {
 }
 const menuItems: MenuItem[] = [
   {
-    name: 'Tổng quan',
-    link: '/inventory-staff',
-    affix: <IoHomeOutline size={22} />,
-    childrens: [],
-  },
-  {
     name: 'Phiếu nhập',
-    link: '/inventory-staff/import-receipts',
+    link: '/inventory-staff',
     affix: <IoDocumentTextOutline size={22} />,
     childrens: [],
   },

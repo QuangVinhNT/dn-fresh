@@ -30,13 +30,13 @@ export class DiaChiDAO {
         FROM DIACHI dc
         JOIN PHUONGXA px ON dc.maPhuongXa = px.maPhuongXa
         WHERE dc.maDiaChi = ?;
-        `, [addressId])
+        `, [addressId]);
       return rows;
     } catch (error) {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 
   public insertAddress = async (address: DiaChi, connection: PoolConnection) => {
     try {
@@ -46,10 +46,10 @@ export class DiaChiDAO {
       `, [address.getMaDiaChi(), address.getChiTietDiaChi(), address.getMaPhuongXa()]);
       return result;
     } catch (error) {
-      console.error('DAO error:', error)
-      throw error
+      console.error('DAO error:', error);
+      throw error;
     }
-  } 
+  };
 
   public getIdByTheRestField = async (addressDetail: string, communeId: string) => {
     try {
@@ -63,7 +63,7 @@ export class DiaChiDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 
   public getAllCity = async () => {
     try {
@@ -77,7 +77,7 @@ export class DiaChiDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
 
   public getAllCommuneByCityId = async (cityId: string) => {
     try {
@@ -91,5 +91,19 @@ export class DiaChiDAO {
       console.error('DAO error:', error);
       throw error;
     }
-  }
+  };
+
+  public getWorkCommuneIdByUserId = async (userId: string) => {
+    try {
+      const [rows] = await pool.query(`
+        SELECT khuVuc
+        FROM lichlamviec
+        WHERE DATEDIFF(ngayLamViec, NOW()) = 0 AND maNhanVien = ?;
+        `, [userId]);
+      return rows;
+    } catch (error) {
+      console.error('DAO error:', error);
+      throw error;
+    }
+  };
 }

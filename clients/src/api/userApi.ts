@@ -26,6 +26,21 @@ const getUserById = async (userId: string) => {
   return res.data;
 };
 
+const getUserRolesByUserId = async (userId: string) => {
+  const res = await axiosInstance.get(`/vai-tro/nguoi-dung/${userId}`);
+  return res.data;
+};
+
+const checkEmailExist = async (email: string) => {
+  const res = await axiosInstance.post(`/v1/nguoi-dung/forgot-password`, { email });
+  return res.data;
+};
+
+const verifyAndResetPassword = async (payload: { email: string, code: string, token: string, newPassword: string; }) => {
+  const res = await axiosInstance.post(`/v1/nguoi-dung/forgot-password/reset`, payload);
+  return res.data;
+};
+
 const lockAccount = async (userId: string) => {
   const res = await axiosInstance.patch(`/v1/nguoi-dung/${userId}/lock`);
   return res.data;
@@ -81,5 +96,5 @@ const verifyEmail = async (payload: { email: string, code: string, token: string
   return res.data;
 };
 
-export { getCustomerById, getCustomers, getStaffs, lockAccount, unlockAccount, insertUser, insertUserRole, getStaffById, deleteAllStaffRole, updateRole, login, getRoleToken, registerUser, verifyEmail, getUserById, updateUser };
+export { getCustomerById, getCustomers, getStaffs, lockAccount, unlockAccount, insertUser, insertUserRole, getStaffById, deleteAllStaffRole, updateRole, login, getRoleToken, registerUser, verifyEmail, getUserById, updateUser, checkEmailExist, verifyAndResetPassword, getUserRolesByUserId };
 
