@@ -51,7 +51,10 @@ const DSOrderDetail = (props: IProps) => {
       {detailData && (
         <div className="order-detail-component">
           <div className="order-detail-tools">
-            <BackComponent backTitle="Quay lại danh sách đơn hàng" onBack={() => setIsShowDetail(false)} />
+            <BackComponent backTitle="Quay lại danh sách đơn hàng" onBack={() => {
+              setIsShowDetail(false);
+              window.location.reload();
+            }} />
             {detailData.trangThai === 2 && (
               <ButtonComponent
                 className="btn-confirm"

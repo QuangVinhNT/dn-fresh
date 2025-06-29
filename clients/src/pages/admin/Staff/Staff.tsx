@@ -171,7 +171,7 @@ const Staff = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập mã nhân viên..." onSearch={fetchStaffs} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập mã nhân viên..." onSearch={fetchStaffs} keywordRef={keywordRef} setPage={setPage} />
             </div>
             <table className="table">
               <thead>

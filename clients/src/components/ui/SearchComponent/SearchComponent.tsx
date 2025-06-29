@@ -6,10 +6,11 @@ interface IProps {
   keywordRef: React.MutableRefObject<string>;
   placeholder?: string;
   onSearch: () => void;
+  setPage?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const SearchComponent = (props: IProps) => {
-  const { placeholder, onSearch, keywordRef } = props;
+  const { placeholder, onSearch, keywordRef, setPage } = props;
 
   const [searchKey, setSearchKey] = useState('');
 
@@ -19,6 +20,7 @@ const SearchComponent = (props: IProps) => {
     if (e.key === 'Enter') {
       keywordRef.current = searchKey;
       searchRef.current?.blur();
+      setPage && setPage(1);
       onSearch();
     }
   };

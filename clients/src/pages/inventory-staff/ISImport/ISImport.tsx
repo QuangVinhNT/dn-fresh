@@ -84,7 +84,7 @@ const ISImport = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập mã phiếu nhập..." onSearch={fetchImportReceipts} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập mã phiếu nhập..." onSearch={fetchImportReceipts} keywordRef={keywordRef} setPage={setPage} />
             </div>
             <table className="table">
               <thead>

@@ -62,6 +62,7 @@ export class DonHangDAO {
       LEFT JOIN nguoidung as kh ON kh.maNguoiDung = dh.maKhachHang
       LEFT JOIN nguoidung as nv ON nv.maNguoiDung = dh.maNhanVien
       ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
+      ORDER BY dh.ngayTao DESC
       LIMIT ? 
       OFFSET ?
     `, [limit, offset]);

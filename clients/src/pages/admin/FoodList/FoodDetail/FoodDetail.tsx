@@ -4,8 +4,8 @@ import { overlayStore } from "@/store";
 import { AdminProductDetail, ProductPackage, ProductStatus } from "@/types/Product";
 import { datetimeFormatter } from "@/utils/datetimeFormatter";
 import { useState } from "react";
-import './FoodDetail.scss';
 import { toast } from "react-toastify";
+import './FoodDetail.scss';
 
 interface IProps {
   setIsShowDetail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,7 +26,10 @@ const FoodDetail = (props: IProps) => {
     <>
       {detailData && (
         <div className="food-detail-component">
-          <BackComponent onBack={() => setIsShowDetail(false)} backTitle="Quay lại danh sách sản phẩm" />
+          <BackComponent onBack={() => {
+            setIsShowDetail(false);
+            window.location.reload();
+          }} backTitle="Quay lại danh sách sản phẩm" />
           <TextComponent
             text={detailData.tenThucPham ?? "Chưa có dữ liệu"}
             title
@@ -161,7 +164,7 @@ const FoodDetail = (props: IProps) => {
       <div className="ok-cancel-delete-modal" style={{ top: isShowDeleteModal ? '50%' : '-100%' }}>
         <OkCancelModal
           data={{
-            message: <p>Bạn chắc chắn muốn <b style={{color: 'red'}}>xóa</b> thực phẩm này chứ?</p>
+            message: <p>Bạn chắc chắn muốn <b style={{ color: 'red' }}>xóa</b> thực phẩm này chứ?</p>
           }}
           onOk={async () => {
             try {

@@ -3,8 +3,8 @@ import './TablePagination.scss';
 
 interface IProps {
   page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
   limit: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
   total: number;
 }
@@ -63,14 +63,6 @@ const TablePagination = (props: IProps) => {
         <IoChevronBackOutline
           onClick={() => setPage(page - 1 < 1 ? 1 : page - 1)}
         />
-        {/* {Array.from({ length: totalPage }, (_, idx) => (
-          <span
-            key={idx}
-            onClick={() => setPage(idx + 1)}
-            className={`${page === idx + 1 && 'active'}`}>
-            {idx + 1}
-          </span>
-        ))} */}
         {paginationRange.map((item, idx) =>
           item === '...' ? (
             <span key={idx} className="dots">

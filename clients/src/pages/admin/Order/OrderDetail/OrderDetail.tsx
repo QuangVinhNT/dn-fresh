@@ -11,7 +11,7 @@ interface IProps {
   detailData: AdminOrderDetail | undefined;
 }
 
-const headers = ['Mã thực phẩm', 'Tên thực phẩm', 'Số lượng', 'Đơn vị tính']
+const headers = ['Mã thực phẩm', 'Tên thực phẩm', 'Số lượng', 'Đơn vị tính'];
 
 const OrderDetail = (props: IProps) => {
   const { setIsShowDetail, detailData } = props;
@@ -19,7 +19,10 @@ const OrderDetail = (props: IProps) => {
     <>
       {detailData && (
         <div className="order-detail-component">
-          <BackComponent backTitle="Quay lại danh sách đơn hàng" onBack={() => setIsShowDetail(false)} />
+          <BackComponent backTitle="Quay lại danh sách đơn hàng" onBack={() => {
+            setIsShowDetail(false);
+            window.location.reload();
+          }} />
           <div className="order-detail-header">
             <div className="order-code-print">
               <TextComponent

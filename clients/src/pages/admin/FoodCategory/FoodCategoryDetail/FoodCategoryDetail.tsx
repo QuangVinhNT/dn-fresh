@@ -32,7 +32,10 @@ const FoodCategoryDetail = (props: IProps) => {
           <div className="food-category-detail-header">
             <BackComponent
               backTitle="Quay lại danh sách loại thực phẩm"
-              onBack={() => { setIsShowDetail(false); }}
+              onBack={() => {
+                setIsShowDetail(false);
+                window.location.reload();
+              }}
             />
           </div>
           <div className="category-tool">
@@ -89,11 +92,11 @@ const FoodCategoryDetail = (props: IProps) => {
       {/* Delete modal */}
       {showDeleteModal && (
         <OkCancelModal
-          message={
-            <p>Bạn chắc chắn muốn xóa danh mục {' '}
+          data={{
+            message: <p>Bạn chắc chắn muốn xóa danh mục {' '}
               <span style={{ fontWeight: 700 }}>{detailData?.tenDanhMuc}</span> ?
             </p>
-          }
+          }}
           onOk={() => {
             deleteCate();
           }}

@@ -96,7 +96,7 @@ const DSOrder = () => {
                 </div>
               </div>
               <div className="search">
-                <SearchComponent placeholder="Nhập mã đơn hàng..." onSearch={fetchOrders} keywordRef={keywordRef} />
+                <SearchComponent placeholder="Nhập mã đơn hàng..." onSearch={fetchOrders} keywordRef={keywordRef} setPage={setPage} />
               </div>
               <table className="table">
                 <thead>

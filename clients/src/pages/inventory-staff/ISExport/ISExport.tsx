@@ -84,7 +84,7 @@ const ISExport = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập mã phiếu xuất..." onSearch={fetchExportReceipts} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập mã phiếu xuất..." onSearch={fetchExportReceipts} keywordRef={keywordRef} setPage={setPage} />
             </div>
             <table className="table">
               <thead>

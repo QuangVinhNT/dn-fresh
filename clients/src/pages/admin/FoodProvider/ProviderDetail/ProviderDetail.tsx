@@ -27,7 +27,10 @@ const ProviderDetail = (props: IProps) => {
     <>
       {detailData && (
         <div className="provider-detail-component">
-          <BackComponent onBack={() => setIsShowDetail(false)} backTitle="Quay lại danh sách nhà cung cấp" />
+          <BackComponent onBack={() => {
+            setIsShowDetail(false);
+            window.location.reload();
+          }} backTitle="Quay lại danh sách nhà cung cấp" />
           <TextComponent
             text={detailData.tenNhaCungCap ?? "Chưa có dữ liệu"}
             title

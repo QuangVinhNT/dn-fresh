@@ -127,7 +127,7 @@ const Customer = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập mã khách hàng..." onSearch={fetchCustomers} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập mã khách hàng..." onSearch={fetchCustomers} keywordRef={keywordRef} setPage={setPage} />
             </div>
             <table className="table">
               <thead>

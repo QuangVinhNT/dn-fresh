@@ -103,7 +103,7 @@ const FoodProvider = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập tên nhà cung cấp..." onSearch={fetchProviders} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập tên nhà cung cấp..." onSearch={fetchProviders} keywordRef={keywordRef} setPage={setPage} />
             </div>
             <table className="table">
               <thead>

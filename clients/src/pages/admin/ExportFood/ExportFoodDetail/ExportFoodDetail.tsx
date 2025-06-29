@@ -31,7 +31,10 @@ const ExportFoodDetail = (props: IProps) => {
             <div className="export-food-detail-header">
               <BackComponent
                 backTitle="Quay lại danh sách phiếu xuất"
-                onBack={() => { setIsShowDetail(false); }}
+                onBack={() => {
+                  setIsShowDetail(false);
+                  window.location.reload();
+                }}
               />
               <div className="delete-edit-approve">
                 <ButtonComponent

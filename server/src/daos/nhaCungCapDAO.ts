@@ -15,7 +15,7 @@ export class NhaCungCapDAO {
         SELECT maNhaCungCap, tenNhaCungCap, ngayDangKy, trangThaiHoatDong
         FROM nhacungcap
         ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
-        ORDER BY tenNhaCungCap ASC
+        ORDER BY ngayDangKy DESC
         LIMIT ?
         OFFSET ?
         `, [limit, offset]);

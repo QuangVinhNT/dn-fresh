@@ -137,7 +137,7 @@ const FoodList = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập tên thực phẩm..." onSearch={fetchProducts} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập tên thực phẩm..." onSearch={fetchProducts} keywordRef={keywordRef} setPage={setPage} />
             </div>
             <table className="table">
               <thead>

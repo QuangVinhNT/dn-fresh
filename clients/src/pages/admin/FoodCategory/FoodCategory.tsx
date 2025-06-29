@@ -94,7 +94,7 @@ const FoodCategory = () => {
               </div>
             </div>
             <div className="search">
-              <SearchComponent placeholder="Nhập tên danh mục..." onSearch={fetchCategories} keywordRef={keywordRef} />
+              <SearchComponent placeholder="Nhập tên danh mục..." onSearch={fetchCategories} keywordRef={keywordRef} setPage={setPage} />
             </div>
             <table className="table">
               <thead>

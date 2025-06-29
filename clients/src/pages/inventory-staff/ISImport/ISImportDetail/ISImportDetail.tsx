@@ -65,7 +65,10 @@ const ISImportDetail = (props: IProps) => {
           <div className="import-food-detail-header">
             <BackComponent
               backTitle="Quay lại danh sách phiếu nhập"
-              onBack={() => { setIsShowDetail(false); }}
+              onBack={() => {
+                setIsShowDetail(false);
+                window.location.reload();
+              }}
             />
             {detailData.trangThai === 3 && (
               <ButtonComponent

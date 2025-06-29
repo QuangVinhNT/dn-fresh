@@ -67,6 +67,7 @@ const ISExportDetail = (props: IProps) => {
                   await unpackOrders(detailData.maPhieuXuat);
                   fetchReadyExportOrders();
                   fetchExportProducts();
+                  window.location.reload();
                 }}
               />
               {detailData.trangThai === 3 && (
@@ -209,7 +210,7 @@ const ISExportDetail = (props: IProps) => {
                   setIsShowDetail(false);
                   onFinish();
                   hideOverlay();
-                  toast.success('Xác nhận hoàn thành phiếu nhập thành công!')
+                  toast.success('Xác nhận hoàn thành phiếu nhập thành công!');
                 } catch (error) {
                   toast.error(`Lỗi: ${error}`);
                 }

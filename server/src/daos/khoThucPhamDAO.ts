@@ -91,7 +91,7 @@ export class KhoThucPhamDAO {
       LEFT JOIN anhthucpham as pi on pi.maThucPham = p.maThucPham
       ${whereClause.length > 0 ? `WHERE ${whereClause}` : ''}
       GROUP BY p.maThucPham
-      ORDER BY p.maThucPham DESC
+      ORDER BY p.tenThucPham
       LIMIT ? 
       OFFSET ?
     `, [limit, offset]);
